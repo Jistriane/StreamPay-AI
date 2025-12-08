@@ -85,4 +85,5 @@ app.post("/api/login", async (req: any, res: any) => {
 // Healthcheck
 app.get("/health", (req: any, res: any) => res.send("OK"));
 
-app.listen(3001, () => console.log("Backend StreamPay rodando na porta 3001"));
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Backend StreamPay rodando na porta ${PORT}`));

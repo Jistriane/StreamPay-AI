@@ -45,7 +45,7 @@ export async function migrateEvents() {
 import { Pool } from "pg";
 
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL || "postgres://postgres:postgres@localhost:5432/streampay"
+  connectionString: process.env.POSTGRES_URL || "postgresql://postgres:1234@localhost:5432/streampay?schema=public"
 });
 
 export async function createStream(stream: any) {

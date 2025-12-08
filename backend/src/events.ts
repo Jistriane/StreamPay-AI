@@ -16,7 +16,7 @@ migrateEvents();
 const contract = new ethers.Contract(contractAddress, StreamPayCoreABI, provider);
 
 export function listenStreamEvents(onCreated?: Function, onClaimed?: Function) {
-  contract.on("StreamCreated", async (streamId, sender, recipient, token, ratePerSecond, duration) => {
+  contract.on("StreamCreated", async (streamId: bigint, sender: string, recipient: string, token: string, ratePerSecond: bigint, duration: bigint) => {
     const event = { streamId, sender, recipient, token, ratePerSecond, duration };
     await saveStreamCreated(event);
     // Notificação mock: enviar e-mail ao destinatário
@@ -25,7 +25,7 @@ export function listenStreamEvents(onCreated?: Function, onClaimed?: Function) {
     // await sendNotification(email, ...)
     if (onCreated) onCreated(event);
   });
-  contract.on("StreamClaimed", async (streamId, recipient, amount) => {
+  contract.on("StreamClaimed", async (streamId: bigint, recipient: string, amount: bigint) => {
     const event = { streamId, recipient, amount };
     await saveStreamClaimed(event);
     // Notificação mock: enviar e-mail ao destinatário

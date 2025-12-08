@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 
 const provider = new ethers.JsonRpcProvider(process.env.ETH_RPC_URL);
 
-const FEEDS = {
+const FEEDS: Record<string, string> = {
   "ETH/USD": "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
   "USDC/USD": "0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6"
 };
