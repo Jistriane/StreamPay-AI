@@ -1,65 +1,130 @@
 "use client";
-import React from 'react';
-
-import { useState } from "react";
+import React, { useState } from "react";
+import Card from "../components/Card";
+import Button from "../components/Button";
+import Input from "../components/Input";
 
 export default function CadastroPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleCadastro = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("Registering...");
+    setLoading(true);
+    setStatus("⏳ Registrando...");
+    
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password })
       });
+      
       const data = await res.json();
+      
       if (res.ok) {
-        setStatus("Registration successful!\n" + JSON.stringify(data, null, 2));
+        setStatus("✅ Registro realizado com sucesso!\n" + JSON.stringify(data, null, 2));
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
       } else {
-        let msg = "Error registering user.\n" + JSON.stringify(data, null, 2);
-        setStatus(msg);
+        setStatus(`❌ Erro: ${data.error || "Falha no registro"}\n${JSON.stringify(data, null, 2)}`);
       }
     } catch (err: any) {
-      setStatus("Erro: " + err.message);
+      setStatus(`❌ Erro: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f2027] via-[#2c5364] to-[#00eaff] animate-fade-in">
-      <div className="bg-slate-900/80 p-10 rounded-2xl shadow-2xl w-full max-w-md border border-cyan-500/30 neon-glow">
-        <h1 className="text-4xl font-bold text-cyan-400 mb-8 neon-glow">StreamPay Registration</h1>
-        <form onSubmit={handleCadastro} className="space-y-4">
-          <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Name" className="w-full p-4 rounded-xl bg-slate-800 text-cyan-100 border border-cyan-500/20 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400 transition" />
-          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full p-4 rounded-xl bg-slate-800 text-cyan-100 border border-cyan-500/20 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400 transition" />
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="w-full p-4 rounded-xl bg-slate-800 text-cyan-100 border border-cyan-500/20 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400 transition" />
-          <button type="submit" className="w-full py-4 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-xl neon-btn font-bold text-lg shadow hover:scale-105 transition-transform">
-            <span className="glow-text">Register</span>
-          </button>
-        </form>
-        {status && (
-          <div
-            className="mt-6 text-cyan-300 animate-pulse text-left"
-            style={{
-              whiteSpace: "pre-wrap",
-              background: "#222c",
-              padding: 12,
-              borderRadius: 8,
-              maxWidth: 600,
-              maxHeight: 300,
-              overflowY: "auto",
-              wordBreak: "break-word"
-            }}
+    <div className="min-h-[80vh] flex items-center justify-center animate-fade-in">
+      <Card variant="glass" padding="lg" className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-2 text-gradient" style={{ 
+            fontFamily: "var(--font-family-display)"
+          }}>
+            StreamPay Registration
+          </h1>
+          <p className="text-secondary" style={{ color: "var(--text-secondary)" }}>
+            Crie sua conta para começar
+          </p>
+        </div>
+
+        <form onSubmit={handleCadastro}>
+          <Input
+            label="Nome"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Seu nome completo"
+            icon="👤"
+            required
+          />
+
+          <Input
+            label="E-mail"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="seu@email.com"
+            icon="📧"
+            required
+          />
+
+          <Input
+            label="Senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            icon="🔒"
+            required
+          />
+
+          <Button
+            type="submit"
+            variant="neon"
+            size="lg"
+            fullWidth
+            loading={loading}
+            className="mt-4"
           >
-            {status}
-          </div>
+            Registrar
+          </Button>
+        </form>
+
+        {status && (
+          <Card variant="bordered" padding="md" className="mt-6">
+            <p 
+              className="text-sm whitespace-pre-wrap break-words text-left"
+              style={{ 
+                color: "var(--text-primary)",
+                maxHeight: "300px",
+                overflowY: "auto"
+              }}
+            >
+              {status}
+            </p>
+          </Card>
         )}
-      </div>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-secondary" style={{ color: "var(--text-secondary)" }}>
+            Já tem uma conta?{" "}
+            <a 
+              href="/login" 
+              className="text-primary hover:underline"
+              style={{ color: "var(--color-primary)" }}
+            >
+              Faça login
+            </a>
+          </p>
+        </div>
+      </Card>
     </div>
   );
 }

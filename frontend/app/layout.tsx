@@ -5,7 +5,8 @@ import './globals.css';
 import { WagmiConfig, createConfig } from "wagmi";
 import { mainnet } from "wagmi/chains";
 import { createPublicClient, http } from "viem";
-import "./globals.css";
+import Header from "./components/Header";
+import BackgroundEffects from "./components/BackgroundEffects";
 
 const wagmiConfig = createConfig({
   autoConnect: true,
@@ -21,21 +22,34 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>StreamPay AI - Pagamentos em Stream Blockchain</title>
+      </head>
       <body>
-        <div className="logo-topo-clean">
-          <img src="/logo-streampay.png" alt="Logo StreamPay AI" className="logo-streampay neon-glow" />
-        </div>
+        <BackgroundEffects />
         <WagmiConfig config={wagmiConfig}>
-          <nav className="nav-futurista">
-            <ul>
-              <li><a href="/" className="nav-link">Dashboard</a></li>
-              <li><a href="/cadastro" className="nav-link">Register</a></li>
-              <li><a href="/historico" className="nav-link">History</a></li>
-              <li><a href="/compliance" className="nav-link">Compliance</a></li>
-            </ul>
-          </nav>
-          <main>{children}</main>
+          <div className="app-container">
+            <Header />
+            <main className="main-content">
+              <div className="content-wrapper">
+                {children}
+              </div>
+            </main>
+            <footer className="app-footer">
+              <div className="footer-content">
+                <p className="footer-text">
+                  © 2024 StreamPay AI. Todos os direitos reservados.
+                </p>
+                <div className="footer-links">
+                  <a href="#" className="footer-link">Documentação</a>
+                  <a href="#" className="footer-link">Suporte</a>
+                  <a href="#" className="footer-link">Termos</a>
+                </div>
+              </div>
+            </footer>
+          </div>
         </WagmiConfig>
       </body>
     </html>

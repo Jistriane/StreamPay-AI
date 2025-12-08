@@ -17,7 +17,7 @@ services:
       - MORALIS_API_KEY
       - CHAINLINK_RPC_URL
       - KYC_PROVIDER_API_KEY
-      - POSTGRES_URL=postgres://postgres:postgres@db:5432/streampay
+      - POSTGRES_URL=postgresql://postgres:1234@localhost:5432/streampay?schema=public
       - REDIS_URL=redis://redis:6379
     depends_on:
       - db
