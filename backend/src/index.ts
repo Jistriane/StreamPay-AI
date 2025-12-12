@@ -4,6 +4,7 @@ import { createStreamOnChain, claimStreamOnChain } from "./contract";
 import { createStream, getStreamsBySender, migrate } from "./db";
 import { Pool } from "pg";
 import axios from "axios";
+import { chatAssistant, analyzeStreamData, generateComplianceReport } from "./gemini";
 
 const app = express();
 app.use(express.json());
@@ -80,6 +81,48 @@ app.post("/api/login", async (req: any, res: any) => {
     res.json({ message: "Login bem-sucedido", user: { id: user.id, type: user.type, wallet: user.wallet, email: user.email } });
   } catch (err: any) {
     return res.status(500).json({ error: "Erro no login", details: err.message });
+  }
+});
+
+// Endpoint do Assistente Gemini AI
+app.post("/api/gemini/chat", authMiddleware, async (req: any, res: any) => {
+  const { message, context } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: "Mensagem é obrigatória" });
+  }
+  try {
+    const response = await chatAssistant(message, context);
+    res.json({ success: true, response });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Erro ao processar chat", details: err.message });
+  }
+});
+
+// Endpoint para análise de stream com Gemini
+app.post("/api/gemini/analyze-stream", authMiddleware, async (req: any, res: any) => {
+  const { streamData } = req.body;
+  if (!streamData) {
+    return res.status(400).json({ error: "Dados do stream são obrigatórios" });
+  }
+  try {
+    const analysis = await analyzeStreamData(streamData);
+    res.json({ success: true, analysis });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Erro ao analisar stream", details: err.message });
+  }
+});
+
+// Endpoint para gerar relatório de compliance com Gemini
+app.post("/api/gemini/compliance-report", authMiddleware, async (req: any, res: any) => {
+  const { kycData } = req.body;
+  if (!kycData) {
+    return res.status(400).json({ error: "Dados KYC são obrigatórios" });
+  }
+  try {
+    const report = await generateComplianceReport(kycData);
+    res.json({ success: true, report });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Erro ao gerar relatório", details: err.message });
   }
 });
 

@@ -12,6 +12,14 @@ StreamPay is a streaming payment system for freelancers, using ERC20, Uniswap V3
 ## Quick Links
 - [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md)
 - [Roadmap](docs/roadmap.md)
+- [Gemini AI Integration](backend/docs/GEMINI_API.md)
+
+## AI Features
+StreamPay integrates **Google Gemini AI** for:
+- 🤖 **Intelligent Virtual Assistant** - Real-time support and guidance
+- 📊 **Stream Analysis** - Security insights and transaction patterns
+- ✅ **Compliance Reports** - Automated KYC/AML analysis
+- 💡 **Smart Recommendations** - Optimization suggestions
 
 ### Project Structure
 - `frontend/`: Next.js 14 + TypeScript, Web3 integration, dashboard, AI interface.
@@ -35,6 +43,10 @@ fetch('/api/streams')
 ## API Endpoints
 - `POST /api/auth/register` — Register a new user
 - `POST /api/auth/login` — Login and receive JWT
+- `POST /api/gemini/chat` — Chat with AI assistant
+- `POST /api/gemini/analyze-stream` — AI-powered stream analysis
+- `POST /api/gemini/compliance-report` — Generate compliance reports
+
 ## Deployment & Environment
 1. Clone the repository and install dependencies:
 	git clone <repo-url>
@@ -45,6 +57,7 @@ fetch('/api/streams')
 	- Database (Postgres)
 	- JWT keys
 	- Compliance providers
+	- **GEMINI_API_KEY** (Google Gemini AI)
 	```bash
 	npm run test -- --coverage
 ## Security Best Practices
