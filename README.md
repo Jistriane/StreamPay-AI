@@ -2,7 +2,9 @@
 
 # StreamPay AI - MVP
 
-![StreamPay Dashboard](docs/streampay_dashboard.png)
+<p align="center">
+	<img src="docs/StreamPay AI.png" alt="Dashboard do StreamPay AI com navegação, chat do assistente e status da carteira conectada" width="960" />
+</p>
 
 ## Overview
 StreamPay is a streaming payment system for freelancers, using ERC20, Uniswap V3, Moralis, Chainlink, and a modular architecture ready for compliance (KYC/LGPD).
