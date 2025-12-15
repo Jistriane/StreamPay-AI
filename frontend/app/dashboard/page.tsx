@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Card from "@/app/components/Card";
 import Button from "@/app/components/Button";
+import CreateStreamModal from "@/app/components/CreateStreamModal";
 import { useAuth } from "@/app/hooks/useAuth";
 import { fetchWithAuth } from "@/app/lib/api";
 
@@ -24,6 +25,7 @@ export default function DashboardPage() {
   const [streams, setStreams] = useState<Stream[]>([]);
   const [streamsLoading, setStreamsLoading] = useState(false);
   const [streamsError, setStreamsError] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Redirecionar se não autenticado
   useEffect(() => {
@@ -97,12 +99,20 @@ export default function DashboardPage() {
               Bem-vindo ao StreamPay AI
             </p>
           </div>
-          <Button
-            onClick={logout}
-            variant="outlined"
-          >
-            Desconectar
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setIsCreateModalOpen(true)}
+              variant="neon"
+            >
+              ✨ Criar Stream
+            </Button>
+            <Button
+              onClick={logout}
+              variant="outlined"
+            >
+              Desconectar
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -287,6 +297,12 @@ export default function DashboardPage() {
           </div>
         </Card>
       </div>
+
+      <CreateStreamModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onStreamCreated={fetchStreams}
+      />
     </div>
   );
 }
