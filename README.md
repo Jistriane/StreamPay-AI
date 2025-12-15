@@ -312,11 +312,12 @@ cd frontend && npm install && npm run dev
 
 ## 📚 Documentação Essencial
 
-1. **Começar**: [INDICE_COMPLETO.md](./INDICE_COMPLETO.md)
-2. **Status**: [STATUS_PROJETO_ATUAL.md](./STATUS_PROJETO_ATUAL.md)
-3. **Frontend**: [FRONTEND_SETUP.md](./FRONTEND_SETUP.md)
-4. **Timeline**: [PROJECT_TIMELINE.md](./PROJECT_TIMELINE.md)
-5. **Próximos**: [PROXIMOS_PASSOS_IMMEDIATOS.md](./PROXIMOS_PASSOS_IMMEDIATOS.md)
+1. **Status**: [STATUS_PROJETO_ATUAL.md](./STATUS_PROJETO_ATUAL.md)
+2. **Contratos**: [CONTRATOS_DEPLOYADOS.md](./CONTRATOS_DEPLOYADOS.md)
+3. **Changelog**: [CHANGELOG.md](./CHANGELOG.md)
+4. **Segurança**: [SECURITY.md](./SECURITY.md)
+5. **API**: [docs/API.md](./docs/API.md)
+6. **Agentes**: [docs/AGENTES.md](./docs/AGENTES.md)
 
 ## 🔐 Security
 
@@ -338,7 +339,7 @@ Ver [SECURITY.md](./SECURITY.md) para mais detalhes.
 
 ## 📞 Suporte
 
-- 📖 Documentação: [INDICE_COMPLETO.md](./INDICE_COMPLETO.md)
+- 📖 Documentação: Ver seção acima
 - 🐛 Issues: GitHub Issues
 - 💬 Discussões: GitHub Discussions
 
@@ -349,5 +350,5 @@ MIT
 ---
 
 **Desenvolvido com ❤️ pelo StreamPay Team**  
-Última atualização: 14 de dezembro de 2025  
-Próxima sessão: 21 de dezembro (Fase 3)
+Última atualização: 15 de dezembro de 2025
+
