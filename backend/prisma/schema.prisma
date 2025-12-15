@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+// ===== WEBHOOKS =====
+model WebhookLog {
+  id         String   @id @default(cuid())
+  eventType  String   // WebhookEventType: stream.created, stream.claimed, pool.created, etc
+  payload    Json     // Full webhook payload with signature
+  status     String   // success | failed | pending
+  retryCount Int      @default(0)
+  lastRetry  DateTime?
+  error      String?  // Error message if failed
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([eventType])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ===== USERS =====
+model User {
+  id        String   @id @default(cuid())
+  wallet    String   @unique
+  email     String   @unique
+  password  String
+  type      String   // "individual" | "business" | "trader"
+  kycStatus String   @default("pending") // pending | verified | rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  streams   Stream[]
+  pools     LiquidityPool[]
+  positions Position[]
+
+  @@index([wallet])
+  @@index([email])
+}
+
+// ===== STREAMS =====
+model Stream {
+  id            String   @id @default(cuid())
+  sender        User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId      String
+  receiver      String   // Receiver wallet address
+  tokenAddress  String   // Token being streamed
+  amount        String   // Total stream amount in wei
+  rate          String   // Tokens per second
+  startTime     DateTime
+  endTime       DateTime
+  claimedAmount String   @default("0")
+  status        String   @default("active") // active | paused | completed | canceled
+  txHash        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([senderId])
+  @@index([receiver])
+  @@index([status])
+}
+
+// ===== LIQUIDITY POOLS =====
+model LiquidityPool {
+  id            String   @id @default(cuid())
+  creator       User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId     String
+  token0        String
+  token1        String
+  fee           Int      // Fee tier: 500 | 3000 | 10000
+  totalLiquidity String   @default("0")
+  tvl           String   @default("0") // Total Value Locked
+  status        String   @default("active") // active | paused | closed
+  txHash        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  positions     Position[]
+
+  @@unique([token0, token1, fee])
+  @@index([creatorId])
+  @@index([status])
+}
+
+// ===== LIQUIDITY POSITIONS =====
+model Position {
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  pool     LiquidityPool @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  poolId   String
+  liquidity String
+  tickLower Int
+  tickUpper Int
+  txHash   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([poolId])
+}
+
+// ===== TRANSACTIONS =====
+model Transaction {
+  id        String   @id @default(cuid())
+  txHash    String   @unique
+  type      String   // stream | liquidity | swap | claim
+  status    String   @default("pending") // pending | success | failed
+  from      String
+  to        String
+  amount    String?
+  error     String?
+  gasUsed   String?
+  gasPrice  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([txHash])
+  @@index([status])
+  @@index([type])
+}
+
+// ===== COMPLIANCE =====
+model ComplianceReport {
+  id        String   @id @default(cuid())
+  user      String   // User wallet
+  reportUrl String
+  status    String   @default("pending") // pending | approved | rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([user])
+  @@index([status])
+}

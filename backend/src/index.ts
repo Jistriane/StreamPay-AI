@@ -1,15 +1,37 @@
 import 'dotenv/config';
 import express from "express";
+import http from "http";
 import { createStreamOnChain, claimStreamOnChain } from "./contract";
 import { createStream, getStreamsBySender, migrate } from "./db";
 import { Pool } from "pg";
 import axios from "axios";
 import { chatAssistant, analyzeStreamData, generateComplianceReport } from "./gemini";
+import { webhookRouter } from "./webhooks";
+import { wsRouter, WebSocketManager } from "./websocket";
+import { Logger } from "./utils/logger";
+import { initializeSentry, sentryRequestHandler, sentryErrorHandler, closeSentry } from "./monitoring/sentry";
+
+// Initialize Sentry first
+initializeSentry({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  enabled: true,
+});
 
 const app = express();
+const httpServer = http.createServer(app);
+
+// Sentry request handler must be first
+app.use(sentryRequestHandler());
+
 app.use(express.json());
+const logger = Logger.getInstance();
 migrate();
 const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
+
+// Initialize WebSocket
+const wsManager = WebSocketManager.getInstance();
+wsManager.initialize(httpServer);
 
 async function authMiddleware(req: any, res: any, next: any) {
   const { authorization } = req.headers;
@@ -129,5 +151,59 @@ app.post("/api/gemini/compliance-report", authMiddleware, async (req: any, res: 
 // Healthcheck
 app.get("/health", (req: any, res: any) => res.send("OK"));
 
+// Mount webhook routes
+app.use("/api", webhookRouter);
+
+// Mount WebSocket routes
+app.use("/api", wsRouter);
+
+// Sentry error handler must be after routes
+app.use(sentryErrorHandler());
+
+// Global error handler
+app.use((err: any, req: any, res: any, next: any) => {
+  logger.error("Unhandled error", {
+    error: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+  });
+
+  res.status(err.status || 500).json({
+    error: process.env.NODE_ENV === "production"
+      ? "Internal Server Error"
+      : err.message,
+    ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
+  });
+});
+
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Backend StreamPay rodando na porta ${PORT}`));
+httpServer.listen(PORT, () => {
+  logger.info(`Backend StreamPay rodando na porta ${PORT}`, { port: PORT });
+  logger.info("WebSocket e Webhook systems initialized", {
+    webhookUrl: process.env.WEBHOOK_URL,
+    wsPort: process.env.WEBSOCKET_PORT || 3002,
+    sentryEnabled: !!process.env.SENTRY_DSN,
+  });
+});
+
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  logger.info("SIGTERM received, shutting down gracefully...");
+  wsManager.shutdown();
+  await closeSentry();
+  httpServer.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", async () => {
+  logger.info("SIGINT received, shutting down gracefully...");
+  wsManager.shutdown();
+  await closeSentry();
+  httpServer.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
+  });
+});

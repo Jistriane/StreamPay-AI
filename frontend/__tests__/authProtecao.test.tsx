@@ -14,6 +14,6 @@ describe('Proteção de rotas', () => {
   it('exibe mensagem para usuário não autenticado', () => {
     // Simula ausência de autenticação
     render(<StreamPayDashboard />);
-    expect(screen.getByText(/Conecte sua wallet para ver seus streams/)).toBeInTheDocument();
+    expect(screen.getByText(/Conecte sua wallet para usar todas as funcionalidades/)).toBeInTheDocument();
   });
 });

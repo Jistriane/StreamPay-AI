@@ -1,5 +1,10 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
+jest.mock("next/navigation", () => {
+  return {
+    useRouter: () => ({ query: { id: "1" }, push: jest.fn() }),
+  };
+});
 import StreamDetalhePage from "../app/stream/[id]/page";
 
 // Mock useRouter

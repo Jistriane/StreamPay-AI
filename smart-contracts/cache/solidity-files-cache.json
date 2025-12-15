@@ -309,10 +309,10 @@
         "IERC20Permit"
       ]
     },
-    "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI/smart-contracts/contracts/StreamPayCore.sol": {
-      "lastModificationDate": 1765496873028,
-      "contentHash": "ff3d50950ecdef004bc7830f7eaf522b",
-      "sourceName": "contracts/StreamPayCore.sol",
+    "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI/smart-contracts/contracts/SwapRouter.sol": {
+      "lastModificationDate": 1765761695421,
+      "contentHash": "7fc090dd2aab29ff07a871d59464c64e",
+      "sourceName": "contracts/SwapRouter.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -349,7 +349,9 @@
         "^0.8.20"
       ],
       "artifacts": [
-        "StreamPayCore"
+        "AggregatorV3Interface",
+        "ISwapRouter",
+        "SwapRouter"
       ]
     },
     "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI/smart-contracts/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
@@ -467,10 +469,10 @@
         "Ownable"
       ]
     },
-    "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI/smart-contracts/contracts/SwapRouter.sol": {
-      "lastModificationDate": 1765761405643,
-      "contentHash": "7fc090dd2aab29ff07a871d59464c64e",
-      "sourceName": "contracts/SwapRouter.sol",
+    "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI/smart-contracts/contracts/StreamPayCore.sol": {
+      "lastModificationDate": 1765496873028,
+      "contentHash": "ff3d50950ecdef004bc7830f7eaf522b",
+      "sourceName": "contracts/StreamPayCore.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
@@ -507,13 +509,11 @@
         "^0.8.20"
       ],
       "artifacts": [
-        "AggregatorV3Interface",
-        "ISwapRouter",
-        "SwapRouter"
+        "StreamPayCore"
       ]
     },
     "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI/smart-contracts/contracts/PoolManager.sol": {
-      "lastModificationDate": 1765761379637,
+      "lastModificationDate": 1765761695420,
       "contentHash": "69f243a00b6fc13d69a67cf4c465a493",
       "sourceName": "contracts/PoolManager.sol",
       "solcConfig": {
@@ -559,7 +559,7 @@
       ]
     },
     "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI/smart-contracts/contracts/LiquidityPool.sol": {
-      "lastModificationDate": 1765761354888,
+      "lastModificationDate": 1765761695420,
       "contentHash": "06b5d90232edd67fcfe97efe0c6b861f",
       "sourceName": "contracts/LiquidityPool.sol",
       "solcConfig": {

@@ -1,0 +1,15 @@
+node_modules
+.env
+.env.local
+.env.*.local
+dist
+coverage
+.DS_Store
+*.log
+*.tmp
+.vscode
+.idea
+prisma/migrations
+.turbo
+pnpm-lock.yaml
+package-lock.json

@@ -12,8 +12,8 @@ global.fetch = jest.fn(() =>
 describe('LoginPage integração', () => {
   it('realiza login e exibe sucesso', async () => {
     render(<LoginPage />);
-    fireEvent.change(screen.getByPlaceholderText('E-mail'), { target: { value: 'user@email.com' } });
-    fireEvent.change(screen.getByPlaceholderText('Senha'), { target: { value: '123456' } });
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'user@email.com' } });
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: '123456' } });
     fireEvent.click(screen.getByText('Entrar'));
     await waitFor(() => {
       expect(screen.getByText(/Login realizado/)).toBeInTheDocument();
@@ -23,8 +23,8 @@ describe('LoginPage integração', () => {
   it('exibe erro de autenticação', async () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() => Promise.resolve({ ok: true, json: () => Promise.resolve({ error: 'Credenciais inválidas' }) }));
     render(<LoginPage />);
-    fireEvent.change(screen.getByPlaceholderText('E-mail'), { target: { value: 'user@email.com' } });
-    fireEvent.change(screen.getByPlaceholderText('Senha'), { target: { value: '123456' } });
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'user@email.com' } });
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: '123456' } });
     fireEvent.click(screen.getByText('Entrar'));
     await waitFor(() => {
       expect(screen.getByText(/Erro: Credenciais inválidas/)).toBeInTheDocument();
@@ -34,8 +34,8 @@ describe('LoginPage integração', () => {
   it('exibe erro de rede', async () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() => Promise.reject(new Error('Network error')));
     render(<LoginPage />);
-    fireEvent.change(screen.getByPlaceholderText('E-mail'), { target: { value: 'user@email.com' } });
-    fireEvent.change(screen.getByPlaceholderText('Senha'), { target: { value: '123456' } });
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'user@email.com' } });
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: '123456' } });
     fireEvent.click(screen.getByText('Entrar'));
     await waitFor(() => {
       expect(screen.getByText(/Erro: Network error/)).toBeInTheDocument();

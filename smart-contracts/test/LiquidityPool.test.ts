@@ -1,7 +1,8 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
-import { LiquidityPool, ERC20Mock } from "../typechain-types";
-import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
+import hre from "hardhat";
+const { ethers } = hre;
+import type { LiquidityPool, ERC20Mock } from "../typechain-types";
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers.js";
 
 describe("LiquidityPool", function () {
     let liquidityPool: LiquidityPool;
@@ -20,8 +21,8 @@ describe("LiquidityPool", function () {
 
         // Deploy tokens
         const ERC20Mock = await ethers.getContractFactory("ERC20Mock");
-        token0 = await ERC20Mock.deploy("Token0", "T0", INITIAL_MINT);
-        token1 = await ERC20Mock.deploy("Token1", "T1", INITIAL_MINT);
+        token0 = await ERC20Mock.deploy("Token0", "T0", owner.address, INITIAL_MINT);
+        token1 = await ERC20Mock.deploy("Token1", "T1", owner.address, INITIAL_MINT);
 
         // Deploy LiquidityPool
         const LiquidityPool = await ethers.getContractFactory("LiquidityPool");
@@ -273,7 +274,7 @@ describe("LiquidityPool", function () {
 
             await expect(
                 liquidityPool.connect(user2).swap(0, token0.target, ethers.parseEther("1"), 0)
-            ).to.be.revertedWithCustomError(liquidityPool, "EnforcedPause");
+            ).to.be.revertedWith("Pausable: paused");
         });
 
         it("Should resume pool operations after unpause", async function () {
