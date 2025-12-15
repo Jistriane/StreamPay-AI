@@ -1,0 +1,12 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "deployer": "0x3b598F74e735104435B450fdf3dAd565f046eA70",
+  "timestamp": "2025-12-15T06:05:36.884Z",
+  "contracts": {
+    "StreamPayCore": "0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C",
+    "LiquidityPool": "0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd",
+    "PoolManager": "0x0F71393348E7b021E64e7787956fB1e7682AB4A8",
+    "SwapRouter": "0x9f3d42feC59d6742CC8dC096265Aa27340C1446F"
+  }
+}
