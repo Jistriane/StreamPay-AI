@@ -149,13 +149,21 @@ npm run dev
 - **SwapRouter**: `0xa513E6E4b8f2a923D98304ec87F64353C4D5C853`
 
 ### Sepolia Testnet
-⏳ Aguardando fundos para deploy
+✅ **DEPLOYADO COM SUCESSO**
 
-**Conta para deploy**: `0x3b598F74e735104435B450fdf3dAd565f046eA70`
+- **StreamPayCore**: `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C)
+- **LiquidityPool**: `0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd)
+- **PoolManager**: `0x0F71393348E7b021E64e7787956fB1e7682AB4A8`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x0F71393348E7b021E64e7787956fB1e7682AB4A8)
+- **SwapRouter**: `0x9f3d42feC59d6742CC8dC096265Aa27340C1446F`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x9f3d42feC59d6742CC8dC096265Aa27340C1446F)
+- **Token (USDC Sepolia)**: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`
 
-**Obter SepoliaETH**:
-- https://www.alchemy.com/faucets/ethereum-sepolia
-- https://faucet.quicknode.com/ethereum/sepolia
+**Arquivo de deploy**: `deployments/sepolia-1765778736884.json`
+**Conta deployer**: `0x3b598F74e735104435B450fdf3dAd565f046eA70`
+**Data**: 15/12/2025 06:05:36 UTC
 
 ## 🧪 Testes
 

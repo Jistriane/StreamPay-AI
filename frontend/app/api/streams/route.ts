@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createPublicClient, http } from 'viem';
-import { mainnet } from 'viem/chains';
+import { sepolia } from 'viem/chains';
 import StreamPayCoreAbi from '../../../../smart-contracts/artifacts/contracts/StreamPayCore.sol/StreamPayCore.json';
 
-const CONTRACT_ADDRESS = 'COLOQUE_O_ENDERECO_DO_CONTRATO_MAINNET_AQUI';
+// StreamPayCore na Sepolia testnet
+const CONTRACT_ADDRESS = '0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,9 +13,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ streams: [] });
   }
 
-  // Conecta ao contrato na mainnet
+  // Conecta ao contrato na Sepolia testnet
   const client = createPublicClient({
-    chain: mainnet,
+    chain: sepolia,
     transport: http()
   });
 

@@ -17,7 +17,7 @@ StreamPay AI é uma plataforma completa de pagamentos em streaming com IA, permi
 | **Frontend** | ✅ Completo | 100% | 58/58 ✅ |
 | **Backend** | ✅ Completo | 100% | Integração ✅ |
 | **ElizaOS Agents** | ✅ Completo | 100% | Operacional ✅ |
-| **Deploy Sepolia** | ⏳ Pendente | 0% | Aguardando fundos |
+| **Deploy Sepolia** | ✅ Completo | 100% | Deployado ✅ |
 
 ---
 
@@ -114,20 +114,25 @@ LiquidityPool
 **Arquivo**: `/smart-contracts/deployments/localhost-1765769739309.json`
 
 #### Sepolia Testnet
-⏳ **AGUARDANDO FUNDOS**
+✅ **DEPLOYADO COM SUCESSO**
 
-**Conta**: `0x3b598F74e735104435B450fdf3dAd565f046eA70`
-**Saldo**: 0 SepoliaETH
+- **StreamPayCore**: `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C)
+- **LiquidityPool**: `0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd)
+- **PoolManager**: `0x0F71393348E7b021E64e7787956fB1e7682AB4A8`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x0F71393348E7b021E64e7787956fB1e7682AB4A8)
+- **SwapRouter**: `0x9f3d42feC59d6742CC8dC096265Aa27340C1446F`
+  - [Ver no Etherscan](https://sepolia.etherscan.io/address/0x9f3d42feC59d6742CC8dC096265Aa27340C1446F)
+- **Token (USDC Sepolia)**: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`
 
-**Obter SepoliaETH**:
-- https://www.alchemy.com/faucets/ethereum-sepolia
-- https://faucet.quicknode.com/ethereum/sepolia
-- https://www.infura.io/faucet/sepolia
+**Arquivo**: `deployments/sepolia-1765778736884.json`  
+**Conta deployer**: `0x3b598F74e735104435B450fdf3dAd565f046eA70`  
+**Data**: 15/12/2025 06:05:36 UTC  
+**Chain ID**: 11155111
 
-**Comando para deploy**:
-```bash
-npx hardhat run scripts/deploy.js --network sepolia
-```
+**Custo de deploy**: ~0.04 ETH em gas  
+**Saldo restante**: ~2.00 SepoliaETH
 
 ---
 

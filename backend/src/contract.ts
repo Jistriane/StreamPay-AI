@@ -1,4 +1,5 @@
 // Integração backend com smart contract StreamPayCore via ethers.js
+// Nota: Para usar endereços atualizados da Sepolia, importe de ./config/contracts.ts
 import { ethers } from "ethers";
 
 const provider = new ethers.JsonRpcProvider(process.env.ETH_RPC_URL);
