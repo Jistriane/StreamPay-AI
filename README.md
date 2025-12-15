@@ -1,248 +1,217 @@
+# 🚀 StreamPay AI - Smart Payment Streaming on Blockchain
 
+**Status**: 🟢 75% Concluído | **Fase Atual**: 2.2 (Forms & Real-time) ✅ | **Próxima**: 3 (Webhooks & Infrastructure)
 
-# StreamPay AI - MVP
+## 📖 Overview
 
-<p align="center">
-	<img src="docs/StreamPay AI.png" alt="Dashboard do StreamPay AI com navegação, chat do assistente e status da carteira conectada" width="960" />
-</p>
+StreamPay é um sistema de streaming de pagamentos descentralizado para freelancers, investidores e empresas, construído com:
+- **Blockchain**: Polygon (ERC20, Uniswap V3)
+- **AI**: Google Gemini para análise e recomendações
+- **Real-time**: WebSocket, ElizaOS Agents
+- **Compliance**: KYC/LGPD ready
 
-## Overview
-StreamPay is a streaming payment system for freelancers, using ERC20, Uniswap V3, Moralis, Chainlink, and a modular architecture ready for compliance (KYC/LGPD).
+## 🎯 Rápidos Links
 
-## Quick Links
-- [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md)
-- [Roadmap](docs/roadmap.md)
-- [Gemini AI Integration](backend/docs/GEMINI_API.md)
+| Documentação | Descrição |
+|---|---|
+| [📚 INDICE_COMPLETO.md](./INDICE_COMPLETO.md) | **COMECE AQUI** - Índice navegável de toda a documentação |
+| [📊 STATUS_PROJETO_ATUAL.md](./STATUS_PROJETO_ATUAL.md) | Status geral do projeto (75% completo) |
+| [🎨 FRONTEND_SETUP.md](./FRONTEND_SETUP.md) | Como usar o frontend |
+| [📈 PROJECT_TIMELINE.md](./PROJECT_TIMELINE.md) | Roadmap completo (Fase 0-4) |
+| [⚙️ Rules Arquiteto Web3.md](./Rules%20Arquiteto%20Web3.md) | Rules e padrões do projeto |
+| [🔒 SECURITY.md](./SECURITY.md) | Guidelines de segurança |
 
-## AI Features
-StreamPay integrates **Google Gemini AI** for:
-- 🤖 **Intelligent Virtual Assistant** - Real-time support and guidance
-- 📊 **Stream Analysis** - Security insights and transaction patterns
-- ✅ **Compliance Reports** - Automated KYC/AML analysis
-- 💡 **Smart Recommendations** - Optimization suggestions
+## 📦 Tecnologias Principais
 
-### Project Structure
-- `frontend/`: Next.js 14 + TypeScript, Web3 integration, dashboard, AI interface.
-- `scripts/`: Automation, deployment, and test scripts.
+### Frontend
+- **Framework**: Next.js 14 + React 18 + TypeScript
+- **Web3**: Ethers.js v6, MetaMask integration
+- **Validação**: Zod + React Hook Form
+- **Real-time**: WebSocket, SWR
+- **UI**: Tailwind CSS
 
-## Technical Acceptance Criteria
-- Functional MVP on testnet.
+### Backend
+- **Server**: Express.js + TypeScript
+- **DB**: PostgreSQL + Prisma
+- **Auth**: JWT + Zod validation
+- **AI**: Google Gemini API
+- **Web3**: Ethers.js v6, Moralis, Chainlink
 
-## Main Flows
-- **Automated Notifications:** Receive alerts and notifications for events and compliance status.
+### Smart Contracts
+- **Language**: Solidity 0.8.20
+- **Contracts**: StreamPayCore, LiquidityPool, PoolManager, SwapRouter
+- **Standards**: ERC20, Uniswap V3, Chainlink oracles
 
-// Connect wallet (frontend)
-import { useConnect } from 'wagmi';
+### Infrastructure
+- **Container**: Docker Compose
+- **Monitoring**: Sentry
+- **CI/CD**: GitHub Actions (próximo)
 
-// Query streams (API)
-fetch('/api/streams')
-  .then(res => res.json())
-  .then(data => console.log(data));
+## 🏗️ Arquitetura do Projeto
+
+```
+StreamPay-AI/
+├── frontend/              # Next.js 14 + TypeScript
+│   ├── src/
+│   │   ├── services/      # API, Web3, Agent clients
+│   │   ├── hooks/         # useAuth, useStreams, useChat, usePools
+│   │   ├── components/    # React components + Forms
+│   │   └── lib/           # Validations, WebSocket, utils
+│   ├── app/               # Next.js pages/routes
+│   └── package.json
+│
+├── backend/               # Express + PostgreSQL
+│   ├── src/
+│   │   ├── routes/        # API endpoints
+│   │   ├── services/      # Business logic
+│   │   ├── middleware/    # Auth, validation, errors
+│   │   ├── db/            # Prisma, migrations
+│   │   └── utils/         # Helpers, validators
+│   └── package.json
+│
+├── smart-contracts/       # Solidity contracts
+│   ├── contracts/         # StreamPayCore, etc
+│   ├── test/              # Contract tests
+│   └── hardhat.config.js
+│
+├── streampay-eliza/       # ElizaOS Agents
+│   ├── src/
+│   │   ├── agents/        # Agent definitions
+│   │   ├── services/      # HTTP, Moralis, Chainlink
+│   │   └── character.ts   # Agent character
+│   └── package.json
+│
+├── infra/                 # Infrastructure
+│   └── docker-compose.yml
+│
+└── docs/                  # Documentation
+    └── *.md files
 ```
 
-## API Endpoints
-- `POST /api/auth/register` — Register a new user
-- `POST /api/auth/login` — Login and receive JWT
-- `POST /api/gemini/chat` — Chat with AI assistant
-- `POST /api/gemini/analyze-stream` — AI-powered stream analysis
-- `POST /api/gemini/compliance-report` — Generate compliance reports
+## 🚀 Quick Start
 
-## Deployment & Environment
-1. Clone the repository and install dependencies:
-	git clone <repo-url>
-	cd StreamPay
-	npm install
-2. Configure environment variables in `.env.example` (copy to `.env`):
-	- SMTP (notifications)
-	- Database (Postgres)
-	- JWT keys
-	- Compliance providers
-	- **GEMINI_API_KEY** (Google Gemini AI)
-	```bash
-	npm run test -- --coverage
-## Security Best Practices
-- Always use HTTPS in production.
-- Store secrets and keys securely (never commit `.env` files).
-- Enable JWT authentication for all protected routes.
-- Validate all user input (backend and frontend).
-- Keep dependencies up to date.
+### Prerequisites
+- Node.js 18+
+- npm ou pnpm
+- PostgreSQL (opcional para local)
+- MetaMask browser extension
 
-## Example API Payloads
-### Register User
-Request:
-```json
-{
-	"name": "Alice",
-	"email": "alice@example.com",
-	"password": "securePassword123"
-}
-```
-Response:
-```json
-{
-	"success": true,
-	"userId": "0x123...abc"
-}
+### Installation
+
+```bash
+# Clone e instale dependências
+git clone <repo-url>
+cd StreamPay-AI
+
+# Terminal 1: Backend
+cd backend && npm install && npm run dev
+
+# Terminal 2: ElizaOS
+cd streampay-eliza && npm install && npm run dev
+
+# Terminal 3: Frontend
+cd frontend && npm install && npm run dev
 ```
 
-### Create Stream
-Request:
-```json
-{
-	"recipient": "0x456...def",
-	"amount": 50,
-	"token": "USDC",
-	"duration": 3600
-}
-```
-Response:
-```json
-{
-	"success": true,
-	"streamId": "0x789...xyz"
-}
-```
+### URLs
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001/api
+- ElizaOS Agent: http://localhost:3002
 
-## Main Process Flow (Textual)
-1. User connects wallet via dashboard.
-2. User registers or logs in.
-3. User creates a new payment stream (form submission).
-4. Backend validates, interacts with smart contract, emits event.
-5. Frontend updates dashboard with real-time stream status.
-6. Compliance checks run in background (KYC/AML).
-7. Notifications sent for status changes, compliance, or errors.
+## 📋 Fase Atual (2.2 - Forms & Real-time)
 
+### ✅ Componentes Implementados
 
-## How to Contribute
-1. Fork the repository and create a new branch.
-2. Make your changes with clear commit messages.
-3. Ensure all tests pass (`npm run test`).
-4. Open a pull request describing your changes and motivation.
-5. Follow the code style and documentation standards.
+**Validações & Schemas**
+- `src/lib/validations.ts` - Zod schemas para todos os tipos
 
-## Architecture
-StreamPay is designed as a modular, scalable, and secure platform for streaming payments. The architecture is divided into:
+**Formulários**
+- `CreateStreamForm` - Criar streams com validação
+- `AddLiquidityForm` - Adicionar liquidez a pools
+- `RemoveLiquidityForm` - Remover liquidez com slider
 
-### 1. Frontend (Next.js 14 + TypeScript)
-- Dashboard, registration, history, compliance, monitoring, settings, login, stream details
-- Wallet integration (wagmi, viem)
-- Glassmorphism UI, neon effects, responsive design
-- English interface, accessibility, real-time updates
+**Gerenciamento**
+- `usePools` hook - CRUD para pools
+- `PoolManager` - UI para gerenciar pools
 
-### 2. Backend (Node.js + TypeScript)
-- RESTful API for user, stream, compliance, monitoring, notification endpoints
-- JWT authentication, input validation, error handling
-- Orchestration of smart contract interactions and compliance checks
-- Scheduled jobs for monitoring and notifications
-- JSON persistence fallback for user data
+**Real-time**
+- `ToastProvider` - Notificações globais
+- `WebSocketManager` - Auto-reconnect automático
 
-### 3. Smart Contracts (Solidity 0.8.20)
-- StreamPayCore: streaming payment logic, event emission, compliance hooks
-- ERC20Mock: test token for development
-- Integration with Uniswap V3 (liquidity/swaps) and Chainlink (price feeds)
-- Security: reentrancy guard, input validation
+**Páginas**
+- `/dashboard` - Página principal
+- `/streams` - Gerenciamento de streams e pools
 
-### 4. Infrastructure
-- Docker/Docker Compose for containerization
-- Redis for caching and job queues
-- PostgreSQL for persistent storage (optional)
-- CI/CD pipelines for automated build, test, and deploy
+### 📊 Status Geral
 
-### 5. Integrations
-- Moralis, Infura, Etherscan for Web3 data and contract access
-- SMTP for notifications
-- KYC/AML providers for compliance
+| Fase | Status | LOC | Componentes |
+|------|--------|-----|-------------|
+| 0 - Requisitos | ✅ 100% | - | Arquitetura |
+| 1 - Smart Contracts | ✅ 100% | 1,200+ | 4 contratos |
+| 2 - Backend API | ✅ 100% | 1,500+ | 15 endpoints |
+| 2.0 - ElizaOS | ✅ 100% | 1,800+ | 12 agents |
+| 2.1 - Frontend Core | ✅ 100% | 2,200+ | 11 componentes |
+| 2.2 - Forms & Real-time | ✅ 100% | 2,130+ | 10 componentes |
+| **3 - Webhooks & Infra** | ⏳ 0% | 0 | Planned |
+| **4 - QA & Deploy** | ⏳ 0% | 0 | Planned |
+| **TOTAL** | **🟢 75%** | **9,030+** | **40 componentes** |
 
-### 6. Documentation
-- Centralized technical documentation (`docs/TECHNICAL_DOCUMENTATION.md`)
-- Roadmap, diagrams, requirements, compliance guides
+## 🔑 Funcionalidades Principais
 
-#### Main Data Flow
-1. User interacts with frontend (connects wallet, registers, creates stream)
-2. Frontend sends requests to backend API
-3. Backend validates, processes, interacts with smart contracts
-4. Smart contracts emit events, update blockchain state
-5. Backend monitors events, triggers notifications and compliance checks
-6. Frontend updates UI in real time
+### User Features
+✅ Conectar MetaMask wallet  
+✅ Criar streams de pagamento (com validação)  
+✅ Gerenciar pools de liquidez (add/remove)  
+✅ Chat em tempo real com ElizaOS agent  
+✅ Dashboard com status de streams  
+✅ Receber notificações (toasts)  
 
-#### Security & Compliance
-- All sensitive operations require JWT authentication
-- KYC/AML checks run asynchronously
-- Data validation at all layers
-- Logs and audit trails for all operations
+### Developer Features
+✅ 100% TypeScript com strict mode  
+✅ Validação com Zod (client-side ready para server)  
+✅ Error handling em todos os fluxos  
+✅ WebSocket com auto-reconnect  
+✅ SWR para data fetching e caching  
+✅ Responsive design (mobile-first)  
 
+## 📚 Documentação Essencial
 
+1. **Começar**: [INDICE_COMPLETO.md](./INDICE_COMPLETO.md)
+2. **Status**: [STATUS_PROJETO_ATUAL.md](./STATUS_PROJETO_ATUAL.md)
+3. **Frontend**: [FRONTEND_SETUP.md](./FRONTEND_SETUP.md)
+4. **Timeline**: [PROJECT_TIMELINE.md](./PROJECT_TIMELINE.md)
+5. **Próximos**: [PROXIMOS_PASSOS_IMMEDIATOS.md](./PROXIMOS_PASSOS_IMMEDIATOS.md)
 
-## Visual Diagrams
+## 🔐 Security
 
-Diagrams for architecture, data flow, and deployment are available in:
+- JWT authentication em todos os endpoints protegidos
+- Validação com Zod no client e server
+- Ethers.js para validação de endereços
+- Environment variables para secrets (nunca commit .env)
+- Rate limiting (próximo)
+- HTTPS em produção
 
-- `docs/TECHNICAL_DOCUMENTATION.md`
-- `docs/roadmap.md` (for sprint and feature flow)
+Ver [SECURITY.md](./SECURITY.md) para mais detalhes.
 
-Example (simplified):
+## 🎓 Como Contribuir
 
+1. Crie uma branch: `git checkout -b feature/sua-feature`
+2. Faça commits claros: `git commit -m "feat: descrição clara"`
+3. Teste localmente
+4. Abra uma PR com descrição detalhada
 
-```text
-User Wallet
-	 |
-Frontend (Next.js)
-	 |
-Backend (Node.js API)
-	 |
-Smart Contracts (Ethereum)
-	 |
-External Providers (Moralis, Infura, Etherscan)
-```
+## 📞 Suporte
 
-## Monitoring Examples
+- 📖 Documentação: [INDICE_COMPLETO.md](./INDICE_COMPLETO.md)
+- 🐛 Issues: GitHub Issues
+- 💬 Discussões: GitHub Discussions
 
-- **Metrics Endpoint:** `/api/monitoring` returns service health, latency, and error rates.
-- **Log Integration:** All backend actions are logged (can be shipped to ELK, Datadog, or Grafana).
-- **Alerting:** Configure Prometheus/Grafana for custom alerts (CPU, memory, failed jobs, compliance status).
+## 📄 License
 
-**Sample Prometheus Scrape Config:**
+MIT
 
+---
 
-```yaml
-scrape_configs:
-	- job_name: 'streampay-backend'
-		static_configs:
-			- targets: ['localhost:3000']
-```
-
-## Multi-Cloud & Microservices Expansion
-
-- All services are stateless and can be deployed on AWS, Azure, GCP, or on-premises.
-- Use Docker Compose or Kubernetes for orchestration and scaling.
-- Each module (frontend, backend, contracts, monitoring) can run independently as a microservice.
-- Integrate with cloud-native solutions (AWS Lambda, Azure Functions, GCP Cloud Run) for event-driven tasks.
-- Use managed databases (RDS, Cloud SQL) and cache (Redis, Memcached) for scalability.
-
-**Example Kubernetes deployment:**
-
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-	name: streampay-backend
-spec:
-	replicas: 3
-	selector:
-		matchLabels:
-			app: streampay-backend
-	template:
-		metadata:
-			labels:
-				app: streampay-backend
-		spec:
-			containers:
-			- name: backend
-				image: streampay/backend:latest
-				ports:
-				- containerPort: 3000
-```
-
-## Roadmap
-See `docs/roadmap.md` for detailed development steps.
+**Desenvolvido com ❤️ pelo StreamPay Team**  
+Última atualização: 14 de dezembro de 2025  
+Próxima sessão: 21 de dezembro (Fase 3)
