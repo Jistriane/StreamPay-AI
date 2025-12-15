@@ -1,14 +1,25 @@
 import express, { Router, Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import { verifyMessage } from 'ethers';
 import jwt from 'jsonwebtoken';
 
 const router: Router = express.Router();
 
+const verifyLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: 'Muitas tentativas de autenticação, tente novamente em breve',
+  },
+});
+
 /**
  * POST /api/auth/verify
  * Verifica assinatura Web3 e gera JWT
  */
-router.post('/verify', async (req: Request, res: Response) => {
+router.post('/verify', verifyLimiter, async (req: Request, res: Response) => {
   try {
     const { address, message, signature } = req.body;
 
@@ -38,17 +49,30 @@ router.post('/verify', async (req: Request, res: Response) => {
         role: 'user',
       },
       process.env.JWT_SECRET || 'dev-secret-key',
-      { expiresIn: '24h' }
+      { expiresIn: '1h' }
     );
+
+    const refreshToken = jwt.sign(
+      {
+        id: address,
+        address,
+        type: 'refresh'
+      },
+      process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || 'dev-refresh-key',
+      { expiresIn: '7d' }
+    );
+
 
     res.json({
       token,
+      refreshToken,
       address,
       message: 'Autenticação bem-sucedida',
+      expiresIn: 3600
     });
   } catch (error) {
     console.error('Erro ao verificar assinatura:', error);
-    res.status(500).json({
+    res.status(401).json({
       error: 'Erro ao verificar assinatura',
       details: error instanceof Error ? error.message : String(error),
     });
@@ -89,3 +113,42 @@ router.get('/me', (req: any, res: Response) => {
 });
 
 export default router;
+
+
+/**
+ * POST /api/auth/refresh
+ * Recebe um refreshToken e retorna um novo JWT de acesso
+ */
+router.post('/refresh', async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ error: 'refreshToken é obrigatório' });
+    }
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || 'dev-refresh-key'
+    ) as any;
+
+    if (!decoded || decoded.type !== 'refresh' || !decoded.address) {
+      return res.status(401).json({ error: 'Refresh token inválido' });
+    }
+
+    const newToken = jwt.sign(
+      {
+        id: decoded.address,
+        address: decoded.address,
+        email: `${decoded.address}@streampay.local`,
+        role: 'user',
+      },
+      process.env.JWT_SECRET || 'dev-secret-key',
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token: newToken, expiresIn: 3600 });
+  } catch (error) {
+    console.error('Erro ao renovar token:', error);
+    res.status(401).json({ error: 'Refresh token inválido ou expirado' });
+  }
+});

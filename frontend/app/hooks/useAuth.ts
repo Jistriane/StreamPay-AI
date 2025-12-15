@@ -56,6 +56,7 @@ export function useAuth(): UseAuthReturn {
   useEffect(() => {
     // Carregar token e endereço do localStorage
     const savedToken = localStorage.getItem('authToken');
+    const savedRefresh = localStorage.getItem('refreshToken');
     const savedAddress = localStorage.getItem('userAddress');
 
     if (savedToken && savedAddress) {
@@ -69,6 +70,7 @@ export function useAuth(): UseAuthReturn {
 
   const logout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('userAddress');
     setToken(null);
     setAddress(null);

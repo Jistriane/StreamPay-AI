@@ -68,9 +68,13 @@ Assinando esta mensagem para confirmar sua identidade.
 
       const data = await response.json();
       const token = data.token;
+      const refreshToken = data.refreshToken;
 
       // Armazenar token e endereço
       localStorage.setItem('authToken', token);
+      if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+      }
       localStorage.setItem('userAddress', userAddress);
 
       setConnected(true);
