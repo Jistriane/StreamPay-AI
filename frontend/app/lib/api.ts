@@ -8,13 +8,13 @@ export async function fetchWithAuth(
   const token = localStorage.getItem('authToken');
   const refreshToken = localStorage.getItem('refreshToken');
 
-  const headers: HeadersInit = {
+  const headers = new Headers({
     'Content-Type': 'application/json',
-    ...options.headers,
-  };
+    ...(options.headers as any),
+  });
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers.set('Authorization', `Bearer ${token}`);
   }
 
   let response = await fetch(
@@ -39,7 +39,7 @@ export async function fetchWithAuth(
           const newToken = data.token;
           if (newToken) {
             localStorage.setItem('authToken', newToken);
-            headers['Authorization'] = `Bearer ${newToken}`;
+            headers.set('Authorization', `Bearer ${newToken}`);
             // Repetir requisição original
             response = await fetch(
               `http://localhost:3001/api${endpoint}`,

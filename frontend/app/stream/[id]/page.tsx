@@ -191,7 +191,7 @@ export default function StreamDetailPage() {
             </h1>
             <p className="text-secondary">Detalhes completos da transação</p>
           </div>
-          <Button onClick={() => router.push('/dashboard')} variant="outlined">
+          <Button onClick={() => router.push('/dashboard')} variant="ghost">
             ← Voltar
           </Button>
         </div>

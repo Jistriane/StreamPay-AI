@@ -22,12 +22,13 @@ export function Web3Auth({ onSuccess, onError }: Web3AuthProps) {
       setMessage(null);
 
       // Verificar se MetaMask está instalado
-      if (!window.ethereum) {
+      const eth = (window as any).ethereum;
+      if (!eth) {
         throw new Error('MetaMask não encontrado. Instale a extensão!');
       }
 
       // Solicitar conexão com MetaMask
-      const provider = new BrowserProvider(window.ethereum);
+      const provider = new BrowserProvider(eth);
       const accounts = await provider.send('eth_requestAccounts', []);
       const userAddress = accounts[0];
 
@@ -111,7 +112,7 @@ Assinando esta mensagem para confirmar sua identidade.
         </Card>
         <Button
           onClick={disconnect}
-          variant="outlined"
+          variant="ghost"
           fullWidth
         >
           Desconectar

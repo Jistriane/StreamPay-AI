@@ -1,3 +1,18 @@
 {
-  "/page": "app/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/register/route": "app/api/auth/register/route.js",
+  "/api/eliza/route": "app/api/eliza/route.js",
+  "/api/kyc-status/route": "app/api/kyc-status/route.js",
+  "/api/streams/route": "app/api/streams/route.js",
+  "/compliance/page": "app/compliance/page.js",
+  "/configuracoes/page": "app/configuracoes/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/login/page": "app/login/page.js",
+  "/monitoramento/page": "app/monitoramento/page.js",
+  "/notificacoes/page": "app/notificacoes/page.js",
+  "/page": "app/page.js",
+  "/stream/[id]/page": "app/stream/[id]/page.js",
+  "/cadastro/page": "app/cadastro/page.js",
+  "/historico/page": "app/historico/page.js"
 }

@@ -218,7 +218,7 @@ export default function CreateStreamModal({
 
             <div className="grid grid-cols-2 gap-3 pt-4">
               <Button
-                variant="outlined"
+                variant="ghost"
                 onClick={onClose}
                 disabled={loading}
                 fullWidth

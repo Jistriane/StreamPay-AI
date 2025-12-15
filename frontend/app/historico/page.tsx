@@ -156,7 +156,7 @@ export default function HistoricoPage() {
               Todos os seus streams e transações
             </p>
           </div>
-          <Button onClick={() => router.push("/dashboard")} variant="outlined">
+          <Button onClick={() => router.push("/dashboard")} variant="ghost">
             ← Voltar
           </Button>
         </div>
@@ -221,7 +221,7 @@ export default function HistoricoPage() {
 
             <div className="flex items-end">
               <Button
-                variant="outlined"
+                variant="ghost"
                 onClick={() =>
                   setFilters({
                     status: "all",
@@ -274,13 +274,16 @@ export default function HistoricoPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4">
             {filteredStreams.map((stream) => (
-              <Card
+              <div
                 key={stream.id}
-                variant="glass"
-                padding="lg"
-                className="cursor-pointer hover:border-cyan-400/50 transition"
                 onClick={() => router.push(`/stream/${stream.id}`)}
+                className="cursor-pointer"
               >
+                <Card
+                  variant="glass"
+                  padding="lg"
+                  className="hover:border-cyan-400/50 transition"
+                >
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
                   {/* Stream ID */}
                   <div>
@@ -333,7 +336,8 @@ export default function HistoricoPage() {
                     </Button>
                   </div>
                 </div>
-              </Card>
+                </Card>
+              </div>
             ))}
           </div>
         )}

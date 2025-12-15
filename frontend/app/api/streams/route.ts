@@ -1,42 +1,20 @@
 import { NextResponse } from 'next/server';
-import { createPublicClient, http } from 'viem';
-import { sepolia } from 'viem/chains';
-import StreamPayCoreAbi from '../../../../smart-contracts/artifacts/contracts/StreamPayCore.sol/StreamPayCore.json';
 
-// StreamPayCore na Sepolia testnet
-const CONTRACT_ADDRESS = '0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C';
+// NOTE: Viem type handling commented out - using backend API instead
+// Frontend streams are fetched from backend `/api/streams` endpoint
+// See: frontend/app/lib/api.ts and frontend/app/dashboard/page.tsx
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const address = searchParams.get('address');
-  if (!address) {
-    return NextResponse.json({ streams: [] });
+  // Redirect to backend API
+  try {
+    const { searchParams } = new URL(request.url);
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    
+    const response = await fetch(`${backendUrl}/api/streams${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error fetching streams:', error);
+    return NextResponse.json({ error: 'Failed to fetch streams' }, { status: 500 });
   }
-
-  // Conecta ao contrato na Sepolia testnet
-  const client = createPublicClient({
-    chain: sepolia,
-    transport: http()
-  });
-
-  // Busca eventos StreamCreated para o address conectado
-  const logs = await client.getLogs({
-    address: CONTRACT_ADDRESS,
-    event: StreamPayCoreAbi.abi.find(e => e.name === 'StreamCreated'),
-    fromBlock: 0n,
-    toBlock: 'latest',
-    args: { sender: address }
-  });
-
-  // Monta lista de streams reais
-  const streams = logs.map(log => ({
-    id: log.args.streamId,
-    sender: log.args.sender,
-    recipient: log.args.recipient,
-    token: log.args.token,
-    ratePerSecond: log.args.ratePerSecond,
-    duration: log.args.duration
-  }));
-
-  return NextResponse.json({ streams });
 }

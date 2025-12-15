@@ -108,7 +108,7 @@ export default function DashboardPage() {
             </Button>
             <Button
               onClick={logout}
-              variant="outlined"
+              variant="ghost"
             >
               Desconectar
             </Button>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
           ) : streamsError ? (
             <div className="bg-red-500/10 border border-red-500 rounded p-4 mb-4">
               <p className="text-red-400">⚠️ Erro: {streamsError}</p>
-              <Button onClick={fetchStreams} variant="outlined" className="mt-2">
+              <Button onClick={fetchStreams} variant="ghost" className="mt-2">
                 Tentar Novamente
               </Button>
             </div>
@@ -217,10 +217,10 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button variant="small" className="flex-1">
+                    <Button variant="neon" className="flex-1">
                       Reivindicar
                     </Button>
-                    <Button variant="small" className="flex-1">
+                    <Button variant="neon" className="flex-1">
                       Detalhes
                     </Button>
                   </div>
