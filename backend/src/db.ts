@@ -90,13 +90,6 @@ export async function migrateEvents() {
     );
   `);
 }
-// Módulo de conexão e operações básicas com Postgres para persistência real
-import 'dotenv/config';
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL || "postgresql://postgres:1234@localhost:5432/streampay?schema=public"
-});
 
 export async function createStream(stream: any) {
   await pool.query(

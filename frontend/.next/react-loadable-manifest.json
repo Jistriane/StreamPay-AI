@@ -1,18 +1,1 @@
-{
-  "node_modules/@wagmi/core/dist/chunk-TSH6VVF4.js -> viem/ens": {
-    "id": "node_modules/@wagmi/core/dist/chunk-TSH6VVF4.js -> viem/ens",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_viem__esm_ens_index_js.js"
-    ]
-  },
-  "node_modules/viem/_esm/actions/public/call.js -> ../../utils/ccip.js": {
-    "id": "node_modules/viem/_esm/actions/public/call.js -> ../../utils/ccip.js",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_viem__esm_utils_ccip_js.js"
-    ]
-  },
-  "node_modules/viem/_esm/utils/signature/recoverPublicKey.js -> @noble/curves/secp256k1": {
-    "id": "node_modules/viem/_esm/utils/signature/recoverPublicKey.js -> @noble/curves/secp256k1",
-    "files": []
-  }
-}
+{}

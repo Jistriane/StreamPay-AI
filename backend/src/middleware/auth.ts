@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 
 export interface AuthRequest extends Request {
     user?: {
@@ -97,7 +97,10 @@ export function generateToken(payload: {
     role?: string;
 }): string {
     const secret = process.env.JWT_SECRET || "dev-secret-key";
-    const expiresIn = process.env.JWT_EXPIRY || "24h";
-
-    return jwt.sign(payload, secret, { expiresIn });
+    
+    // Converte duração para segundos (24h = 86400s)
+    const expiresInSeconds = 86400; // 24 horas por padrão
+    
+    const options: SignOptions = { expiresIn: expiresInSeconds };
+    return jwt.sign(payload, secret, options);
 }

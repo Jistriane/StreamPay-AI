@@ -1,9 +1,1 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js",
-  "/compliance/page": "app/compliance/page.js",
-  "/monitoramento/page": "app/monitoramento/page.js",
-  "/configuracoes/page": "app/configuracoes/page.js",
-  "/api/eliza/route": "app/api/eliza/route.js",
-  "/historico/page": "app/historico/page.js"
-}
+{}

@@ -60,7 +60,7 @@ export const addressSchema = z
 
 export const uint256Schema = z.coerce.bigint().positive("Must be positive");
 
-export const createStreamSchema = z.object({
+export const createStreamSchema = {
     body: z.object({
         recipient: addressSchema,
         token: addressSchema,
@@ -68,42 +68,43 @@ export const createStreamSchema = z.object({
         duration: z.coerce.number().positive(),
         ratePerSecond: z.coerce.bigint().positive(),
     }),
-});
+};
 
-export const claimStreamSchema = z.object({
+export const claimStreamSchema = {
     params: z.object({
         streamId: z.coerce.number().nonnegative(),
     }),
-});
+};
 
-export const cancelStreamSchema = z.object({
+export const cancelStreamSchema = {
     params: z.object({
         streamId: z.coerce.number().nonnegative(),
     }),
-});
+};
 
-export const createPoolSchema = z.object({
+export const createPoolSchema = {
     body: z.object({
         token0: addressSchema,
         token1: addressSchema,
         amount0: z.coerce.bigint().positive(),
         amount1: z.coerce.bigint().positive(),
     }),
-});
+};
 
-export const loginSchema = z.object({
+export const loginSchema = {
     body: z.object({
         address: addressSchema,
         message: z.string(),
         signature: z.string(),
     }),
-});
+};
 
-export const registerSchema = z.object({
+export const registerSchema = {
     body: z.object({
         address: addressSchema,
         email: z.string().email().optional(),
         message: z.string(),
         signature: z.string(),
     }),
-});
+};
+
