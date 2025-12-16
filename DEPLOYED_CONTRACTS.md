@@ -1,66 +1,66 @@
-# 📋 Endereços dos Contratos - Quick Reference
+# 📋 Contract Addresses - Quick Reference
 
-**Última atualização**: 15 de dezembro de 2025  
+**Last updated**: December 15, 2025  
 **Network**: Sepolia Testnet  
 **Chain ID**: 11155111
 
 ---
 
-## 🚀 Contratos Deployados
+## 🚀 Deployed Contracts
 
 ### StreamPayCore
-- **Endereço**: `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C`
+- **Address**: `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C`
 - **Etherscan**: https://sepolia.etherscan.io/address/0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C
-- **Função**: Core do sistema de streaming de pagamentos
+- **Function**: Core payment streaming system
 
 ### LiquidityPool
-- **Endereço**: `0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd`
+- **Address**: `0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd`
 - **Etherscan**: https://sepolia.etherscan.io/address/0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd
-- **Função**: Pool AMM com taxa de 0.3%
+- **Function**: AMM pool with 0.3% fee
 
 ### PoolManager
-- **Endereço**: `0x0F71393348E7b021E64e7787956fB1e7682AB4A8`
+- **Address**: `0x0F71393348E7b021E64e7787956fB1e7682AB4A8`
 - **Etherscan**: https://sepolia.etherscan.io/address/0x0F71393348E7b021E64e7787956fB1e7682AB4A8
-- **Função**: Gerenciamento de posições Uniswap V3
+- **Function**: Uniswap V3 position management
 
 ### SwapRouter
-- **Endereço**: `0x9f3d42feC59d6742CC8dC096265Aa27340C1446F`
+- **Address**: `0x9f3d42feC59d6742CC8dC096265Aa27340C1446F`
 - **Etherscan**: https://sepolia.etherscan.io/address/0x9f3d42feC59d6742CC8dC096265Aa27340C1446F
-- **Função**: Roteamento de swaps entre pools
+- **Function**: Swap routing between pools
 
 ---
 
 ## 💰 Tokens
 
 ### USDC (Sepolia)
-- **Endereço**: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`
+- **Address**: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`
 - **Etherscan**: https://sepolia.etherscan.io/token/0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238
 - **Decimals**: 6
-- **Símbolo**: USDC
+- **Symbol**: USDC
 
 ---
 
 ## 🦄 Uniswap V3 (Sepolia)
 
 ### Position Manager
-- **Endereço**: `0x1238536071E1c677A632429e3655c799b22cDA52`
+- **Address**: `0x1238536071E1c677A632429e3655c799b22cDA52`
 
 ### Factory
-- **Endereço**: `0x0227628f3F023bb0B980b67D528571c95c6DaC1c`
+- **Address**: `0x0227628f3F023bb0B980b67D528571c95c6DaC1c`
 
 ---
 
-## 📊 Informações de Deploy
+## 📊 Deploy Information
 
 - **Deployer**: `0x3b598F74e735104435B450fdf3dAd565f046eA70`
-- **Data**: 15/12/2025 06:05:36 UTC
-- **Arquivo**: `smart-contracts/deployments/sepolia-1765778736884.json`
-- **Custo**: ~0.04 ETH (gas)
-- **Saldo Restante**: ~2.00 SepoliaETH
+- **Date**: 12/15/2025 06:05:36 UTC
+- **File**: `smart-contracts/deployments/sepolia-1765778736884.json`
+- **Cost**: ~0.04 ETH (gas)
+- **Remaining Balance**: ~2.00 SepoliaETH
 
 ---
 
-## 🔧 Como Usar
+## 🔧 How to Use
 
 ### Frontend (.env)
 ```env
@@ -81,13 +81,13 @@ POOL_MANAGER_ADDRESS=0x0F71393348E7b021E64e7787956fB1e7682AB4A8
 SWAP_ROUTER_ADDRESS=0x9f3d42feC59d6742CC8dC096265Aa27340C1446F
 ```
 
-### TypeScript (Importar configuração)
+### TypeScript (Import configuration)
 ```typescript
 // Frontend
 import { CONTRACTS, getContractAddress } from '@/app/config/contracts';
 
 const streamPayCore = CONTRACTS.sepolia.contracts.StreamPayCore.address;
-// ou
+// or
 const address = getContractAddress('StreamPayCore', 11155111);
 ```
 
