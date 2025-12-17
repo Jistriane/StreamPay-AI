@@ -4,6 +4,25 @@ All notable changes are documented here.
 
 ---
 
+## [0.1.1] - 2025-12-17
+
+### Frontend fixes & Dev experience
+
+- Fix: React Query context error by adding `QueryClientProvider` and `WagmiProvider` (wagmi v2) in `frontend/app/components/Web3Provider.tsx`.
+- Fix: MetaMask SDK web build error by aliasing `@react-native-async-storage/async-storage` to `false` in `frontend/next.config.js`.
+- Chore: Update `next` to `^14.2.33` and align `@types/react` to v18 for compatibility.
+- Docs: Minor improvements in `README.md`, `GETTING_STARTED.md` and `.env.example`.
+- Infra: Added `webpack` config alias to avoid RN modules in web.
+
+Dev URLs:
+- Frontend: `http://localhost:3003`
+- Backend: `http://localhost:3001` (Swagger: `/api-docs`)
+- ElizaOS: `http://localhost:3000`
+
+Notes:
+- If port `3003` is in use, run `PORT=3004 npm run dev` in `frontend`.
+- Consider renewing `GOOGLE_API_KEY` if expiry warnings persist.
+
 ## [2.0.0] - 2025-12-15 (FINAL - 100% COMPLETE)
 
 ### ✅ Project 100% finalized and production-ready
