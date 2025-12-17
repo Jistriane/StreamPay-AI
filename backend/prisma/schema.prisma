@@ -35,6 +35,14 @@ model User {
   password  String
   type      String   // "individual" | "business" | "trader"
   kycStatus String   @default("pending") // pending | verified | rejected
+  
+  // 2FA Fields
+  twoFAEnabled          Boolean?  @default(false) @map("two_fa_enabled")
+  twoFASecret           String?   @map("two_fa_secret") // TOTP secret (base32)
+  twoFASecretPending    String?   @map("two_fa_secret_pending") // Temporary secret during setup
+  twoFABackupCodes      String?   @map("two_fa_backup_codes") // JSON array of backup codes
+  twoFABackupCodesPending String? @map("two_fa_backup_codes_pending") // Temporary during setup
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -139,4 +147,24 @@ model ComplianceReport {
 
   @@index([user])
   @@index([status])
+}
+
+// ===== AUDIT LOG =====
+model AuditLog {
+  id           String   @id @default(cuid())
+  userId       String?  // User wallet address (optional for system events)
+  action       String   // CREATE_STREAM | CLAIM_STREAM | ENABLE_2FA | LOGIN | etc
+  resource     String?  // Resource type: stream, pool, user, etc
+  resourceId   String?  // ID of the resource affected
+  details      Json?    // Additional details (before/after state, metadata)
+  ipAddress    String?  // User IP address
+  userAgent    String?  // User agent string
+  status       String   @default("success") // success | failure
+  errorMessage String?  // Error message if status is failure
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([createdAt])
 }

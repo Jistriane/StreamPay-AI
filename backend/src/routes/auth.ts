@@ -16,8 +16,54 @@ const verifyLimiter = rateLimit({
 });
 
 /**
- * POST /api/auth/verify
- * Verifica assinatura Web3 e gera JWT
+ * @swagger
+ * /api/auth/verify:
+ *   post:
+ *     summary: Verify Web3 signature and generate JWT
+ *     tags: [Auth]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - address
+ *               - message
+ *               - signature
+ *             properties:
+ *               address:
+ *                 type: string
+ *                 example: "0x1234567890123456789012345678901234567890"
+ *               message:
+ *                 type: string
+ *                 example: "Sign this message to authenticate with StreamPay"
+ *               signature:
+ *                 type: string
+ *                 example: "0xabc123..."
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *                 address:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 expiresIn:
+ *                   type: integer
+ *       400:
+ *         description: Missing required parameters
+ *       401:
+ *         description: Invalid signature
  */
 router.post('/verify', verifyLimiter, async (req: Request, res: Response) => {
   try {
@@ -80,8 +126,31 @@ router.post('/verify', verifyLimiter, async (req: Request, res: Response) => {
 });
 
 /**
- * GET /api/auth/me
- * Retorna dados do usuário autenticado
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get authenticated user info
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 address:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *       401:
+ *         description: Not authenticated
  */
 router.get('/me', (req: any, res: Response) => {
   try {

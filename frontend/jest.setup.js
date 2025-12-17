@@ -46,6 +46,23 @@ jest.mock('wagmi', () => ({
   useAccount: jest.fn(() => ({ address: null, isConnected: false })),
 }));
 
+// Mock do Next.js navigation para evitar erros de "app router to be mounted"
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    pathname: '/',
+    query: {},
+    asPath: '/',
+  })),
+  usePathname: jest.fn(() => '/'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+  useParams: jest.fn(() => ({})),
+  redirect: jest.fn(),
+}));
+
 // Suavizar warnings de act em atualizações assíncronas (opcional)
 // eslint-disable-next-line no-console
 console.error = (msg, ...args) => {

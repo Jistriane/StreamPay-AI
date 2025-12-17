@@ -122,8 +122,8 @@ All fields are required and validated:
    - Input type: text
    - Placeholder: "0x..."
    - Validation: Ethereum address format (42 chars, starts with 0x)
-   - Error message: "Endereço Ethereum inválido"
-   - Hint text: "Endereço Ethereum de 42 caracteres"
+   - Error message: "Invalid Ethereum address"
+   - Hint text: "Ethereum address (42 characters)"
 
 2. **Token Selection**
    - Input type: dropdown select
@@ -136,14 +136,14 @@ All fields are required and validated:
    - Step: 0.01
    - Placeholder: "100.00"
    - Validation: Must be > 0
-   - Error message: "Valor de depósito deve ser maior que zero"
+   - Error message: "Deposit amount must be greater than zero"
 
 4. **Rate Per Second**
    - Input type: number
    - Step: 0.0001
    - Placeholder: "0.01"
    - Validation: Must be > 0
-   - Error message: "Taxa por segundo deve ser maior que zero"
+   - Error message: "Rate per second must be greater than zero"
 
 #### Validation Features
 - Real-time validation on input change
@@ -159,8 +159,8 @@ Displays estimated monthly payout based on:
 - Shows in same token denomination
 
 #### Submit & Success Feedback
-- Loading state: "⏳ Criando..."
-- Success message: "✅ Stream criado com sucesso!"
+- Loading state: "⏳ Creating..."
+- Success message: "✅ Stream created successfully!"
 - Auto-redirect after 2 seconds
 - Reloads parent component (Dashboard)
 
@@ -185,7 +185,7 @@ Displays estimated monthly payout based on:
 const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
 <Button onClick={() => setIsCreateModalOpen(true)} variant="neon">
-  ✨ Criar Stream
+   ✨ Create Stream
 </Button>
 
 <CreateStreamModal
@@ -212,25 +212,25 @@ POST /api/streams
 ### Example Workflow
 
 ```
-1. User clicks "✨ Criar Stream"
+1. User clicks "✨ Create Stream"
 2. Modal opens
 3. User enters:
    - Recipient: "0x742d35Cc6634C0532925a3b844Bc9e7595f42CD4"
    - Token: "USDC"
    - Deposit: "1000"
    - Rate: "0.01"
-4. Modal shows "Estimativa mensal: 25920.00 USDC"
-5. User clicks "✓ Criar"
-6. Loading state shows "⏳ Criando..."
+4. Modal shows "Estimated monthly: 25920.00 USDC"
+5. User clicks "✓ Create"
+6. Loading state shows "⏳ Creating..."
 7. Stream created successfully
-8. Success message "✅ Stream criado com sucesso!"
+8. Success message "✅ Stream created successfully!"
 9. Modal closes automatically
 10. Dashboard refreshes with new stream
 ```
 
 ---
 
-## 3. History Page with Advanced Filters (`/historico`)
+## 3. History Page with Advanced Filters (`/historico` route)
 
 ### Location
 `frontend/app/historico/page.tsx`
@@ -242,13 +242,13 @@ Located at top of page with 5 inputs and clear button:
 
 1. **Status Filter**
    - Input type: dropdown select
-   - Options: Todos, Ativo, Pendente, Pausado, Concluído, Cancelado
+   - Options: All, Active, Pending, Paused, Completed, Cancelled
    - Default: "all"
    - Filters streams by exact status match
 
 2. **Token Filter**
    - Input type: dropdown select
-   - Options: Todos, USDC, USDT, ETH
+   - Options: All, USDC, USDT, ETH
    - Default: "all"
    - Filters by token type
 
@@ -269,7 +269,7 @@ Located at top of page with 5 inputs and clear button:
 #### Filter Counter
 Shows below filter panel:
 ```
-Mostrando [X] de [Y] streams
+Showing [X] of [Y] streams
 ```
 - X = filtered count
 - Y = total count
@@ -291,13 +291,13 @@ Each stream card displays:
 #### Empty State
 When no streams match filters:
 ```
-Nenhum stream encontrado com os filtros selecionados
-[Limpar Filtros button]
+No streams found with the selected filters
+[Clear Filters button]
 ```
 
 #### Navigation
 - Click card to navigate to `/stream/:id`
-- Click "Ver Detalhes →" button to navigate
+- Click "View Details →" button to navigate
 - Button prevents event propagation to avoid double navigation
 
 #### Responsive Design
@@ -356,10 +356,10 @@ Completed/Cancelled → 🔴 Red (text-red-400)
 ### Example Workflows
 
 **Workflow 1: Find completed USDC streams**
-1. Select Status = "Concluído"
+1. Select Status = "Completed"
 2. Select Token = "USDC"
 3. Grid updates instantly
-4. Counter shows: "Mostrando 5 de 23 streams"
+4. Counter shows: "Showing 5 of 23 streams"
 
 **Workflow 2: Find streams from past week**
 1. Set From date = today - 7 days
@@ -368,7 +368,7 @@ Completed/Cancelled → 🔴 Red (text-red-400)
 4. Counter shows filtered result
 
 **Workflow 3: Reset all filters**
-1. Click "Limpar Filtros"
+1. Click "Clear Filters"
 2. All filters reset
 3. Shows complete list again
 

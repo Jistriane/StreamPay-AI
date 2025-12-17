@@ -2,7 +2,6 @@ import cors from "cors";
 import 'dotenv/config';
 import express from "express";
 import http from "http";
-import { createStreamOnChain, claimStreamOnChain } from "./contract";
 import { createStream, getStreamsBySender, migrate } from "./db";
 import { Pool } from "pg";
 import axios from "axios";
@@ -70,18 +69,8 @@ app.post("/api/kyc", authMiddleware, async (req: any, res: any) => {
   }
 });
 
-// Endpoint para claim de stream on-chain
-app.post("/api/claim-stream", authMiddleware, async (req: any, res: any) => {
-  const { streamId } = req.body;
-  const contractAddress = process.env.STREAMPAY_CORE_ADDRESS || "0xYourContractAddress";
-  let txHash = null;
-  try {
-    txHash = await claimStreamOnChain(contractAddress, streamId);
-  } catch (err: any) {
-    return res.status(500).json({ error: "Erro ao claimar stream on-chain", details: err.message });
-  }
-  res.json({ message: "Claim realizado com sucesso", txHash });
-});
+// Endpoint para claim de stream on-chain (removido - usar API de streams em routes/)
+
 
 // Simulação de integração Moralis e Chainlink
 app.get("/api/token-price", (req: any, res: any) => {

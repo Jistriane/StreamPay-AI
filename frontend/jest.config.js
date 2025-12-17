@@ -5,6 +5,9 @@ module.exports = {
     '^.+\\.(t|j)sx?$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+  },
   collectCoverage: true,
   coverageDirectory: 'coverage',
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],

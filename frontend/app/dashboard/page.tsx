@@ -7,6 +7,7 @@ import Button from "@/app/components/Button";
 import CreateStreamModal from "@/app/components/CreateStreamModal";
 import { useAuth } from "@/app/hooks/useAuth";
 import { fetchWithAuth } from "@/app/lib/api";
+import { useToast } from "@/app/components/ToastProvider";
 
 interface Stream {
   id: string | number;
@@ -22,6 +23,7 @@ interface Stream {
 export default function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, loading, user, address, logout } = useAuth();
+  const { addToast } = useToast();
   const [streams, setStreams] = useState<Stream[]>([]);
   const [streamsLoading, setStreamsLoading] = useState(false);
   const [streamsError, setStreamsError] = useState<string | null>(null);
@@ -55,9 +57,14 @@ export default function DashboardPage() {
 
       const data = await response.json();
       setStreams(data.data || []);
+      if (data.data && data.data.length > 0) {
+        addToast(`✅ ${data.data.length} stream(s) carregado(s)`, 'info', 2000);
+      }
     } catch (error) {
       console.error('Erro ao buscar streams:', error);
-      setStreamsError(error instanceof Error ? error.message : 'Erro desconhecido');
+      const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
+      setStreamsError(errorMsg);
+      addToast(`❌ Erro ao carregar streams: ${errorMsg}`, 'error', 4000);
       setStreams([]);
     } finally {
       setStreamsLoading(false);

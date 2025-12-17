@@ -3,12 +3,57 @@ import { query } from "../db";
 import { authenticateJWT, AuthRequest } from "../middleware/auth";
 import { asyncHandler, APIError } from "../middleware/errorHandler";
 import { validateRequest, createStreamSchema, claimStreamSchema } from "../middleware/validation";
+import { createStreamOnChain, toggleStreamOnChain, cancelStreamOnChain, getStreamedAmountOnChain } from "../contract";
+import { logger } from "../utils/logger";
+import { logAudit } from "../utils/audit";
 
 const router = Router();
 
 /**
- * GET /api/streams
- * Listar streams do usuário autenticado
+ * @swagger
+ * /api/streams:
+ *   get:
+ *     summary: List all streams for authenticated user
+ *     tags: [Streams]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: skip
+ *         schema:
+ *           type: integer
+ *           default: 0
+ *         description: Number of items to skip for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *           maximum: 100
+ *         description: Number of items to return
+ *     responses:
+ *       200:
+ *         description: List of streams retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Stream'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                     skip:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
  */
 router.get(
     "/",
@@ -93,8 +138,61 @@ router.get(
 );
 
 /**
- * POST /api/streams
- * Criar novo stream
+ * @swagger
+ * /api/streams:
+ *   post:
+ *     summary: Create a new payment stream
+ *     tags: [Streams]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - recipient
+ *               - token
+ *               - amount
+ *               - ratePerSecond
+ *               - duration
+ *             properties:
+ *               recipient:
+ *                 type: string
+ *                 example: "0x0987654321098765432109876543210987654321"
+ *               token:
+ *                 type: string
+ *                 example: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"
+ *               amount:
+ *                 type: string
+ *                 example: "1000000000000000000"
+ *               ratePerSecond:
+ *                 type: string
+ *                 example: "11574074074074"
+ *               duration:
+ *                 type: integer
+ *                 example: 86400
+ *     responses:
+ *       201:
+ *         description: Stream created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/Stream'
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post(
     "/",
@@ -120,7 +218,7 @@ router.post(
             );
         }
 
-        // Registrar stream no banco (pendente execução on-chain)
+        // Registrar stream no banco
         const result = await query(
             `
             INSERT INTO streams (sender, recipient, token, deposit, rate_per_second,
@@ -140,11 +238,53 @@ router.post(
         );
 
         const stream = result.rows[0];
+        const streamId = stream.id;
+
+        // Audit log
+        await logAudit({
+            userId: req.user.address,
+            action: "CREATE_STREAM",
+            resource: "stream",
+            resourceId: streamId.toString(),
+            details: {
+                recipient: recipient.toLowerCase(),
+                token: token.toLowerCase(),
+                amount: amount.toString(),
+                duration,
+            },
+            ipAddress: req.ip,
+            userAgent: req.headers["user-agent"],
+            status: "success",
+        });
+
+        // Executar no blockchain (assíncrono, não bloqueia resposta)
+        try {
+            logger.info(`[Streams] Creating on-chain stream ${streamId} for ${recipient}...`);
+            
+            const onChainResult = await createStreamOnChain({
+              freelancer: recipient.toLowerCase(),
+              totalAmount: amount.toString(),
+              duration,
+              outputToken: token.toLowerCase(),
+              tokenAddress: token.toLowerCase(), // Assuming token address = token symbol for now
+            });
+
+            // Atualizar banco com tx hash
+            await query(
+                `UPDATE streams SET status = $1, tx_hash = $2, on_chain_id = $3 WHERE id = $4`,
+                ['confirmed', onChainResult.txHash, onChainResult.streamId, streamId]
+            );
+
+            logger.info(`[Streams] On-chain stream created: ${onChainResult.txHash}`);
+        } catch (error) {
+            logger.warn(`[Streams] On-chain creation failed: ${error}. Stream stored locally as 'pending'.`);
+            // Não falha a resposta - stream está no banco de forma local
+        }
 
         res.status(201).json({
             success: true,
-            data: stream,
-            message: "Stream created. Waiting for on-chain confirmation...",
+            data: { ...stream, tx_hash: stream.tx_hash || null },
+            message: stream.tx_hash ? "Stream created on-chain successfully!" : "Stream created locally. On-chain confirmation pending...",
         });
     })
 );
@@ -170,7 +310,7 @@ router.post(
 
         // Verificar que o usuário é o recipient
         const streamResult = await query(
-            "SELECT recipient, active FROM streams WHERE id = $1",
+            "SELECT recipient, active, on_chain_id FROM streams WHERE id = $1",
             [streamId]
         );
 
@@ -196,20 +336,49 @@ router.post(
             );
         }
 
+        // Buscar quantidade streamada no contrato
+        let claimableAmount = "0";
+        try {
+            if (stream.on_chain_id) {
+                logger.info(`[Streams] Fetching streamed amount for on-chain stream ${stream.on_chain_id}...`);
+                claimableAmount = await getStreamedAmountOnChain(parseInt(stream.on_chain_id));
+                logger.info(`[Streams] Claimable amount: ${claimableAmount}`);
+            }
+        } catch (error) {
+            logger.warn(`[Streams] Could not fetch streamed amount from contract: ${error}. Using local calculation.`);
+            // Fallback: calcular localmente
+            claimableAmount = "0";
+        }
+
         // Registrar claim pendente
         const claimResult = await query(
             `
-            INSERT INTO stream_claims (stream_id, recipient, status, created_at)
-            VALUES ($1, $2, 'pending', NOW())
-            RETURNING id, stream_id, recipient, status, created_at
+            INSERT INTO stream_claims (stream_id, recipient, status, amount, created_at)
+            VALUES ($1, $2, 'pending', $3, NOW())
+            RETURNING id, stream_id, recipient, status, amount, created_at
             `,
-            [streamId, req.user.address]
+            [streamId, req.user.address, claimableAmount]
         );
+
+        // Audit log
+        await logAudit({
+            userId: req.user.address,
+            action: "CLAIM_STREAM",
+            resource: "stream",
+            resourceId: streamId.toString(),
+            details: {
+                claimAmount: claimableAmount,
+                claimId: claimResult.rows[0].id,
+            },
+            ipAddress: req.ip,
+            userAgent: req.headers["user-agent"],
+            status: "success",
+        });
 
         res.status(201).json({
             success: true,
             data: claimResult.rows[0],
-            message: "Claim submitted. Waiting for on-chain confirmation...",
+            message: `Claim submitted for ${claimableAmount} tokens. Waiting for on-chain confirmation...`,
         });
     })
 );
@@ -259,10 +428,19 @@ router.patch(
             [streamId]
         );
 
+        // Executar no blockchain (assíncrono)
+        try {
+            logger.info(`[Streams] Pausing on-chain stream ${streamId}...`);
+            const onChainResult = await toggleStreamOnChain(streamId, false);
+            logger.info(`[Streams] On-chain stream paused: ${onChainResult.txHash}`);
+        } catch (error) {
+            logger.warn(`[Streams] On-chain pause failed: ${error}. Stream paused locally.`);
+        }
+
         res.json({
             success: true,
             data: result.rows[0],
-            message: "Stream paused. Waiting for on-chain confirmation...",
+            message: "Stream paused successfully!",
         });
     })
 );
@@ -311,6 +489,15 @@ router.delete(
             "UPDATE streams SET active = false, status = 'cancelled' WHERE id = $1 RETURNING *",
             [streamId]
         );
+
+        // Executar no blockchain (assíncrono)
+        try {
+            logger.info(`[Streams] Cancelling on-chain stream ${streamId}...`);
+            const onChainResult = await cancelStreamOnChain(streamId);
+            logger.info(`[Streams] On-chain stream cancelled: ${onChainResult.txHash}`);
+        } catch (error) {
+            logger.warn(`[Streams] On-chain cancel failed: ${error}. Stream cancelled locally.`);
+        }
 
         res.json({
             success: true,

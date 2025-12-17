@@ -126,7 +126,7 @@
 docs/
 ├── README.md (355 lines, BROKEN LINKS) ❌
 ├── COMECE_AQUI.md (304 lines, OUTDATED) 🟡
-├── PROJETO_STATUS_FINAL.md (347 lines) ✅
+├── PROJETO_STATUS_FINAL.md (347 lines) ✅ (removed; replaced by PROJECT_STATUS_FINAL.md)
 ├── STATUS_CONCLUSAO.md (duplicado) ❌
 ├── STATUS_CONCLUSAO_ATUALIZADO.md (duplicado) ❌
 ├── IMPLEMENTAR_WEB3AUTH.md (421 lines, OBSOLETE) ❌

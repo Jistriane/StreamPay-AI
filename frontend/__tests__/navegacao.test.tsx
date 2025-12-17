@@ -14,17 +14,17 @@ import CadastroPage from '../app/cadastro/page';
 
 describe('Navegação entre páginas', () => {
   it('renderiza login e dashboard', () => {
-    render(<LoginPage />);
-    // Título atual é "StreamPay Login" na UI
-    expect(screen.getByText('StreamPay Login')).toBeInTheDocument();
+    const { container: loginContainer } = render(<LoginPage />);
+    // Login agora usa Web3Auth com título "StreamPay AI"
+    expect(loginContainer.textContent).toContain('StreamPay AI');
 
-    render(<StreamPayDashboard />);
-    expect(screen.getByText(/StreamPay AI|Dashboard/i)).toBeInTheDocument();
+    const { container: dashboardContainer } = render(<StreamPayDashboard />);
+    expect(dashboardContainer.textContent).toMatch(/StreamPay AI|Dashboard/i);
   });
 
   it('renderiza cadastro', () => {
     render(<CadastroPage />);
-    // Título atual é "StreamPay Registration" na UI
-    expect(screen.getByText('StreamPay Registration')).toBeInTheDocument();
+    // Procura por elementos que existem na página de cadastro
+    expect(screen.getByPlaceholderText(/nome|name/i)).toBeInTheDocument();
   });
 });

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Card from "./Card";
 import Button from "./Button";
 import { fetchWithAuth } from "@/app/lib/api";
+import { useToast } from "./ToastProvider";
 
 interface CreateStreamModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export default function CreateStreamModal({
   onClose,
   onStreamCreated,
 }: CreateStreamModalProps) {
+  const { addToast } = useToast();
   const [formData, setFormData] = useState({
     recipient: "",
     token: "USDC",
@@ -95,6 +97,7 @@ export default function CreateStreamModal({
       }
 
       setSuccess(true);
+      addToast("✅ Stream criado com sucesso!", "success", 3000);
       setFormData({
         recipient: "",
         token: "USDC",
@@ -105,9 +108,11 @@ export default function CreateStreamModal({
       setTimeout(() => {
         onStreamCreated?.();
         onClose();
-      }, 2000);
+      }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro desconhecido");
+      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido";
+      setError(errorMsg);
+      addToast(`❌ Erro ao criar stream: ${errorMsg}`, "error", 4000);
     } finally {
       setLoading(false);
     }

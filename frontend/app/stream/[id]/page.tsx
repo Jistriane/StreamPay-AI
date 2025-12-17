@@ -4,6 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import Card from "@/app/components/Card";
 import Button from "@/app/components/Button";
 import { fetchWithAuth } from "@/app/lib/api";
+import { useToast } from "@/app/components/ToastProvider";
 
 interface Stream {
   id: string | number;
@@ -22,6 +23,7 @@ interface Stream {
 export default function StreamDetailPage() {
   const router = useRouter();
   const params = useParams();
+  const { addToast } = useToast();
   const streamId = params?.id as string;
 
   const [stream, setStream] = useState<Stream | null>(null);
@@ -78,10 +80,13 @@ export default function StreamDetailPage() {
         throw new Error('Erro ao reivindicar stream');
       }
 
+      addToast('✅ Stream reivindicado com sucesso!', 'success', 3000);
       setActionMessage('✅ Stream reivindicado com sucesso!');
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
-      setActionMessage(`❌ Erro: ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
+      const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
+      setActionMessage(`❌ Erro: ${errorMsg}`);
+      addToast(`❌ Erro ao reivindicar: ${errorMsg}`, 'error', 4000);
     } finally {
       setActionLoading(false);
     }
@@ -105,10 +110,13 @@ export default function StreamDetailPage() {
         throw new Error('Erro ao pausar stream');
       }
 
+      addToast('⏸️ Stream pausado com sucesso!', 'success', 3000);
       setActionMessage('⏸️ Stream pausado com sucesso!');
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
-      setActionMessage(`❌ Erro: ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
+      const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
+      setActionMessage(`❌ Erro: ${errorMsg}`);
+      addToast(`❌ Erro ao pausar: ${errorMsg}`, 'error', 4000);
     } finally {
       setActionLoading(false);
     }
@@ -132,10 +140,13 @@ export default function StreamDetailPage() {
         throw new Error('Erro ao cancelar stream');
       }
 
+      addToast('🗑️ Stream cancelado com sucesso!', 'success', 3000);
       setActionMessage('🗑️ Stream cancelado com sucesso!');
       setTimeout(() => router.push('/dashboard'), 1500);
     } catch (err) {
-      setActionMessage(`❌ Erro: ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
+      const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
+      setActionMessage(`❌ Erro: ${errorMsg}`);
+      addToast(`❌ Erro ao cancelar: ${errorMsg}`, 'error', 4000);
     } finally {
       setActionLoading(false);
     }

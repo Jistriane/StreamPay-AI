@@ -2,11 +2,15 @@ module.exports = {
   presets: [
     ['@babel/preset-env', { targets: { node: 'current' } }],
     ['@babel/preset-react', { runtime: 'automatic' }],
-    '@babel/preset-typescript',
+    ['@babel/preset-typescript', { 
+      allowDeclareFields: true,
+      isTSX: true,
+      allExtensions: true,
+    }],
   ],
   plugins: [
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-transform-private-methods',
-    '@babel/plugin-transform-private-property-in-object',
+    ['@babel/plugin-proposal-class-properties', { loose: true }],
+    ['@babel/plugin-transform-private-methods', { loose: true }],
+    ['@babel/plugin-transform-private-property-in-object', { loose: true }],
   ],
 };

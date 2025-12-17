@@ -4,8 +4,10 @@ exports.listenStreamEvents = listenStreamEvents;
 // Monitoramento de eventos do contrato StreamPayCore
 const ethers_1 = require("ethers");
 const db_1 = require("./db");
-const provider = new ethers_1.ethers.JsonRpcProvider(process.env.ETH_RPC_URL);
-const contractAddress = process.env.STREAMPAY_CORE_ADDRESS || "0xYourContractAddress";
+const contracts_1 = require("./config/contracts");
+const networkConfig = (0, contracts_1.getNetworkConfig)('sepolia');
+const provider = new ethers_1.ethers.JsonRpcProvider(networkConfig.rpcUrl);
+const contractAddress = (0, contracts_1.getContractAddress)('StreamPayCore', 'sepolia');
 const StreamPayCoreABI = [
     "event StreamCreated(uint256 indexed streamId, address indexed sender, address indexed recipient, address token, uint256 ratePerSecond, uint256 duration)",
     "event StreamClaimed(uint256 indexed streamId, address indexed recipient, uint256 amount)"

@@ -28,3 +28,10 @@ dist/
 build/
 *.tsbuildinfo
 frontend/.next/
+
+# Coverage reports
+coverage/
+frontend/coverage/
+backend/coverage/
+smart-contracts/coverage/
+streampay-eliza/coverage/

@@ -2,20 +2,10 @@
 
 import './globals.css';
 
-import { WagmiConfig, createConfig } from "wagmi";
-import { mainnet } from "wagmi/chains";
-import { createPublicClient, http } from "viem";
 import Header from "./components/Header";
 import BackgroundEffects from "./components/BackgroundEffects";
 import { ToastProvider } from "./components/ToastProvider";
-
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  publicClient: createPublicClient({
-    chain: mainnet,
-    transport: http(),
-  }),
-});
+import { Web3Provider } from "./components/Web3Provider";
 
 export default function RootLayout({
   children,
@@ -31,7 +21,7 @@ export default function RootLayout({
       <body>
         <BackgroundEffects />
         <ToastProvider>
-          <WagmiConfig config={wagmiConfig}>
+          <Web3Provider>
             <div className="app-container">
               <Header />
               <main className="main-content">
@@ -52,7 +42,7 @@ export default function RootLayout({
                 </div>
               </footer>
             </div>
-          </WagmiConfig>
+          </Web3Provider>
         </ToastProvider>
       </body>
     </html>
