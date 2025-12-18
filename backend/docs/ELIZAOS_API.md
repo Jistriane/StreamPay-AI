@@ -1,32 +1,32 @@
-# Integração StreamPay AI x ElizaOS
+# StreamPay AI x ElizaOS Integration
 
-## Endpoints implementados
+## Implemented Endpoints
 
-### Monitoramento
+### Monitoring
 
-- `GET /api/eliza-status`: Consulta status do agente ElizaOS (health check).
+- `GET /api/eliza-status`: Checks ElizaOS agent status (health check).
 
-### Interação
+### Interaction
 
-- `POST /api/eliza-message`: Envia mensagem para o agente ElizaOS e retorna resposta.
+- `POST /api/eliza-message`: Sends a message to the ElizaOS agent and returns the response.
 
-## Testes automatizados
+## Automated Tests
 
-Arquivo: `eliza.integration.test.ts`
-- Testa status do agente e envio de mensagem.
+File: `eliza.integration.test.ts`
+- Verifies agent status and message sending.
 
-## Monitoramento automático
+## Automatic Monitoring
 
-Arquivo: `eliza.monitor.js`
-- Verifica status do ElizaOS a cada minuto.
-- Envia alerta por e-mail se o agente estiver fora do ar.
+File: `eliza.monitor.js`
+- Checks ElizaOS status every minute.
+- Sends an email alert if the agent is offline.
 
-## Recomendações
+## Recommendations
 
-- Configure variáveis de ambiente para autenticação e segurança.
-- Expanda integração conforme necessidade dos fluxos do StreamPay AI.
-- Consulte logs e dashboard do ElizaOS para monitoramento avançado.
+- Configure environment variables for authentication and security.
+- Expand the integration as StreamPay AI flows evolve.
+- Review ElizaOS logs and dashboard for advanced monitoring.
 
 ---
 
-Para dúvidas ou evolução, consulte a documentação oficial do ElizaOS ou solicite automações adicionais.
+For questions or enhancements, consult the official ElizaOS documentation or request additional automations.

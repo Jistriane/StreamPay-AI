@@ -32,12 +32,16 @@
     "@elizaos/plugin-bootstrap": "1.6.4",
     "@elizaos/plugin-google-genai": "^1.1.0",
     "@elizaos/server": "1.6.4",
+    "axios": "^1.6.2",
+    "ethers": "^6.8.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.1.10",
     "zod": "4.1.11"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^20.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

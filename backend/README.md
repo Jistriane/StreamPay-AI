@@ -87,8 +87,8 @@ Configure variables in `.env` for:
 
 ## Roadmap
 
-Consulte o roadmap do projeto para etapas futuras e integrações avançadas.
+See the project roadmap for future steps and advanced integrations.
 
 ---
 
-Para dúvidas, sugestões ou contribuições, consulte a documentação técnica ou entre em contato com o time de desenvolvimento.
+For questions, suggestions, or contributions, review the technical documentation or contact the engineering team.

@@ -1,30 +1,30 @@
-# Endpoints Moralis no StreamPay AI
+# Moralis Endpoints in StreamPay AI
 
-## Consulta de saldo
+## Balance Lookup
 
-- `GET /api/moralis-balance/:address`: Consulta saldo de um endereço.
+- `GET /api/moralis-balance/:address`: Fetches the balance of an address.
 
-## Consulta de tokens ERC20
+## ERC20 Tokens Lookup
 
-- `GET /api/moralis-erc20/:address`: Consulta tokens ERC20 de um endereço.
+- `GET /api/moralis-erc20/:address`: Fetches ERC20 tokens for an address.
 
-## Consulta de histórico
+## History Lookup
 
-- `GET /api/moralis-txs/:address`: Consulta histórico de transações de um endereço.
+- `GET /api/moralis-txs/:address`: Fetches the transaction history of an address.
 
-## Consulta de NFTs
+## NFT Lookup
 
-- `GET /api/moralis-nfts/:address`: Consulta NFTs de um endereço.
+- `GET /api/moralis-nfts/:address`: Fetches NFTs for an address.
 
-## Testes automatizados
+## Automated Tests
 
-Arquivo: `moralis.integration.test.ts`
-- Testa saldo, tokens ERC20 e histórico de transações.
+File: `moralis.integration.test.ts`
+- Tests balance, ERC20 tokens, and transaction history.
 
-Arquivo: `moralis.nft.integration.test.ts`
-- Testa consulta de NFTs.
+File: `moralis.nft.integration.test.ts`
+- Tests NFT queries.
 
-## Recomendações
+## Recommendations
 
-- Use endpoints para validação, auditoria e automação de fluxos.
-- Expanda conforme necessidade do projeto.
+- Use the endpoints for validation, auditing, and automation flows.
+- Expand as the project needs evolve.

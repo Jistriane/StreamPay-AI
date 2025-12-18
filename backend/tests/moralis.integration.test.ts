@@ -1,36 +1,32 @@
 import request from 'supertest';
-import app from './index';
+import app from '../src/server';
 
 describe('Integração Moralis', () => {
-  it('deve consultar saldo de um endereço', async () => {
-    const address = '0x123...'; // Substitua por um endereço real
-    const res = await request(app).get(`/api/moralis-balance/${address}`);
+  it('deve consultar saldo de um token', async () => {
+    const address = '0x1234567890123456789012345678901234567890';
+    const tokenAddress = '0x1234567890123456789012345678901234567890';
+    const res = await request(app).get(`/api/moralis-balance/${address}/token/${tokenAddress}`);
     expect(res.status).toBe(200);
-    expect(res.body.result).toBeDefined();
+    expect(res.body).toHaveProperty('balance');
   });
 
-  it('deve consultar tokens ERC20 de um endereço', async () => {
-    const address = '0x123...'; // Substitua por um endereço real
-    const res = await request(app).get(`/api/moralis-erc20/${address}`);
+  it('deve consultar saldo nativo ETH', async () => {
+    const address = '0x1234567890123456789012345678901234567890';
+    const res = await request(app).get(`/api/moralis-native-balance/${address}`);
     expect(res.status).toBe(200);
-    expect(res.body.result).toBeDefined();
+    expect(res.body).toHaveProperty('balance');
   });
 
-  it('deve consultar histórico de transações de um endereço', async () => {
-    const address = '0x123...'; // Substitua por um endereço real
-    const res = await request(app).get(`/api/moralis-txs/${address}`);
+  it('deve consultar streams do endereço', async () => {
+    const address = '0x1234567890123456789012345678901234567890';
+    const res = await request(app).get(`/api/moralis-streams/${address}`);
     expect(res.status).toBe(200);
-    expect(res.body.result).toBeDefined();
+    expect(res.body).toHaveProperty('streams');
   });
 
-    it('GET /api/moralis-balance - sem autenticação', async () => {
-      const res = await request(app).get('/api/moralis-balance');
-      expect(res.statusCode).toBe(401);
-    });
-
-    it('GET /api/moralis-balance - erro integração', async () => {
-      // Simula erro de integração (exemplo: token inválido)
-      const res = await request(app).get('/api/moralis-balance').set('Authorization', 'Bearer invalid_token');
-      expect([400, 500]).toContain(res.statusCode);
-    });
+  it('deve rejeitar endereço inválido', async () => {
+    const res = await request(app).get(`/api/moralis-streams/invalid-address`);
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('error');
+  });
 });

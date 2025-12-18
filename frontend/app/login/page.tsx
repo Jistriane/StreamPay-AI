@@ -1,112 +1,89 @@
 "use client";
-import React, { useState } from "react";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Card from "../components/Card";
-import Button from "../components/Button";
-import Input from "../components/Input";
+import { Web3Auth } from "../components/Web3Auth";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { isAuthenticated, loading } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setStatus("⏳ Autenticando...");
-    
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
-      
-      const data = await res.json();
-      
-      if (res.ok && (data.success || data.token)) {
-        setStatus("✅ Login realizado com sucesso!");
-        // Aqui pode redirecionar para dashboard ou salvar token
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1500);
-      } else {
-        setStatus(`❌ Erro: ${data.error || "Falha na autenticação"}`);
-      }
-    } catch (err: any) {
-      setStatus(`❌ Erro: ${err.message}`);
-    } finally {
-      setLoading(false);
+  // Se já está autenticado, redirecionar para dashboard
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      router.push("/dashboard");
     }
+  }, [isAuthenticated, loading, router]);
+
+  const handleAuthSuccess = () => {
+    // Dar um tempo para o token ser armazenado
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 1000);
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center animate-fade-in">
+    <div className="min-h-screen flex items-center justify-center animate-fade-in bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <Card variant="glass" padding="lg" className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2 text-gradient" style={{ 
-            fontFamily: "var(--font-family-display)"
-          }}>
-            StreamPay Login
+          <h1 
+            className="text-4xl font-bold mb-2 text-gradient" 
+            style={{ fontFamily: "var(--font-family-display)" }}
+          >
+            StreamPay AI
           </h1>
-          <p className="text-secondary" style={{ color: "var(--text-secondary)" }}>
-            Entre com suas credenciais
+          <p 
+            className="text-secondary" 
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Autenticação Web3 com MetaMask
           </p>
         </div>
 
-        <form onSubmit={handleLogin}>
-          <Input
-            label="E-mail"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="seu@email.com"
-            icon="📧"
-            required
+        <div className="mb-6">
+          <p className="text-sm text-center mb-4" style={{ color: "var(--text-secondary)" }}>
+            Conecte sua carteira MetaMask para acessar o StreamPay AI
+          </p>
+          <Web3Auth
+            onSuccess={handleAuthSuccess}
+            onError={(error) => {
+              console.error("Erro na autenticação:", error);
+            }}
           />
+        </div>
 
-          <Input
-            label="Senha"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            icon="🔒"
-            required
-          />
+        <div className="border-t border-gray-300 dark:border-gray-700 pt-6">
+          <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--text-primary)" }}>
+            Como funciona:
+          </h2>
+          <ul className="text-xs space-y-2" style={{ color: "var(--text-secondary)" }}>
+            <li>✅ Clique em "Conectar MetaMask"</li>
+            <li>✅ Selecione sua carteira</li>
+            <li>✅ Assine a mensagem para verificar identidade</li>
+            <li>✅ Receba seu JWT para acessar a plataforma</li>
+          </ul>
+        </div>
 
-          <Button
-            type="submit"
-            variant="neon"
-            size="lg"
-            fullWidth
-            loading={loading}
-            className="mt-4"
-          >
-            Entrar
-          </Button>
-        </form>
-
-        {status && (
-          <Card variant="bordered" padding="md" className="mt-6">
-            <p 
-              className="text-sm whitespace-pre-wrap break-words text-center"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {status}
-            </p>
-          </Card>
-        )}
+        <div className="mt-6 text-center text-xs" style={{ color: "var(--text-secondary)" }}>
+          <p>
+            ℹ️ Certifique-se de estar na rede{" "}
+            <strong>Sepolia Testnet</strong>
+          </p>
+        </div>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-secondary" style={{ color: "var(--text-secondary)" }}>
-            Não tem uma conta?{" "}
-            <a 
-              href="/cadastro" 
-              className="text-primary hover:underline"
+          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+            Não tem MetaMask?{" "}
+            <a
+              href="https://metamask.io/download/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
               style={{ color: "var(--color-primary)" }}
             >
-              Cadastre-se
+              Instale aqui
             </a>
           </p>
         </div>

@@ -1,32 +1,32 @@
-# Endpoints Etherscan no StreamPay AI
+# Etherscan Endpoints in StreamPay AI
 
-## Consulta de transação
-- `GET /api/etherscan-tx/:txHash`: Consulta status de uma transação.
+## Transaction Lookup
+- `GET /api/etherscan-tx/:txHash`: Checks the status of a transaction.
 
-## Consulta de saldo
-- `GET /api/etherscan-balance/:address`: Consulta saldo de um endereço.
+## Balance Lookup
+- `GET /api/etherscan-balance/:address`: Fetches the balance of an address.
 
-## Consulta de histórico
+## History Lookup
 
-- `GET /api/etherscan-txs/:address`: Consulta histórico de transações de um endereço.
+- `GET /api/etherscan-txs/:address`: Fetches the transaction history of an address.
 
-## Consulta de tokens ERC20
+## ERC20 Token Transfers
 
-- `GET /api/etherscan-erc20/:address`: Consulta transferências de tokens ERC20 de um endereço.
+- `GET /api/etherscan-erc20/:address`: Fetches ERC20 token transfers for an address.
 
-## Consulta de logs de contrato
+## Contract Logs Lookup
 
-- `GET /api/etherscan-logs/:contractAddress`: Consulta eventos/logs de um contrato.
+- `GET /api/etherscan-logs/:contractAddress`: Fetches events/logs of a contract.
 
-## Testes automatizados
-Arquivo: `etherscan.integration.test.ts`
-- Testa consulta de transação.
+## Automated Tests
+File: `etherscan.integration.test.ts`
+- Tests transaction lookup.
 
-## Automação de monitoramento
+## Monitoring Automation
 
-- Script `eliza.monitor.js` monitora status do ElizaOS e logs de contrato, enviando alertas por e-mail em caso de erro ou evento específico.
+- Script `eliza.monitor.js` monitors ElizaOS status and contract logs, sending email alerts for errors or specific events.
 
-## Recomendações
+## Recommendations
 
-- Use endpoints para validação, auditoria, automação de fluxos e monitoramento avançado.
-- Expanda conforme necessidade do projeto.
+- Use the endpoints for validation, auditing, automation flows, and advanced monitoring.
+- Expand as the project needs evolve.

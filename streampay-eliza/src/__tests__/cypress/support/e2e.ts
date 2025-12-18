@@ -17,6 +17,9 @@ import './commands';
 // Import Testing Library Cypress commands
 import '@testing-library/cypress/add-commands';
 
+// Import StreamPay custom commands
+import './streampay-commands';
+
 // E2E-specific configurations
 Cypress.on('uncaught:exception', (err, runnable) => {
   // Prevent Cypress from failing the test on uncaught exceptions

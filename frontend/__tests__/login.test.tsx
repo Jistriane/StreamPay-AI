@@ -1,20 +1,24 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: jest.fn(), replace: jest.fn(), back: jest.fn(), refresh: jest.fn() }),
+}));
+jest.mock('wagmi', () => ({
+  useAccount: jest.fn(() => ({ address: undefined, isConnected: false })),
+  useConnect: jest.fn(() => ({ connect: jest.fn(), connectors: [] })),
+}));
 import LoginPage from '../app/login/page';
 
 describe('LoginPage', () => {
-  it('renderiza formulário de login', () => {
+  it('renderiza autenticação Web3', () => {
     render(<LoginPage />);
-    expect(screen.getByPlaceholderText('E-mail')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Senha')).toBeInTheDocument();
-    expect(screen.getByText('Entrar')).toBeInTheDocument();
+    expect(screen.getByText('StreamPay AI')).toBeInTheDocument();
+    expect(screen.getByText('Autenticação Web3 com MetaMask')).toBeInTheDocument();
+    expect(screen.getByText(/Conecte sua carteira MetaMask/)).toBeInTheDocument();
   });
 
-  it('exibe status ao tentar login', async () => {
+  it('exibe instruções de uso', () => {
     render(<LoginPage />);
-    fireEvent.change(screen.getByPlaceholderText('E-mail'), { target: { value: 'user@email.com' } });
-    fireEvent.change(screen.getByPlaceholderText('Senha'), { target: { value: '123456' } });
-    fireEvent.click(screen.getByText('Entrar'));
-    expect(await screen.findByText(/Autenticando|Login realizado|Erro/)).toBeInTheDocument();
+    expect(screen.getByText('Como funciona:')).toBeInTheDocument();
   });
 });

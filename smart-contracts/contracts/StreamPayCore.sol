@@ -56,7 +56,7 @@ contract StreamPayCore is ReentrancyGuard, Pausable, Ownable {
     uint256 public nextStreamId;
     mapping(uint256 => Stream) public streams;
 
-    constructor() Ownable(msg.sender) {}
+    constructor() Ownable() {}
 
     /**
      * @notice Cria um novo stream de pagamento

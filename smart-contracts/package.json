@@ -5,7 +5,12 @@
   "private": true,
   "scripts": {
     "test": "hardhat test",
-    "compile": "hardhat compile"
+    "test:fork": "FORKING=true hardhat test test/StreamPayCore.testnet-fork.test.ts",
+    "test:mainnet-fork": "FORKING=true hardhat test test/StreamPayCore.mainnet-fork.test.ts",
+    "compile": "hardhat compile",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "deploy:mumbai": "hardhat run scripts/deploy.js --network polygon_mumbai",
+    "setup:sepolia": "bash scripts/setup-sepolia.sh"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
@@ -13,6 +18,7 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^1.5.0",
-    "@openzeppelin/contracts": "^4.9.0"
+    "@openzeppelin/contracts": "^4.9.0",
+    "dotenv": "^17.2.3"
   }
 }

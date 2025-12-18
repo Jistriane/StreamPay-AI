@@ -5,6 +5,31 @@
 
 The StreamPay API provides RESTful endpoints for integration between frontend, backend, smart contracts, and external providers. It covers registration, streams, history, compliance, monitoring, notifications, and authentication, with security, automation, and test coverage.
 
+## 📋 Smart Contracts (Sepolia Testnet)
+
+**Network**: Sepolia Testnet (Chain ID: 11155111)  
+**Deploy Date**: 15/12/2025 06:05:36 UTC
+
+### Contract Addresses
+
+| Contract | Address | Etherscan |
+|----------|---------|-----------|
+| **StreamPayCore** | `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C` | [View](https://sepolia.etherscan.io/address/0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C) |
+| **LiquidityPool** | `0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd` | [View](https://sepolia.etherscan.io/address/0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd) |
+| **PoolManager** | `0x0F71393348E7b021E64e7787956fB1e7682AB4A8` | [View](https://sepolia.etherscan.io/address/0x0F71393348E7b021E64e7787956fB1e7682AB4A8) |
+| **SwapRouter** | `0x9f3d42feC59d6742CC8dC096265Aa27340C1446F` | [View](https://sepolia.etherscan.io/address/0x9f3d42feC59d6742CC8dC096265Aa27340C1446F) |
+| **USDC (Token)** | `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238` | [View](https://sepolia.etherscan.io/token/0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238) |
+
+### Configuration Files
+
+- **Frontend**: `frontend/app/config/contracts.ts`
+- **Backend**: `backend/src/config/contracts.ts`
+- **Deployment**: `smart-contracts/deployments/sepolia-1765778736884.json`
+
+For full reference, see [CONTRATOS_DEPLOYADOS.md](../CONTRATOS_DEPLOYADOS.md)
+
+---
+
 ## Authentication
 
 - JWT for protected routes

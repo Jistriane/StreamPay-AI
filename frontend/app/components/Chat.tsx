@@ -164,10 +164,11 @@ export default function Chat() {
             rows={1}
             disabled={loading}
           />
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || loading}
-            className="chat-send-button"
+           <button
+             onClick={handleSend}
+             aria-label="Enviar mensagem"
+             disabled={!input.trim() || loading}
+             className="chat-send-button"
           >
             <svg
               width="20"

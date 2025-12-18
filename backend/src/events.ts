@@ -2,9 +2,11 @@
 import { ethers } from "ethers";
 import { saveStreamCreated, saveStreamClaimed, migrateEvents } from "./db";
 import { sendNotification } from "./notify";
+import { getContractAddress, getNetworkConfig } from "./config/contracts";
 
-const provider = new ethers.JsonRpcProvider(process.env.ETH_RPC_URL);
-const contractAddress = process.env.STREAMPAY_CORE_ADDRESS || "0xYourContractAddress";
+const networkConfig = getNetworkConfig('sepolia');
+const provider = new ethers.JsonRpcProvider(networkConfig.rpcUrl);
+const contractAddress = getContractAddress('StreamPayCore', 'sepolia');
 
 const StreamPayCoreABI = [
   "event StreamCreated(uint256 indexed streamId, address indexed sender, address indexed recipient, address token, uint256 ratePerSecond, uint256 duration)",

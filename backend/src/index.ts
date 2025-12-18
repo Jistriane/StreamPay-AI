@@ -1,13 +1,49 @@
+import cors from "cors";
+import 'dotenv/config';
 import express from "express";
-import { createStreamOnChain, claimStreamOnChain } from "./contract";
+import http from "http";
 import { createStream, getStreamsBySender, migrate } from "./db";
 import { Pool } from "pg";
 import axios from "axios";
+import { chatAssistant, analyzeStreamData, generateComplianceReport } from "./gemini";
+import authRouter from "./routes/auth";
+import { webhookRouter } from "./webhooks";
+import { wsRouter, WebSocketManager } from "./websocket";
+import { Logger } from "./utils/logger";
+import { initializeSentry, sentryRequestHandler, sentryErrorHandler, closeSentry } from "./monitoring/sentry";
+
+// Initialize Sentry first
+initializeSentry({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  enabled: true,
+});
 
 const app = express();
+const httpServer = http.createServer(app);
+
+// Sentry request handler must be first
+app.use(sentryRequestHandler());
+
 app.use(express.json());
+
+// Configure CORS
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3003',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3003'
+  ],
+  credentials: true
+}));
+const logger = Logger.getInstance();
 migrate();
 const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
+
+// Initialize WebSocket
+const wsManager = WebSocketManager.getInstance();
+wsManager.initialize(httpServer);
 
 async function authMiddleware(req: any, res: any, next: any) {
   const { authorization } = req.headers;
@@ -33,18 +69,8 @@ app.post("/api/kyc", authMiddleware, async (req: any, res: any) => {
   }
 });
 
-// Endpoint para claim de stream on-chain
-app.post("/api/claim-stream", authMiddleware, async (req: any, res: any) => {
-  const { streamId } = req.body;
-  const contractAddress = process.env.STREAMPAY_CORE_ADDRESS || "0xYourContractAddress";
-  let txHash = null;
-  try {
-    txHash = await claimStreamOnChain(contractAddress, streamId);
-  } catch (err: any) {
-    return res.status(500).json({ error: "Erro ao claimar stream on-chain", details: err.message });
-  }
-  res.json({ message: "Claim realizado com sucesso", txHash });
-});
+// Endpoint para claim de stream on-chain (removido - usar API de streams em routes/)
+
 
 // Simulação de integração Moralis e Chainlink
 app.get("/api/token-price", (req: any, res: any) => {
@@ -82,8 +108,107 @@ app.post("/api/login", async (req: any, res: any) => {
   }
 });
 
+// Endpoint do Assistente Gemini AI
+app.post("/api/gemini/chat", authMiddleware, async (req: any, res: any) => {
+  const { message, context } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: "Mensagem é obrigatória" });
+  }
+  try {
+    const response = await chatAssistant(message, context);
+    res.json({ success: true, response });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Erro ao processar chat", details: err.message });
+  }
+});
+
+// Endpoint para análise de stream com Gemini
+app.post("/api/gemini/analyze-stream", authMiddleware, async (req: any, res: any) => {
+  const { streamData } = req.body;
+  if (!streamData) {
+    return res.status(400).json({ error: "Dados do stream são obrigatórios" });
+  }
+  try {
+    const analysis = await analyzeStreamData(streamData);
+    res.json({ success: true, analysis });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Erro ao analisar stream", details: err.message });
+  }
+});
+
+// Endpoint para gerar relatório de compliance com Gemini
+app.post("/api/gemini/compliance-report", authMiddleware, async (req: any, res: any) => {
+  const { kycData } = req.body;
+  if (!kycData) {
+    return res.status(400).json({ error: "Dados KYC são obrigatórios" });
+  }
+  try {
+    const report = await generateComplianceReport(kycData);
+    res.json({ success: true, report });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Erro ao gerar relatório", details: err.message });
+  }
+});
+
 // Healthcheck
 app.get("/health", (req: any, res: any) => res.send("OK"));
 
+// Mount webhook routes
+app.use("/api/auth", authRouter);
+
+// Webhook router
+app.use("/api", webhookRouter);
+
+// Mount WebSocket routes
+app.use("/api", wsRouter);
+
+// Sentry error handler must be after routes
+app.use(sentryErrorHandler());
+
+// Global error handler
+app.use((err: any, req: any, res: any, next: any) => {
+  logger.error("Unhandled error", {
+    error: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+  });
+
+  res.status(err.status || 500).json({
+    error: process.env.NODE_ENV === "production"
+      ? "Internal Server Error"
+      : err.message,
+    ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
+  });
+});
+
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Backend StreamPay rodando na porta ${PORT}`));
+httpServer.listen(PORT, () => {
+  logger.info(`Backend StreamPay rodando na porta ${PORT}`, { port: PORT });
+  logger.info("WebSocket e Webhook systems initialized", {
+    webhookUrl: process.env.WEBHOOK_URL,
+    wsPort: process.env.WEBSOCKET_PORT || 3002,
+    sentryEnabled: !!process.env.SENTRY_DSN,
+  });
+});
+
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  logger.info("SIGTERM received, shutting down gracefully...");
+  wsManager.shutdown();
+  await closeSentry();
+  httpServer.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", async () => {
+  logger.info("SIGINT received, shutting down gracefully...");
+  wsManager.shutdown();
+  await closeSentry();
+  httpServer.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
+  });
+});

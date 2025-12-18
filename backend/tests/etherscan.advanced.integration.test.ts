@@ -1,18 +1,18 @@
 import request from 'supertest';
-import app from './index';
+import app from '../src/server';
 
-describe('Integração avançada Etherscan', () => {
-  it('deve consultar tokens ERC20 de um endereço', async () => {
-    const address = '0x123...'; // Substitua por um endereço real
-    const res = await request(app).get(`/api/etherscan-erc20/${address}`);
+describe('Integração Avançada Etherscan', () => {
+  it('deve consultar histórico de transações de um endereço', async () => {
+    const address = '0x1234567890123456789012345678901234567890';
+    const res = await request(app).get(`/api/etherscan-address/${address}/txs?limit=10`);
     expect(res.status).toBe(200);
-    expect(res.body.result).toBeDefined();
+    expect(res.body).toHaveProperty('transactions');
   });
 
-  it('deve consultar logs de um contrato', async () => {
-    const contractAddress = '0xabc...'; // Substitua por um contrato real
-    const res = await request(app).get(`/api/etherscan-logs/${contractAddress}`);
-    expect(res.status).toBe(200);
-    expect(res.body.result).toBeDefined();
+  it('deve rejeitar endereço inválido', async () => {
+    const invalidAddress = 'not-an-address';
+    const res = await request(app).get(`/api/etherscan-address/${invalidAddress}/txs`);
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('error');
   });
 });

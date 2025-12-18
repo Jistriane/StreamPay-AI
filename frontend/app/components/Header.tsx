@@ -77,7 +77,7 @@ export default function Header() {
                 <span className="wallet-address-text">{formatAddress(address)}</span>
               </div>
               <button
-                onClick={disconnect}
+                onClick={() => disconnect()}
                 className="btn-wallet btn-disconnect"
                 title="Desconectar Wallet"
               >
