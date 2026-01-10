@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useAccount } from "wagmi";
+import TransactionConfirm, { type SignatureRequest } from "./TransactionConfirm";
 
 interface Message {
   id: string;
@@ -21,6 +22,8 @@ export default function Chat() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [txModalOpen, setTxModalOpen] = useState(false);
+  const [signatureRequest, setSignatureRequest] = useState<SignatureRequest | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -33,7 +36,7 @@ export default function Chat() {
   }, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || !isConnected) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -60,6 +63,23 @@ export default function Chat() {
       });
 
       const data = await response.json();
+
+      // Se o agente pediu assinatura, abrir modal de confirmação
+      const maybeReq: any = data?.data?.pendingSignature ? data.data : data?.pendingSignature ? data : null;
+      if (maybeReq?.pendingSignature && maybeReq?.messageToSign && maybeReq?.payload) {
+        setSignatureRequest(maybeReq as SignatureRequest);
+        setTxModalOpen(true);
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content:
+            (data.resposta || data.message || "Preciso da sua assinatura para continuar.") +
+            "\n\nAbra o modal e confirme a transação na sua wallet.",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        return;
+      }
 
       // Se for uma transação de pagamento, adiciona mensagem de processamento
       if (data.type === 'payment') {
@@ -159,15 +179,15 @@ export default function Chat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Digite sua mensagem... (Enter para enviar, Shift+Enter para nova linha)"
+            placeholder={isConnected ? "Digite sua mensagem... (Enter para enviar, Shift+Enter para nova linha)" : "Conecte sua wallet para usar o chat"}
             className="chat-input"
             rows={1}
-            disabled={loading}
+            disabled={loading || !isConnected}
           />
            <button
              onClick={handleSend}
              aria-label="Enviar mensagem"
-             disabled={!input.trim() || loading}
+             disabled={!input.trim() || loading || !isConnected}
              className="chat-send-button"
           >
             <svg
@@ -184,6 +204,23 @@ export default function Chat() {
           </button>
         </div>
       </div>
+
+      <TransactionConfirm
+        isOpen={txModalOpen}
+        onClose={() => setTxModalOpen(false)}
+        request={signatureRequest}
+        onSuccess={(hashes) => {
+          const assistantMessage: Message = {
+            id: (Date.now() + 2).toString(),
+            role: "assistant",
+            content:
+              `Transação(ões) enviada(s) com sucesso.\n\n` +
+              hashes.map((h) => `- ${h}`).join("\n"),
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, assistantMessage]);
+        }}
+      />
     </div>
   );
 }
