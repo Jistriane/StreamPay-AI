@@ -64,7 +64,8 @@ StreamPay is a decentralized payment streaming platform for freelancers, investo
 
 | Document | Purpose | Time |
 |----------|---------|------|
-| **[DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md)** ⭐ | Documentation index | 10 min |
+| **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** ⭐ | Complete deployment guide (Frontend + Backend) | 15 min |
+| **[DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md)** | Documentation index | 10 min |
 | **[GETTING_STARTED.md](./GETTING_STARTED.md)** | Quick start guide | 5 min |
 | **[SECURITY.md](./SECURITY.md)** | Security guidelines | 10 min |
 | **[CHANGELOG.md](./CHANGELOG.md)** | Version history | 5 min |
@@ -80,14 +81,26 @@ StreamPay is a decentralized payment streaming platform for freelancers, investo
 
 More details and token addresses in [DEPLOYED_CONTRACTS.md](DEPLOYED_CONTRACTS.md).
 
-## ⚡ Quick Start (5 minutes)
+## 🎯 Deployment
 
-### Prerequisites
-- Node.js 18+
-- PostgreSQL 15+
-- MetaMask browser extension
+### Production Deployment (Polygon Mainnet)
 
-### Development Setup
+**Status:** 🟢 Live em Produção
+
+```bash
+# Frontend
+https://stream-pay-ai.vercel.app
+
+# Backend
+https://stream-pay-ai.vercel.app
+
+# Deploy automático ao fazer push para 'main'
+git push origin main
+```
+
+**Para detalhes completos:** Ver [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+
+### Local Development
 
 ```bash
 # Clone repository
@@ -312,6 +325,22 @@ See [SECURITY.md](./SECURITY.md) for detailed security guidelines.
 | **Production Ready** | Yes | ✅ Ready |
 
 ## 🎯 Deployment
+
+### Production (Polygon Mainnet)
+
+🟢 **Live em Produção**
+
+| Service | URL | Status |
+|---------|-----|--------|
+| **Frontend** | https://stream-pay-ai.vercel.app | ✅ Live |
+| **Backend** | https://stream-pay-ai.vercel.app | ✅ Live |
+| **GitHub Actions** | https://github.com/Jistriane/StreamPay-AI/actions | ✅ Configured |
+
+**Deploy Automático:** Qualquer push para `main` dispara deploy automático  
+**Tempo de Deploy:** 2-5 minutos  
+**Rede:** Polygon Mainnet (Chain ID: 137)
+
+Ver [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) para instruções completas.
 
 ### Local Development
 ```bash
