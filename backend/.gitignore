@@ -13,3 +13,5 @@ prisma/migrations
 .turbo
 pnpm-lock.yaml
 package-lock.json
+.vercel
+.env*.local

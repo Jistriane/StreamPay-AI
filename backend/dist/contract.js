@@ -13,6 +13,11 @@ const ethers_1 = require("ethers");
 const contracts_1 = require("./config/contracts");
 const logger_1 = require("./utils/logger");
 const networkConfig = (0, contracts_1.getNetworkConfig)(process.env.NETWORK);
+if (!networkConfig) {
+    const target = process.env.NETWORK || process.env.NODE_ENV || "unknown";
+    logger_1.logger.error(`[StreamPay] Configuração de rede inválida ou ausente: ${target}`);
+    throw new Error("NETWORK inválida ou não configurada (use polygon, mainnet, sepolia ou localhost)");
+}
 const rpcUrl = networkConfig.rpcUrl;
 const provider = new ethers_1.ethers.JsonRpcProvider(rpcUrl);
 // Função para obter wallet de forma segura (lazy initialization)

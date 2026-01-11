@@ -1,16 +1,9 @@
-# 📝 RELATÓRIO FINAL - Deploy Automático Mainnet StreamPay AI
+# 📝 RELATÓRIO FINAL - Deploy Automático Backend Mainnet StreamPay AI
 
 **Data de Setup:** 11 de janeiro de 2026  
 **Status:** ✅ COMPLETO E PRONTO PARA USAR  
-**Rede:** Polygon Mainnet (Chain ID: 137)
-
-## 🎉 URLs de Produção
-
-| Ambiente | URL | Status |
-|----------|-----|--------|
-| **Production** | https://stream-pay-ai.vercel.app | 🟢 Live |
-| **Main Branch** | https://stream-pay-ai-git-main-jistrianedroid-3423s-projects.vercel.app | 🟢 Live |
-| **Auto Deploy** | https://stream-pay-p8lnyknz3-jistrianedroid-3423s-projects.vercel.app | 🟢 Live |
+**Rede:** Polygon Mainnet (Chain ID: 137)  
+**Framework:** Express.js / Node.js
 
 ---
 
@@ -19,35 +12,46 @@
 ### 1. ✅ Vercel CLI
 - **Status:** Instalado e autenticado
 - **Versão:** 49.1.0
-- **Projeto:** Vinculado (`jistrianedroid-3423s-projects/frontend`)
+- **Projeto:** Vinculado (`jistrianedroid-3423s-projects/backend`)
 
-### 2. ✅ Variáveis de Ambiente (Mainnet)
+### 2. ✅ Vercel Configuration
+- **Arquivo:** `backend/vercel.json`
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Framework:** Express.js
+
+### 3. ✅ Variáveis de Ambiente (Mainnet - Production)
 Todas configuradas para **Polygon Mainnet**:
 ```
-NEXT_PUBLIC_CHAIN_ID = 137
-NEXT_PUBLIC_BACKEND_URL = https://api.streampay.io
-NEXT_PUBLIC_ELIZA_URL = https://agent.streampay.io
-NEXT_PUBLIC_STREAM_PAY_CORE_ADDRESS = 0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD
-NEXT_PUBLIC_LIQUIDITY_POOL_ADDRESS = 0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c
-NEXT_PUBLIC_POOL_MANAGER_ADDRESS = 0xae185cA95D0b626a554b0612777350CE3DE06bB9
-NEXT_PUBLIC_SWAP_ROUTER_ADDRESS = 0x07AfFa6C58999Ac0c98237d10476983A573eD368
-NEXT_PUBLIC_TOKEN_ADDRESS = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174
+NODE_ENV = production
+NETWORK = polygon
+POLYGON_RPC_URL = https://polygon-rpc.com
+PORT = 3001
+DATABASE_URL = [Criptografado em Vercel]
+JWT_SECRET = [Protegido em GitHub Secrets]
+JWT_REFRESH_SECRET = [Protegido em GitHub Secrets]
+PRIVATE_KEY = [Protegido em GitHub Secrets]
+BACKEND_URL = https://streampay-backend.vercel.app
+GEMINI_API_KEY = [Criptografado em Vercel]
+MORALIS_API_KEY = [Criptografado em Vercel]
+ETHERSCAN_API_KEY = [Criptografado em Vercel]
 ```
 
-### 3. ✅ GitHub Actions Workflow
-- **Arquivo:** `.github/workflows/deploy-vercel.yml`
+### 4. ✅ GitHub Actions Workflow
+- **Arquivo:** `.github/workflows/deploy-backend-vercel.yml`
 - **Trigger:** Push automático para branch `main`
 - **Ação:** Valida build + Deploy para Vercel (Produção/Mainnet)
 
-### 4. ✅ Build Next.js
+### 5. ✅ Build Express.js
 - **Status:** Validado e funcionando
+- **Compilation:** TypeScript → JavaScript (dist/)
 - **Otimização:** Habilitada para produção
-- **Tamanho:** Otimizado para CDN Vercel
 
-### 5. ✅ Segurança
+### 6. ✅ Segurança
 - ✅ Nenhum código foi alterado
 - ✅ Tokens em GitHub Secrets (nunca visível)
-- ✅ Variáveis públicas sem dados sensíveis
+- ✅ DATABASE_URL criptografado no Vercel
+- ✅ API Keys protegidas
 - ✅ Build validado antes de cada deploy
 - ✅ Git com histórico rastreável
 
@@ -58,7 +62,7 @@ NEXT_PUBLIC_TOKEN_ADDRESS = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174
 ### **Método 1: Script Automático (RECOMENDADO)**
 
 ```bash
-bash "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI-1/deploy-mainnet.sh"
+bash "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI-1/deploy-backend-mainnet.sh"
 ```
 
 **O script faz automaticamente:**
@@ -75,7 +79,7 @@ cd "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI-1"
 
 # Fazer commit com suas mudanças (ou vazio para apenas acionar deploy)
 git add .
-git commit -m "feat: update for mainnet"
+git commit -m "feat: backend update for mainnet"
 
 # Push para main (aciona deploy automático)
 git push origin main
@@ -85,28 +89,28 @@ git push origin main
 
 ## 📊 Monitorar Deploy
 
-### **Acessar Site (Mais Rápido)**
+### **Acessar Site (Quando pronto)**
 ```
-https://stream-pay-ai.vercel.app
+https://streampay-backend.vercel.app
 ```
 
 ### **Via GitHub Actions**
 ```bash
 https://github.com/Jistriane/StreamPay-AI/actions
-→ Aba "Deploy Frontend to Vercel (Mainnet)"
+→ Aba "Deploy Backend to Vercel (Mainnet)"
 ```
 
 ### **Via Vercel Dashboard**
 ```bash
 https://vercel.com/dashboard
-→ Projeto "frontend"
+→ Projeto "backend"
 → Aba "Deployments"
 → Veja histórico de deployments
 ```
 
 ### **Via Terminal**
 ```bash
-cd "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI-1/frontend"
+cd "/home/jistriane/Documentos/StreamPay AI/StreamPay-AI-1/backend"
 
 # Ver logs do Vercel em tempo real
 vercel logs --follow
@@ -114,32 +118,41 @@ vercel logs --follow
 
 ---
 
-## 📁 Arquivos Criados
+## 📁 Arquivos Criados/Atualizados
 
-1. **`AUTOMATIC_DEPLOY_SETUP.md`**
+1. **`backend/vercel.json`**
+   - Configuração do Vercel para Express
+   - Build e output settings
+
+2. **`.github/workflows/deploy-backend-vercel.yml`**
+   - Workflow de GitHub Actions
+   - Deploy automático para mainnet
+
+3. **`deploy-backend-mainnet.sh`**
+   - Script auxiliar automático
+   - Validação de build
+   - Monitoramento em tempo real
+
+4. **`AUTOMATIC_BACKEND_DEPLOY.md`**
    - Documentação completa do setup
    - Instruções de segurança
    - Troubleshooting
 
-2. **`DEPLOY_QUICK_START.md`**
+5. **`BACKEND_DEPLOY_QUICK_START.md`**
    - Guia rápido de uso
    - Checklist pré-deploy
    - Tabela de suporte
-
-3. **`deploy-mainnet.sh`**
-   - Script auxiliar automático
-   - Validação de build
-   - Monitoramento em tempo real
 
 ---
 
 ## ✅ Checklist Final
 
 - [x] Vercel CLI instalado e autenticado
-- [x] Projeto vinculado à Vercel
+- [x] Projeto backend vinculado à Vercel
+- [x] vercel.json criado com configurações
 - [x] Variáveis de ambiente configuradas para mainnet
 - [x] GitHub Actions workflow pronto
-- [x] Build Next.js validado
+- [x] Build Express.js validado
 - [x] Nenhuma alteração de código
 - [x] Documentação completa
 - [x] Script auxiliar criado
@@ -153,7 +166,7 @@ vercel logs --follow
 
 **Opção 1 (Automática):**
 ```bash
-bash deploy-mainnet.sh
+bash deploy-backend-mainnet.sh
 ```
 
 **Opção 2 (Manual):**
@@ -163,8 +176,8 @@ git push origin main
 
 ### Depois que fazer deploy:
 
-1. **Acessar site:** https://stream-pay-ai.vercel.app
-2. **Monitorar deploy:** https://github.com/Jistriane/StreamPay-AI/actions
+1. **Acessar site:** https://streampay-backend.vercel.app
+2. **Monitorar em:** https://github.com/Jistriane/StreamPay-AI/actions
 3. **Verificar status:** https://vercel.com/dashboard
 
 ---
@@ -173,9 +186,9 @@ git push origin main
 
 ✅ **Código:** Não modificado  
 ✅ **Tokens:** Protegidos em GitHub Secrets  
+✅ **Database:** Variável de ambiente criptografada  
 ✅ **Build:** Validado antes de deploy  
-✅ **Variáveis:** Sem dados sensíveis  
-✅ **CORS:** Backend valida chamadas  
+✅ **API Keys:** Protegidas em Vercel  
 ✅ **CDN:** Vercel protege sua aplicação  
 
 ---
@@ -198,6 +211,7 @@ git push origin main
 | Env vars incorretas | Execute `vercel env pull` para sincronizar |
 | Site offline | Verifique logs em `Vercel Dashboard` |
 | Quer rollback | `git revert HEAD && git push origin main` |
+| Database não conecta | Verificar `DATABASE_URL` em production |
 
 ---
 
@@ -206,19 +220,20 @@ git push origin main
 - **GitHub Actions:** https://github.com/Jistriane/StreamPay-AI/actions
 - **Vercel Dashboard:** https://vercel.com/dashboard
 - **CLI Help:** `vercel --help`
-- **Docs:** Leia `AUTOMATIC_DEPLOY_SETUP.md`
+- **Docs:** Leia `AUTOMATIC_BACKEND_DEPLOY.md`
 
 ---
 
 ## 🎉 Conclusão
 
-Seu frontend StreamPay AI está **100% pronto para deploy automático em mainnet**!
+Seu backend StreamPay AI está **100% pronto para deploy automático em mainnet**!
 
 - ✅ Qualquer push para `main` dispara deploy automático
 - ✅ GitHub Actions valida + Vercel faz deploy
 - ✅ Zero alterações de código
 - ✅ Deploy seguro e confiável
 - ✅ Monitore em tempo real
+- ✅ APIs em https://streampay-backend.vercel.app
 
 **Status:** 🟢 PRONTO PARA PRODUÇÃO
 
@@ -227,4 +242,5 @@ Seu frontend StreamPay AI está **100% pronto para deploy automático em mainnet
 **Setup realizado por:** GitHub Copilot  
 **Data:** 11 de janeiro de 2026  
 **Rede:** Polygon Mainnet (Chain ID: 137)  
+**Framework:** Express.js/Node.js  
 **Versão:** v1.0

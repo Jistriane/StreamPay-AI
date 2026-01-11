@@ -24,11 +24,23 @@ Seu projeto StreamPay AI está **100% pronto para deploy automático** em mainne
 
 ---
 
+## 🎉 URLs de Produção
+
+| Ambiente | URL | Status |
+|----------|-----|--------|
+| **Production (Mainnet)** | https://stream-pay-ai.vercel.app | 🟢 Live |
+| **Main Branch** | https://stream-pay-ai-git-main-jistrianedroid-3423s-projects.vercel.app | 🟢 Live |
+| **Automatic Deploy** | https://stream-pay-p8lnyknz3-jistrianedroid-3423s-projects.vercel.app | 🟢 Live |
+
+---
+
 ## 🚀 Como Fazer Deploy Automático Agora
 
 ### **Opção 1: Deployment Automático (RECOMENDADO)**
 
-Qualquer push para a branch `main` acionará automaticamente:
+Qualquer push para a branch `main` acionará automaticamente deploy para:
+- **Production:** https://stream-pay-ai.vercel.app
+- **Preview:** https://stream-pay-ai-git-main-jistrianedroid-3423s-projects.vercel.app
 
 ```bash
 git add .

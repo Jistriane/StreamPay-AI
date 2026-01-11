@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "framework": "express",
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3001"
+  }
+}
