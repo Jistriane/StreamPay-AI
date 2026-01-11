@@ -5,7 +5,11 @@ export const swapTokensAction: Action = {
     name: 'SWAP_TOKENS',
     similes: ['EXCHANGE_TOKENS', 'TRADE_TOKENS', 'TROCAR_TOKENS', 'SWAP'],
     description: 'Swap exact amount of input tokens for output tokens.',
-    validate: async (runtime: IAgentRuntime, message: Memory) => true,
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const text = (message.content?.text || '').toLowerCase();
+        const keywords = ['swap', 'trocar', 'exchange', 'convert', 'converter', 'trade'];
+        return keywords.some(kw => text.includes(kw));
+    },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         elizaLogger.info('[StreamPay] Executing SWAP_TOKENS');
 

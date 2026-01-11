@@ -5,7 +5,11 @@ export const cancelStreamAction: Action = {
     name: 'CANCEL_STREAM',
     similes: ['STOP_STREAM', 'CANCELAR_PAGAMENTO', 'CANCELAR_STREAM'],
     description: 'Cancel an ongoing payment stream.',
-    validate: async (runtime: IAgentRuntime, message: Memory) => true,
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const text = (message.content?.text || '').toLowerCase();
+        const keywords = ['cancel stream', 'cancelar stream', 'stop stream', 'parar stream', 'delete stream'];
+        return keywords.some(kw => text.includes(kw));
+    },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         elizaLogger.info('[StreamPay] Executing CANCEL_STREAM');
 

@@ -5,7 +5,11 @@ export const getPriceAction: Action = {
     name: 'GET_PRICE',
     similes: ['PRICE_CHECK', 'TOKEN_PRICE', 'COTAÇÃO', 'PREÇO'],
     description: 'Get the current price of a cryptocurrency token.',
-    validate: async (runtime: IAgentRuntime, message: Memory) => true,
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const text = (message.content?.text || '').toLowerCase();
+        const keywords = ['price', 'preço', 'cotação', 'quanto custa', 'valor do', 'how much is'];
+        return keywords.some(kw => text.includes(kw));
+    },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         elizaLogger.info('[StreamPay] Executing GET_PRICE');
 

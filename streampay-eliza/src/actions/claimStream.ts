@@ -5,7 +5,11 @@ export const claimStreamAction: Action = {
     name: 'CLAIM_STREAM',
     similes: ['WITHDRAW_STREAM', 'RECEIVE_PAYMENT', 'SAQUE_STREAM', 'REIVINDICAR_PAGAMENTO'],
     description: 'Claim available tokens from a payment stream.',
-    validate: async (runtime: IAgentRuntime, message: Memory) => true,
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const text = (message.content?.text || '').toLowerCase();
+        const keywords = ['claim', 'reivindicar', 'collect', 'coletar', 'withdraw stream', 'sacar stream'];
+        return keywords.some(kw => text.includes(kw));
+    },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         elizaLogger.info('[StreamPay] Executing CLAIM_STREAM');
 

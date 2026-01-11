@@ -6,7 +6,11 @@ export const checkBalanceAction: Action = {
     name: 'CHECK_BALANCE',
     similes: ['CHECK_WALLET', 'VIEW_BALANCE', 'MY_NET_WORTH', 'WALLET_STATUS', 'BALANCE'],
     description: 'Check the token balances and total net worth of the user connected wallet.',
-    validate: async (runtime: IAgentRuntime, message: Memory) => true,
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const text = (message.content?.text || '').toLowerCase();
+        const keywords = ['balance', 'saldo', 'carteira', 'wallet', 'net worth', 'patrimônio', 'quanto tenho'];
+        return keywords.some(kw => text.includes(kw));
+    },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         elizaLogger.info('[StreamPay] Executing CHECK_BALANCE');
         

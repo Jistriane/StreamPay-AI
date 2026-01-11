@@ -5,7 +5,11 @@ export const createStreamAction: Action = {
     name: 'CREATE_STREAM',
     similes: ['SEND_PAYMENT', 'MAKE_STREAM', 'PAY_STREAM', 'START_STREAM', 'ENVIAR_PAGAMENTO', 'CRIAR_STREAM'],
     description: 'Create a new payment stream to a recipient address.',
-    validate: async (runtime: IAgentRuntime, message: Memory) => true,
+    validate: async (runtime: IAgentRuntime, message: Memory) => {
+        const text = (message.content?.text || '').toLowerCase();
+        const keywords = ['create stream', 'criar stream', 'new stream', 'novo stream', 'send payment', 'enviar pagamento', 'stream of', 'stream de'];
+        return keywords.some(kw => text.includes(kw));
+    },
     handler: async (runtime: IAgentRuntime, message: Memory, state: State, _options: any, callback: HandlerCallback) => {
         elizaLogger.info('[StreamPay] Executing CREATE_STREAM');
 
