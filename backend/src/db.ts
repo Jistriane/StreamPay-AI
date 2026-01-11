@@ -142,3 +142,19 @@ export async function migrateClaims() {
     );
   `);
 }
+
+// ===== PRISMA CLIENT =====
+import { PrismaClient } from "@prisma/client";
+
+export const prisma = new PrismaClient({
+  log: [
+    {
+      emit: "event",
+      level: "error",
+    },
+  ],
+});
+
+prisma.$on("error", (e) => {
+  console.error("Prisma error:", e);
+});

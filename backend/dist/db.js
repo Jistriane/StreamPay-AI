@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pool = void 0;
+exports.prisma = exports.pool = void 0;
 exports.query = query;
 exports.getClient = getClient;
 exports.saveStreamCreated = saveStreamCreated;
@@ -12,6 +12,7 @@ exports.migrateEvents = migrateEvents;
 exports.createStream = createStream;
 exports.getStreamsBySender = getStreamsBySender;
 exports.migrate = migrate;
+exports.migrateClaims = migrateClaims;
 const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -81,7 +82,8 @@ async function migrateEvents() {
       rate_per_second TEXT,
       duration TEXT,
       amount TEXT,
-      timestamp TIMESTAMP
+      timestamp TIMESTAMP,
+      created_at TIMESTAMP DEFAULT NOW()
     );
   `);
 }
@@ -96,12 +98,49 @@ async function migrate() {
     await exports.pool.query(`
     CREATE TABLE IF NOT EXISTS streams (
       id SERIAL PRIMARY KEY,
-      recipient TEXT,
-      token TEXT,
-      rate TEXT,
-      duration INTEGER,
-      active BOOLEAN,
-      sender TEXT
+      sender TEXT NOT NULL,
+      recipient TEXT NOT NULL,
+      token TEXT NOT NULL,
+      deposit TEXT,
+      rate_per_second TEXT,
+      duration INTEGER NOT NULL,
+      status TEXT DEFAULT 'pending',
+      tx_hash TEXT,
+      on_chain_id TEXT,
+      active BOOLEAN DEFAULT true,
+      remaining_balance TEXT DEFAULT '0',
+      start_time TIMESTAMP,
+      stop_time TIMESTAMP,
+      created_at TIMESTAMP DEFAULT NOW()
     );
   `);
 }
+async function migrateClaims() {
+    await exports.pool.query(`
+    CREATE TABLE IF NOT EXISTS stream_claims (
+      id SERIAL PRIMARY KEY,
+      stream_id INTEGER NOT NULL,
+      recipient TEXT NOT NULL,
+      status TEXT DEFAULT 'pending',
+      amount TEXT,
+      created_at TIMESTAMP DEFAULT NOW(),
+      CONSTRAINT fk_stream
+        FOREIGN KEY(stream_id)
+          REFERENCES streams(id)
+          ON DELETE CASCADE
+    );
+  `);
+}
+// ===== PRISMA CLIENT =====
+const client_1 = require("@prisma/client");
+exports.prisma = new client_1.PrismaClient({
+    log: [
+        {
+            emit: "event",
+            level: "error",
+        },
+    ],
+});
+exports.prisma.$on("error", (e) => {
+    console.error("Prisma error:", e);
+});

@@ -4,7 +4,7 @@
  */
 
 import { io, Socket } from "socket.io-client";
-import { WebSocketEventType, WebSocketMessage } from "../types";
+import { WebSocketEventType, WebSocketMessage } from "./types";
 
 export interface WebSocketClientConfig {
   url: string;

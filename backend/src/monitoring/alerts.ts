@@ -321,3 +321,5 @@ class AlertSystem {
 }
 
 export const alertSystem = AlertSystem.getInstance();
+
+export { AlertSystem };

@@ -126,7 +126,7 @@ export class WebhookManager {
       const log = await prisma.webhookLog.create({
         data: {
           eventType,
-          payload: payload as unknown as Record<string, unknown>,
+          payload: JSON.stringify(payload) as any,
           status,
           retryCount: 0,
           lastRetry: null,
@@ -136,7 +136,7 @@ export class WebhookManager {
         }
       });
 
-      return log as WebhookLog;
+      return { ...log, payload: JSON.parse(String(log.payload)) as WebhookPayload } as WebhookLog;
     } catch (error) {
       logger.error('Erro ao criar webhook log', error);
       throw error;
@@ -193,7 +193,7 @@ export class WebhookManager {
           if (webhookUrl) {
             await this.sendWebhook(
               webhookUrl,
-              log.payload as WebhookPayload
+              JSON.parse(String(log.payload)) as WebhookPayload
             );
             await prisma.webhookLog.update({
               where: { id: log.id },

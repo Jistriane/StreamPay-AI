@@ -5,7 +5,7 @@
 
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
-import { Logger } from "./logger";
+import { Logger } from "../utils/logger";
 
 const logger = Logger.getInstance();
 
@@ -45,7 +45,7 @@ export function initializeSentry(config: Partial<SentryConfig> = {}): void {
         new Sentry.Integrations.Http({ tracing: true }),
         new Sentry.Integrations.OnUncaughtException(),
         new Sentry.Integrations.OnUnhandledRejection(),
-        nodeProfilingIntegration(),
+        // nodeProfilingIntegration() - Type incompatibility with @sentry/types,
       ],
       tracesSampleRate: config.tracesSampleRate ?? 1.0,
       profilesSampleRate: config.profilesSampleRate ?? 1.0,

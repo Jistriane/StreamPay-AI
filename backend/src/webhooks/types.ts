@@ -23,7 +23,7 @@ export interface WebhookPayload {
   nonce: string;
 }
 
-export interface StreamCreatedEvent {
+export interface StreamCreatedEvent extends Record<string, unknown> {
   streamId: string;
   creator: string;
   recipient: string;
@@ -34,7 +34,7 @@ export interface StreamCreatedEvent {
   blockNumber: number;
 }
 
-export interface StreamClaimedEvent {
+export interface StreamClaimedEvent extends Record<string, unknown> {
   streamId: string;
   claimer: string;
   amountClaimed: string;
@@ -42,7 +42,7 @@ export interface StreamClaimedEvent {
   blockNumber: number;
 }
 
-export interface PoolCreatedEvent {
+export interface PoolCreatedEvent extends Record<string, unknown> {
   poolId: string;
   creator: string;
   tokenA: string;
@@ -53,7 +53,7 @@ export interface PoolCreatedEvent {
   blockNumber: number;
 }
 
-export interface LiquidityAddedEvent {
+export interface LiquidityAddedEvent extends Record<string, unknown> {
   poolId: string;
   provider: string;
   amountA: string;

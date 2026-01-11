@@ -13,7 +13,17 @@ interface LogEntry {
 }
 
 class Logger {
+  private static instance: Logger;
   private isDevelopment = process.env.NODE_ENV === 'development';
+
+  private constructor() {}
+
+  static getInstance(): Logger {
+    if (!Logger.instance) {
+      Logger.instance = new Logger();
+    }
+    return Logger.instance;
+  }
 
   private format(entry: LogEntry): string {
     const { level, timestamp, message, context, error } = entry;
@@ -61,7 +71,7 @@ class Logger {
     console.warn(this.format(entry));
   }
 
-  error(message: string, error?: Error | unknown, context?: unknown): void {
+  error(message: string, context?: unknown, error?: unknown): void {
     let errorObj: Error | undefined;
 
     if (error instanceof Error) {
@@ -90,4 +100,5 @@ class Logger {
   }
 }
 
-export const logger = new Logger();
+export { Logger };
+export const logger = Logger.getInstance();

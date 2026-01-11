@@ -24,6 +24,7 @@ export enum WebSocketEventType {
   LIQUIDITY_ADDED = "pool:liquidity_added",
   LIQUIDITY_REMOVED = "pool:liquidity_removed",
   SWAP_EXECUTED = "pool:swap_executed",
+  POOL_SWAPPED = "pool:swapped",
   POOL_UPDATED = "pool:updated",
 
   // Chat events

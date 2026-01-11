@@ -104,3 +104,6 @@ export function generateToken(payload: {
     const options: SignOptions = { expiresIn: expiresInSeconds };
     return jwt.sign(payload, secret, options);
 }
+
+// Alias para compatibilidade
+export const authenticate = authenticateJWT;

@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
 
 // Criar configuração do Wagmi (v2)
 const wagmiConfig = createConfig({
-  chains: [sepolia],
+  chains: [sepolia as any],
   connectors: [injected()],
   transports: {
     [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
