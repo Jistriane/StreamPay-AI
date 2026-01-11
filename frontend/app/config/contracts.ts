@@ -1,13 +1,93 @@
 /**
  * Smart Contracts Configuration
  * 
- * Endereços dos contratos deployados na Sepolia testnet
+ * Endereços dos contratos deployados em Mainnet e Sepolia
  * Deploy: 15/12/2025 06:05:36 UTC
  * Deployer: 0x3b598F74e735104435B450fdf3dAd565f046eA70
- * Chain ID: 11155111
+ * Chain IDs: Mainnet (1), Sepolia (11155111)
  */
+/**
+ * Default chain ID (Polygon Mainnet)
+ */
+export const DEFAULT_CHAIN_ID = 137;
 
-export const CONTRACTS = {
+/**
+ * Supported chain IDs
+ */
+export const SUPPORTED_CHAINS = [137, 1, 11155111, 31337] as const;
+      StreamPayCore: {
+        address: '0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298',
+        explorerUrl: 'https://polygonscan.com/address/0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298',
+      },
+      LiquidityPool: {
+        address: '0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
+        explorerUrl: 'https://polygonscan.com/address/0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
+      },
+      PoolManager: {
+        address: '0xae185cA95D0b626a554b0612777350CE3DE06bB9',
+        explorerUrl: 'https://polygonscan.com/address/0xae185cA95D0b626a554b0612777350CE3DE06bB9',
+      },
+      SwapRouter: {
+        address: '0x07AfFa6C58999Ac0c98237d10476983A573eD368',
+        explorerUrl: 'https://polygonscan.com/address/0x07AfFa6C58999Ac0c98237d10476983A573eD368',
+      },
+    },
+
+    tokens: {
+      USDC: {
+        address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+        symbol: 'USDC',
+        decimals: 6,
+        explorerUrl: 'https://polygonscan.com/token/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+      },
+    },
+
+    uniswap: {
+      positionManager: '0xC36442b4a4522e871399cD717ABDd847AB11fe1f',
+      factory: '0x1F98431C8aD98523631AE4a59F267346Ea31f64C',
+    },
+  },
+
+  mainnet: {
+    chainId: 1,
+    chainName: 'Ethereum Mainnet',
+    rpcUrl: 'https://eth.publicnode.com',
+    blockExplorer: 'https://etherscan.io',
+    
+    contracts: {
+      StreamPayCore: {
+        address: '0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD',
+        explorerUrl: 'https://etherscan.io/address/0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD',
+      },
+      LiquidityPool: {
+        address: '0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
+        explorerUrl: 'https://etherscan.io/address/0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
+      },
+      PoolManager: {
+        address: '0xae185cA95D0b626a554b0612777350CE3DE06bB9',
+        explorerUrl: 'https://etherscan.io/address/0xae185cA95D0b626a554b0612777350CE3DE06bB9',
+      },
+      SwapRouter: {
+        address: '0x07AfFa6C58999Ac0c98237d10476983A573eD368',
+        explorerUrl: 'https://etherscan.io/address/0x07AfFa6C58999Ac0c98237d10476983A573eD368',
+      },
+    },
+    
+    tokens: {
+      USDC: {
+        address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+        symbol: 'USDC',
+        decimals: 6,
+        explorerUrl: 'https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      },
+    },
+    
+    uniswap: {
+      positionManager: '0xC36442b4a4522e871399cD717ABDd847AB11fe1f',
+      factory: '0x1F98431C8aD98523631AE4a59F267346Ea31f64C',
+    },
+  },
+
   sepolia: {
     chainId: 11155111,
     chainName: 'Sepolia',
@@ -74,10 +154,12 @@ export const CONTRACTS = {
  * Get contract configuration based on chain ID
  */
 export function getContractConfig(chainId: number) {
+  if (chainId === 137) return CONTRACTS.polygon;
+  if (chainId === 1) return CONTRACTS.mainnet;
   if (chainId === 11155111) return CONTRACTS.sepolia;
   if (chainId === 31337) return CONTRACTS.localhost;
   
-  throw new Error(`Unsupported chain ID: ${chainId}`);
+  throw new Error(`Unsupported chain ID: ${chainId}. Supported: Mainnet (1), Sepolia (11155111), Localhost (31337)`);
 }
 
 /**
@@ -92,11 +174,16 @@ export function getContractAddress(
 }
 
 /**
- * Default chain ID (Sepolia for development/testing)
+ * Default chain ID (Mainnet)
  */
-export const DEFAULT_CHAIN_ID = 11155111;
+export const DEFAULT_CHAIN_ID = 1;
 
 /**
  * Supported chain IDs
  */
-export const SUPPORTED_CHAINS = [11155111, 31337] as const;
+export const DEFAULT_CHAIN_ID = 137;
+
+/**
+ * Supported chain IDs
+ */
+export const SUPPORTED_CHAINS = [137, 1, 11155111, 31337] as const;

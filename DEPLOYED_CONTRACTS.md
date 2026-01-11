@@ -8,8 +8,8 @@
 ## 🌐 Polygon Mainnet (Chain ID: 137)
 
 ### StreamPayCore
-- **Address**: `0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD`
-- **Polygonscan**: https://polygonscan.com/address/0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD
+- **Address**: `0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298`
+- **Polygonscan**: https://polygonscan.com/address/0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298
 - **Function**: Core payment streaming system
 
 ### LiquidityPool

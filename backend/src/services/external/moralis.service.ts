@@ -35,7 +35,7 @@ export class MoralisService {
 
       const response = await axios.get<any>(`${this.baseUrl}/${address}/erc20/streams`, {
         headers: { 'X-API-Key': this.apiKey },
-        params: { chain: 'sepolia' },
+        params: { chain: 'eth' },
         timeout: 10000,
       });
 
@@ -46,7 +46,7 @@ export class MoralisService {
     }
   }
 
-  async getNFTs(address: string, chain: string = 'sepolia'): Promise<MoralisNFT[]> {
+  async getNFTs(address: string, chain: string = 'eth'): Promise<MoralisNFT[]> {
     try {
       if (!this.apiKey) {
         logger.warn('[Moralis] API key não configurada, retornando NFTs fictícios');
@@ -75,7 +75,7 @@ export class MoralisService {
 
       const response = await axios.get<any>(`${this.baseUrl}/${address}/erc20/${tokenAddress}/balance`, {
         headers: { 'X-API-Key': this.apiKey },
-        params: { chain: 'sepolia' },
+        params: { chain: 'eth' },
         timeout: 10000,
       });
 
@@ -95,7 +95,7 @@ export class MoralisService {
 
       const response = await axios.get<any>(`${this.baseUrl}/${address}/balance`, {
         headers: { 'X-API-Key': this.apiKey },
-        params: { chain: 'sepolia' },
+        params: { chain: 'eth' },
         timeout: 10000,
       });
 

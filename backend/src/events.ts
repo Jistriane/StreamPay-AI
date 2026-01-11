@@ -4,9 +4,9 @@ import { saveStreamCreated, saveStreamClaimed, migrateEvents } from "./db";
 import { sendNotification } from "./notify";
 import { getContractAddress, getNetworkConfig } from "./config/contracts";
 
-const networkConfig = getNetworkConfig('sepolia');
+const networkConfig = getNetworkConfig('polygon');
 const provider = new ethers.JsonRpcProvider(networkConfig.rpcUrl);
-const contractAddress = getContractAddress('StreamPayCore', 'sepolia');
+const contractAddress = getContractAddress('StreamPayCore', 'polygon');
 
 const StreamPayCoreABI = [
   "event StreamCreated(uint256 indexed streamId, address indexed sender, address indexed recipient, address token, uint256 ratePerSecond, uint256 duration)",

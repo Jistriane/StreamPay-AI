@@ -1,6 +1,6 @@
 import express, { Router, Response } from "express";
 import { z } from "zod";
-import { Interface, parseUnits } from "ethers";
+import { Interface, parseUnits, getAddress } from "ethers";
 import { authenticateJWT } from "../../middleware/auth";
 import { asyncHandler, APIError } from "../../middleware/errorHandler";
 import { getNetworkConfig } from "../../config/contracts";
@@ -33,12 +33,12 @@ const SWAP_ROUTER_ABI = [
 
 function resolveTokenAddress(tokenOrSymbol: string, networkCfg: any): string {
   if (typeof tokenOrSymbol === "string" && tokenOrSymbol.startsWith("0x")) {
-    return tokenOrSymbol;
+    return getAddress(tokenOrSymbol); // Normalizar checksum
   }
   const key = String(tokenOrSymbol || "").toUpperCase();
   const addr = networkCfg[key];
   if (typeof addr === "string" && addr.startsWith("0x")) {
-    return addr;
+    return getAddress(addr); // Normalizar checksum
   }
   throw new APIError(400, `Token inválido ou não suportado: ${tokenOrSymbol}`, "INVALID_TOKEN");
 }
@@ -108,7 +108,8 @@ router.post(
         throw new APIError(400, "ratePerSecond inválido", "INVALID_RATE");
       }
 
-      const streamCore = String(networkCfg.StreamPayCore);
+      const streamCore = getAddress(String(networkCfg.StreamPayCore));
+      const recipientChecksummed = getAddress(recipient);
       const erc20Iface = new Interface(ERC20_ABI);
       const coreIface = new Interface(STREAM_PAY_CORE_ABI);
 
@@ -127,7 +128,7 @@ router.post(
         tx: buildTxRequest(
           streamCore,
           coreIface.encodeFunctionData("createStream", [
-            recipient,
+            recipientChecksummed,
             tokenAddr,
             depositRaw,
             ratePerSecond,

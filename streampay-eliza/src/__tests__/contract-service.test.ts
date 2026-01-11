@@ -5,7 +5,7 @@ describe("ContractService", () => {
     const svc = new ContractService({
       backendUrl: "http://localhost:3001",
       userAddress: "0x1234567890123456789012345678901234567890",
-      network: "sepolia",
+      network: "polygon",
     });
 
     const req = svc.createStream({
@@ -18,8 +18,8 @@ describe("ContractService", () => {
     expect(req.pendingSignature).toBe(true);
     expect(req.payload.intent).toBe("CREATE_STREAM");
     expect(req.payload.userAddress).toBe("0x1234567890123456789012345678901234567890");
-    expect(req.payload.network).toBe("sepolia");
-    expect(req.payload.chainId).toBe(11155111);
+    expect(req.payload.network).toBe("polygon");
+    expect(req.payload.chainId).toBe(137);
     expect(req.payload.parameters.recipient).toBe("0x1234567890123456789012345678901234567890");
     expect(req.payload.parameters.token).toBe("USDC");
 

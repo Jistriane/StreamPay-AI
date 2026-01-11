@@ -14,8 +14,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url('DATABASE_URL deve ser uma URL válida'),
   
   // Blockchain
-  NETWORK: z.enum(['localhost', 'sepolia', 'polygon', 'mainnet']).default('sepolia'),
-  RPC_URL: z.string().url('RPC_URL deve ser uma URL válida').default('https://ethereum-sepolia-rpc.publicnode.com'),
+  NETWORK: z.enum(['localhost', 'sepolia', 'polygon', 'mainnet']).default('polygon'),
+  RPC_URL: z.string().url('RPC_URL deve ser uma URL válida').default('https://polygon-rpc.com'),
   PRIVATE_KEY: z.string()
     .refine(
       (key) => key.startsWith('0x') && key.length === 66,
@@ -68,7 +68,7 @@ export function validateEnv(): EnvConfig {
       NODE_ENV: 'test',
       PORT: 3001,
       DATABASE_URL: 'postgresql://user:pass@localhost:5432/testdb',
-      NETWORK: 'sepolia',
+      NETWORK: 'polygon',
       RPC_URL: 'https://example.com',
       PRIVATE_KEY: '0x' + '0'.repeat(64),
       STREAMPAY_CORE_ADDRESS: '0x' + '0'.repeat(40),

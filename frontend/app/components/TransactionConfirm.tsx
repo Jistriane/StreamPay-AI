@@ -19,7 +19,7 @@ export interface SignatureRequestPayload {
   requestId: string;
   intent: string;
   userAddress: string;
-  network: "sepolia" | "localhost";
+  network: "polygon" | "mainnet" | "sepolia" | "localhost";
   chainId: number;
   parameters: Record<string, any>;
   issuedAt: number;
@@ -84,9 +84,78 @@ export default function TransactionConfirm({
       if (!eth) throw new Error(t("txConfirm.metaMaskMissing"));
 
       // Lazy import to avoid SSR issues
-      const { BrowserProvider } = await import("ethers");
+      const { BrowserProvider, isAddress } = await import("ethers");
       const provider = new BrowserProvider(eth);
       const signer = await provider.getSigner();
+      
+      // Validate network matches; attempt auto-switch if mismatch
+      const network = await provider.getNetwork();
+      const expectedChainId = request.payload.chainId;
+      const actualChainId = typeof network.chainId === 'bigint' ? Number(network.chainId) : Number(network.chainId);
+      if (actualChainId !== expectedChainId) {
+        try {
+          const hexChainId = `0x${expectedChainId.toString(16)}`;
+          await eth.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: hexChainId }],
+          });
+          const postSwitch = await provider.getNetwork();
+          const postSwitchId = typeof postSwitch.chainId === 'bigint' ? Number(postSwitch.chainId) : Number(postSwitch.chainId);
+          if (postSwitchId !== expectedChainId) {
+            throw new Error(t("txConfirm.networkMismatch"));
+          }
+        } catch (switchErr: any) {
+          // Se erro 4902, rede não existe na wallet - tentar adicionar
+          if (switchErr?.code === 4902) {
+            try {
+              const chainParams = expectedChainId === 137
+                ? {
+                    chainId: '0x89',
+                    chainName: 'Polygon Mainnet',
+                    nativeCurrency: { name: 'POL', symbol: 'POL', decimals: 18 },
+                    rpcUrls: ['https://polygon-rpc.com', 'https://rpc.ankr.com/polygon', 'https://polygon.llamarpc.com'],
+                    blockExplorerUrls: ['https://polygonscan.com'],
+                  }
+                : expectedChainId === 1
+                ? {
+                    chainId: '0x1',
+                    chainName: 'Ethereum Mainnet',
+                    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+                    rpcUrls: ['https://eth.publicnode.com', 'https://ethereum.publicnode.com', 'https://rpc.ankr.com/eth'],
+                    blockExplorerUrls: ['https://etherscan.io'],
+                  }
+                : expectedChainId === 11155111
+                ? {
+                    chainId: '0xAA36A7',
+                    chainName: 'Sepolia',
+                    nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
+                    rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
+                    blockExplorerUrls: ['https://sepolia.etherscan.io'],
+                  }
+                : undefined;
+              if (chainParams) {
+                await eth.request({ method: 'wallet_addEthereumChain', params: [chainParams] });
+                // Após adicionar, tentar trocar novamente
+                await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: chainParams.chainId }] });
+                const postAdd = await provider.getNetwork();
+                const postAddId = typeof postAdd.chainId === 'bigint' ? Number(postAdd.chainId) : Number(postAdd.chainId);
+                if (postAddId !== expectedChainId) {
+                  throw new Error(t("txConfirm.networkMismatch"));
+                }
+              } else {
+                throw new Error(t("txConfirm.networkMismatch"));
+              }
+            } catch (e2) {
+              console.error('[TransactionConfirm] Erro ao adicionar rede:', e2);
+              throw new Error(t("txConfirm.networkMismatch"));
+            }
+          } else {
+            // Outro erro (usuário rejeitou, etc)
+            console.error('[TransactionConfirm] Erro ao trocar rede:', switchErr);
+            throw new Error(t("txConfirm.networkMismatch"));
+          }
+        }
+      }
 
       setStep("signing");
       const signature = await signer.signMessage(request.messageToSign);
@@ -129,6 +198,24 @@ export default function TransactionConfirm({
       const txs = data.txRequests || [];
       if (!txs.length)
         throw new Error(t("txConfirm.noTxReturned"));
+
+      // Validate transaction targets before sending
+      for (const item of txs) {
+        console.log("[TransactionConfirm] Validating tx:", item.label, "to:", item.tx.to);
+        if (!isAddress(item.tx.to)) {
+          throw new Error(t("txConfirm.invalidAddress"));
+        }
+        // Only enforce contract code check for the core createStream call
+        const isCoreCreate = /Criar stream|createStream/i.test(item.label || "");
+        if (isCoreCreate) {
+          console.log("[TransactionConfirm] Checking contract code for:", item.tx.to, "on network:", network.chainId);
+          const code = await provider.getCode(item.tx.to);
+          console.log("[TransactionConfirm] Code result:", code.substring(0, 20), "...", "(length:", code.length, ")");
+          if (code === "0x") {
+            throw new Error(t("txConfirm.contractNotFound"));
+          }
+        }
+      }
 
       setStep("sending");
       const hashes: string[] = [];
@@ -218,6 +305,10 @@ export default function TransactionConfirm({
                 const explorerBase =
                   summary?.network === "sepolia"
                     ? "https://sepolia.etherscan.io/tx/"
+                    : summary?.network === "mainnet"
+                    ? "https://etherscan.io/tx/"
+                    : summary?.network === "polygon"
+                    ? "https://polygonscan.com/tx/"
                     : undefined;
                 return (
                   <li key={h}>

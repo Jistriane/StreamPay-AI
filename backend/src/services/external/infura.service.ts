@@ -15,7 +15,7 @@ export class InfuraService {
   private projectId: string;
 
   constructor() {
-    this.rpcUrl = process.env.INFURA_GAS_API_URL || 'https://sepolia.infura.io/v3/';
+    this.rpcUrl = process.env.INFURA_GAS_API_URL || 'https://mainnet.infura.io/v3/';
     this.projectId = process.env.INFURA_API_KEY || '';
   }
 

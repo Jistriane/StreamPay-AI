@@ -1,0 +1,8 @@
+{
+  "network": "polygon_mainnet",
+  "chainId": 137,
+  "contract": "StreamPayCore",
+  "address": "0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298",
+  "deployer": "0x3b598F74e735104435B450fdf3dAd565f046eA70",
+  "timestamp": "2026-01-11T15:57:57.877Z"
+}

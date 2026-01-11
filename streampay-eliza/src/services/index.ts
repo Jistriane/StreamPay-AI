@@ -24,7 +24,7 @@ export interface ServiceConfig {
   backendUrl: string;
   userAddress?: string;
   authToken?: string;
-  network?: 'sepolia' | 'localhost';
+  network?: 'polygon' | 'mainnet' | 'sepolia' | 'localhost';
 }
 
 export class ServiceFactory {
@@ -86,7 +86,7 @@ export class ServiceFactory {
         backendUrl: this.config.backendUrl,
         userAddress: this.config.userAddress || '',
         authToken: this.config.authToken,
-        network: this.config.network || 'sepolia',
+        network: this.config.network || 'polygon',
       });
     }
     return this.contractService;

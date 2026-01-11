@@ -37,7 +37,7 @@ export const StreamPayAgentFlowTestSuite: TestSuite = {
           moralisApiKey: process.env.MORALIS_API_KEY || 'test-key',
           chainlinkRpcUrl: process.env.CHAINLINK_RPC_URL || 'http://localhost:8545',
           backendUrl: process.env.BACKEND_URL || 'http://localhost:3001',
-          network: (process.env.NETWORK as 'sepolia' | 'localhost') || 'sepolia',
+          network: (process.env.NETWORK as 'polygon' | 'mainnet' | 'sepolia' | 'localhost') || 'polygon',
         };
 
         const agent = createStreamPayAgent(config);

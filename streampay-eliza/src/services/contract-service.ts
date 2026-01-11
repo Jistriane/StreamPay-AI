@@ -13,7 +13,7 @@ import type { StreamPayIntent } from './intent-parser';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 
-export type NetworkName = 'sepolia' | 'localhost';
+export type NetworkName = 'polygon' | 'mainnet' | 'sepolia' | 'localhost';
 
 export interface SignaturePayload<TParams extends Record<string, any> = Record<string, any>> {
   /**
@@ -64,7 +64,12 @@ const addressSchema = z
   .regex(/^0x[a-fA-F0-9]{40}$/, 'Endereço Ethereum inválido (esperado 0x + 40 hex)');
 
 function getChainId(network: NetworkName): number {
-  return network === 'sepolia' ? 11155111 : 31337;
+  // Polygon (137) for production, Mainnet (1) optional, Sepolia (11155111) for testing, Localhost (31337) for dev
+  if (network === 'polygon') return 137;
+  if (network === 'mainnet') return 1;
+  if (network === 'sepolia') return 11155111;
+  if (network === 'localhost') return 31337;
+  return 137; // Default to Polygon
 }
 
 function canonicalMessage(payload: SignaturePayload): string {
@@ -83,7 +88,7 @@ export class ContractService {
       backendUrl: config.backendUrl,
       userAddress: config.userAddress,
       authToken: config.authToken,
-      network: config.network || 'sepolia',
+      network: config.network || 'polygon',
     };
 
     this.httpClient = new HttpClient({

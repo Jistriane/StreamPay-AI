@@ -12,7 +12,7 @@ const polygonConfig = {
   chainName: 'Polygon Mainnet',
   rpcUrl: process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com',
 
-  StreamPayCore: '0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD',
+  StreamPayCore: '0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298',
   LiquidityPool: '0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
   PoolManager: '0xae185cA95D0b626a554b0612777350CE3DE06bB9',
   SwapRouter: '0x07AfFa6C58999Ac0c98237d10476983A573eD368',
@@ -25,9 +25,27 @@ const polygonConfig = {
   UniswapFactory: '0x1F98431C8aD98523631AE4a59F267346Ea31f64C',
 } as const;
 
+const mainnetConfig = {
+  chainId: 1,
+  chainName: 'Ethereum Mainnet',
+  rpcUrl: process.env.MAINNET_RPC_URL || 'https://eth.publicnode.com',
+
+  StreamPayCore: '0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD',
+  LiquidityPool: '0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
+  PoolManager: '0xae185cA95D0b626a554b0612777350CE3DE06bB9',
+  SwapRouter: '0x07AfFa6C58999Ac0c98237d10476983A573eD368',
+
+  // Tokens
+  USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+
+  // Uniswap V3
+  UniswapPositionManager: '0xC36442b4a4522e871399cD717ABDd847AB11fe1f',
+  UniswapFactory: '0x1F98431C8aD98523631AE4a59F267346Ea31f64C',
+} as const;
+
 export const CONTRACTS_CONFIG = {
   polygon: polygonConfig,
-  mainnet: polygonConfig,
+  mainnet: mainnetConfig,
   
   sepolia: {
     chainId: 11155111,
@@ -65,7 +83,7 @@ export type NetworkKey = keyof typeof CONTRACTS_CONFIG;
  * Get network config based on NODE_ENV or explicit network parameter
  */
 export function getNetworkConfig(network?: NetworkKey) {
-  const defaultNetwork: NetworkKey = process.env.NODE_ENV === 'production' ? 'sepolia' : 'localhost';
+  const defaultNetwork: NetworkKey = process.env.NODE_ENV === 'production' ? 'polygon' : 'localhost';
   const envNetwork = (process.env.NETWORK as NetworkKey) || undefined;
   const targetNetwork: NetworkKey = network || envNetwork || defaultNetwork;
   return CONTRACTS_CONFIG[targetNetwork];

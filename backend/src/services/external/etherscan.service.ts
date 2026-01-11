@@ -18,7 +18,7 @@ export class EtherscanService {
   private apiKey: string;
 
   constructor() {
-    this.baseUrl = process.env.ETHERSCAN_BASE_URL || 'https://api-sepolia.etherscan.io/api';
+    this.baseUrl = process.env.ETHERSCAN_BASE_URL || 'https://api.etherscan.io/api';
     this.apiKey = process.env.ETHERSCAN_API_KEY || '';
   }
 

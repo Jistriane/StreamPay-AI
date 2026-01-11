@@ -5,9 +5,9 @@ exports.listenStreamEvents = listenStreamEvents;
 const ethers_1 = require("ethers");
 const db_1 = require("./db");
 const contracts_1 = require("./config/contracts");
-const networkConfig = (0, contracts_1.getNetworkConfig)('sepolia');
+const networkConfig = (0, contracts_1.getNetworkConfig)('polygon');
 const provider = new ethers_1.ethers.JsonRpcProvider(networkConfig.rpcUrl);
-const contractAddress = (0, contracts_1.getContractAddress)('StreamPayCore', 'sepolia');
+const contractAddress = (0, contracts_1.getContractAddress)('StreamPayCore', 'polygon');
 const StreamPayCoreABI = [
     "event StreamCreated(uint256 indexed streamId, address indexed sender, address indexed recipient, address token, uint256 ratePerSecond, uint256 duration)",
     "event StreamClaimed(uint256 indexed streamId, address indexed recipient, uint256 amount)"
