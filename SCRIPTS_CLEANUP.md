@@ -1,122 +1,122 @@
-# 📝 Relatório de Limpeza de Scripts
+# 📝 Scripts Cleanup Report
 
-**Data:** 11 de janeiro de 2026  
-**Status:** ✅ CONCLUÍDO
+**Date:** January 11, 2026  
+**Status:** ✅ COMPLETED
 
-## 📊 Resumo Executivo
+## 📊 Executive Summary
 
-### Scripts Mantidos ✅
-| Script | Propósito | Localização | Status |
-|--------|----------|------------|--------|
-| `deploy.sh` | Deploy Frontend + Backend em Mainnet | Root | ✅ Novo e Melhorado |
-| `test.sh` | Testes integrados (Frontend + Backend) | Root | ✅ Novo e Melhorado |
+### Maintained Scripts ✅
+| Script | Purpose | Location | Status |
+|--------|---------|----------|--------|
+| `deploy.sh` | Deploy Frontend + Backend to Mainnet | Root | ✅ New and Improved |
+| `test.sh` | Integrated tests (Frontend + Backend) | Root | ✅ New and Improved |
 
-### Scripts Removidos 🗑️
-| Script | Motivo | Data Removida |
-|--------|--------|--------------|
-| `deploy-mainnet.sh` | Substituído por `deploy.sh` unificado | 11/01/2026 |
-| `deploy-backend-mainnet.sh` | Substituído por `deploy.sh` unificado | 11/01/2026 |
-| `test-e2e.sh` | Duplicado em npm test, não necessário | 11/01/2026 |
-| `test-integration.sh` | Duplicado em npm test, não necessário | 11/01/2026 |
-| `start-stack.sh` | Desenvolvimento local apenas (docker-compose) | 11/01/2026 |
-| `backend/setup-db.sh` | Arquivo vazio, não utilizado | 11/01/2026 |
+### Removed Scripts 🗑️
+| Script | Reason | Date Removed |
+|--------|--------|------------|
+| `deploy-mainnet.sh` | Replaced by unified `deploy.sh` | 01/11/2026 |
+| `deploy-backend-mainnet.sh` | Replaced by unified `deploy.sh` | 01/11/2026 |
+| `test-e2e.sh` | Duplicate with npm test, not necessary | 01/11/2026 |
+| `test-integration.sh` | Duplicate with npm test, not necessary | 01/11/2026 |
+| `start-stack.sh` | Local development only (docker-compose) | 01/11/2026 |
+| `backend/setup-db.sh` | Empty file, not used | 01/11/2026 |
 
 ---
 
-## 🚀 Script de Deploy Unificado (`deploy.sh`)
+## 🚀 Unified Deploy Script (`deploy.sh`)
 
-### Características Principais
-- ✅ Validação automática de builds (Frontend + Backend)
-- ✅ Verificação de mudanças no Git
-- ✅ Suporte a múltiplos modos (frontend, backend, both)
-- ✅ Aciona GitHub Actions automaticamente
-- ✅ Interface amigável com cores e emojis
-- ✅ Logs detalhados de cada etapa
-- ✅ Tratamento robusto de erros
+### Main Features
+- ✅ Automatic build validation (Frontend + Backend)
+- ✅ Git change verification
+- ✅ Support for multiple modes (frontend, backend, both)
+- ✅ Triggers GitHub Actions automatically
+- ✅ User-friendly interface with colors and emojis
+- ✅ Detailed logs for each step
+- ✅ Robust error handling
 
-### Como Usar
+### How to Use
 ```bash
 # Deploy Frontend + Backend
 ./deploy.sh
 
-# Deploy apenas Frontend
+# Deploy only Frontend
 ./deploy.sh frontend
 
-# Deploy apenas Backend
+# Deploy only Backend
 ./deploy.sh backend
 ```
 
-### Fluxo de Execução
-1. **Validação Git** - Verifica se é um repositório Git válido
-2. **Verificação de Branch** - Confirma estar na branch correta
-3. **Validação de Builds** - Executa `npm run build` em ambas pastas
-4. **Verificação de Mudanças** - Detecta arquivos alterados
-5. **Verificação Vercel** - Confirma que Vercel CLI está instalado
-6. **Push para Main** - Faz push automático (aciona GitHub Actions)
+### Execution Flow
+1. **Git Validation** - Checks if it's a valid Git repository
+2. **Branch Verification** - Confirms you're on the correct branch
+3. **Build Validation** - Executes `npm run build` in both folders
+4. **Change Detection** - Detects modified files
+5. **Vercel Check** - Confirms Vercel CLI is installed
+6. **Push to Main** - Automatic push (triggers GitHub Actions)
 
 ---
 
-## 🧪 Script de Testes Unificado (`test.sh`)
+## 🧪 Unified Test Script (`test.sh`)
 
-### Características Principais
-- ✅ Testes integrados de Frontend e Backend
-- ✅ Suporte a múltiplos modos (all, frontend, backend, integration)
-- ✅ Interface amigável com cores
-- ✅ Retorna status de sucesso/falha
+### Main Features
+- ✅ Integrated Frontend and Backend tests
+- ✅ Support for multiple modes (all, frontend, backend, integration)
+- ✅ User-friendly interface with colors
+- ✅ Returns success/failure status
 
-### Como Usar
+### How to Use
 ```bash
-# Todos os testes
+# All tests
 ./test.sh
 
-# Apenas Frontend
+# Frontend only
 ./test.sh frontend
 
-# Apenas Backend
+# Backend only
 ./test.sh backend
 
-# Testes de Integração
+# Integration tests
 ./test.sh integration
 ```
 
 ---
 
-## 📈 Impacto da Limpeza
+## 📈 Cleanup Impact
 
-### Redução de Complexidade
-- **Antes:** 6 scripts de deploy/teste (fragmentados)
-- **Depois:** 2 scripts unificados (consolidados)
-- **Redução:** 66% menos scripts
+### Complexity Reduction
+- **Before:** 6 deploy/test scripts (fragmented)
+- **After:** 2 unified scripts (consolidated)
+- **Reduction:** 66% fewer scripts
 
-### Benefícios
-1. **Manutenção Simplificada** - Um único script para deploy ao invés de 2
-2. **Consistência** - Ambos serviços usam mesmo processo
-3. **Menos Erros** - Interface unificada reduz confusão
-4. **Melhor Documentação** - Scripts bem documentados com comentários
-5. **Automação Completa** - GitHub Actions faz o resto automaticamente
+### Benefits
+1. **Simplified Maintenance** - One deployment script instead of 2
+2. **Consistency** - Both services use the same process
+3. **Fewer Errors** - Unified interface reduces confusion
+4. **Better Documentation** - Scripts well documented with comments
+5. **Complete Automation** - GitHub Actions does the rest automatically
 
 ---
 
-## 📋 Verificação Pós-Limpeza
+## 📋 Post-Cleanup Verification
 
 ```bash
-# Verificar scripts mantidos
+# Check maintained scripts
 ls -lh *.sh
 # deploy.sh (5.4K)
 # test.sh (3.2K)
 
-# Verificar que deploy-mainnet.sh foi removido
-ls deploy-*.sh 2>/dev/null || echo "✅ Nenhum deploy-*.sh encontrado"
+# Verify deploy-mainnet.sh was removed
+ls deploy-*.sh 2>/dev/null || echo "✅ No deploy-*.sh found"
 
-# Verificar que test-*.sh foi removido
-ls test-*.sh 2>/dev/null || echo "✅ Nenhum test-*.sh encontrado"
+# Verify test-*.sh was removed
+ls test-*.sh 2>/dev/null || echo "✅ No test-*.sh found"
 ```
 
 ---
 
-## 🔄 Próximos Passos
+## 🔄 Next Steps
 
-1. **Commit da Limpeza:**
+1. **Commit the Cleanup:**
    ```bash
    git add deploy.sh test.sh SCRIPTS_CLEANUP.md
    git rm deploy-mainnet.sh deploy-backend-mainnet.sh test-e2e.sh test-integration.sh start-stack.sh backend/setup-db.sh
@@ -124,23 +124,23 @@ ls test-*.sh 2>/dev/null || echo "✅ Nenhum test-*.sh encontrado"
    git push origin main
    ```
 
-2. **Atualizar Documentação:**
-   - [x] DEPLOYMENT_GUIDE.md atualizado com novo script
-   - [x] SCRIPTS_CLEANUP.md criado
-   - [ ] Comunicar mudança à equipe
+2. **Update Documentation:**
+   - [x] DEPLOYMENT_GUIDE.md updated with new script
+   - [x] SCRIPTS_CLEANUP.md created
+   - [ ] Communicate change to team
 
-3. **Verificar GitHub Actions:**
-   - Confirmar que workflows continuam funcionando normalmente
-
----
-
-## ⚠️ Notas Importantes
-
-- **Backup:** Scripts antigos não foram deletados permanentemente (estão em git history)
-- **Vercel:** Deployment continua automático via GitHub Actions
-- **Testes:** Continuam via npm test em cada serviço
-- **Compatibilidade:** Nenhuma mudança em código, apenas scripts
+3. **Verify GitHub Actions:**
+   - Confirm workflows continue working normally
 
 ---
 
-**Limpeza realizada com sucesso! 🎉**
+## ⚠️ Important Notes
+
+- **Backup:** Old scripts not permanently deleted (in git history)
+- **Vercel:** Deployment continues automatic via GitHub Actions
+- **Tests:** Continue via npm test in each service
+- **Compatibility:** No code changes, only scripts
+
+---
+
+**Cleanup completed successfully! 🎉**
