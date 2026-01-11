@@ -1,12 +1,44 @@
 # 📋 Contract Addresses - Quick Reference
 
-**Last updated**: December 15, 2025  
-**Network**: Sepolia Testnet  
-**Chain ID**: 11155111
+**Last updated**: January 11, 2026  
+**Network**: Sepolia Testnet & Polygon Mainnet
 
 ---
 
-## 🚀 Deployed Contracts
+## 🌐 Polygon Mainnet (Chain ID: 137)
+
+### StreamPayCore
+- **Address**: `0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD`
+- **Polygonscan**: https://polygonscan.com/address/0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD
+- **Function**: Core payment streaming system
+
+### LiquidityPool
+- **Address**: `0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c`
+- **Polygonscan**: https://polygonscan.com/address/0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c
+- **Function**: AMM pool with 0.3% fee
+
+### PoolManager
+- **Address**: `0xae185cA95D0b626a554b0612777350CE3DE06bB9`
+- **Polygonscan**: https://polygonscan.com/address/0xae185cA95D0b626a554b0612777350CE3DE06bB9
+- **Function**: Uniswap V3 position management
+- **Deploy Date**: January 11, 2026
+
+### SwapRouter
+- **Address**: `0x07AfFa6C58999Ac0c98237d10476983A573eD368`
+- **Polygonscan**: https://polygonscan.com/address/0x07AfFa6C58999Ac0c98237d10476983A573eD368
+- **Function**: Swap routing between pools
+
+### USDC (Polygon Mainnet)
+- **Address**: `0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174`
+- **Polygonscan**: https://polygonscan.com/token/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174
+- **Decimals**: 6
+- **Symbol**: USDC
+
+---
+
+## 🔵 Sepolia Testnet (Chain ID: 11155111)
+
+**Last updated**: December 15, 2025
 
 ### StreamPayCore
 - **Address**: `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C`

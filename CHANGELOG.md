@@ -167,6 +167,34 @@ Notes:
 
 ---
 
+## [1.1.0] - 2026-01-11
+
+### 🚀 Deploy Polygon Mainnet
+
+**Contracts deployed successfully to Polygon mainnet (Chain ID: 137)**
+
+#### Deployed Contracts
+- **StreamPayCore**: `0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD`
+- **LiquidityPool**: `0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c`
+- **PoolManager**: `0xae185cA95D0b626a554b0612777350CE3DE06bB9`
+- **SwapRouter**: `0x07AfFa6C58999Ac0c98237d10476983A573eD368`
+
+#### Deploy Details
+- **Network**: Polygon Mainnet (Chain ID: 137)
+- **Deployer**: `0x3b598F74e735104435B450fdf3dAd565f046eA70`
+- **Timestamp**: 2026-01-11 08:18:53 + 08:40:45 UTC (PoolManager)
+- **Deployment Files**:
+   - `smart-contracts/deployments/polygon_mainnet-1768119533450.json`
+   - `smart-contracts/deployments/polygon-poolmanager-1768120845394.json`
+
+#### To-Do
+- [ ] Atualizar `.env` do frontend/backend com os enderecos mainnet
+- [ ] Verificar contratos no Polygonscan
+- [ ] Rodar smoke-test apontando para mainnet (somente leitura)
+- [ ] Publicar addresses na documentação externa
+
+---
+
 ## [1.0.0] - 2025-12-15
 
 ### 🚀 Deploy Sepolia Testnet

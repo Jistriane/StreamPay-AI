@@ -61,17 +61,23 @@ async function main() {
     deployedContracts.LiquidityPool = liquidityPoolAddress;
     console.log(`✅ LiquidityPool implantado em: ${liquidityPoolAddress}\n`);
 
-    // 4. Deploy PoolManager
+    // 4. Deploy PoolManager (Opcional - se Uniswap estiver configurado)
     console.log("4️⃣ Deployando PoolManager...");
-    if (!UNISWAP_POSITION_MANAGER || !UNISWAP_FACTORY) {
-      throw new Error("UNISWAP_POSITION_MANAGER e UNISWAP_FACTORY são obrigatórios para PoolManager.");
+    if (UNISWAP_POSITION_MANAGER && UNISWAP_FACTORY) {
+      try {
+        const PoolManager = await hre.ethers.getContractFactory("PoolManager");
+        const poolManager = await PoolManager.deploy(UNISWAP_POSITION_MANAGER, UNISWAP_FACTORY);
+        await poolManager.waitForDeployment();
+        const poolManagerAddress = await poolManager.getAddress();
+        deployedContracts.PoolManager = poolManagerAddress;
+        console.log(`✅ PoolManager implantado em: ${poolManagerAddress}\n`);
+      } catch (error) {
+        console.log(`⚠️  PoolManager pulado: Uniswap não disponível em ${hre.network.name}\n`);
+        console.log(`   Motivo: ${error.message}\n`);
+      }
+    } else {
+      console.log("⚠️  PoolManager pulado: UNISWAP_POSITION_MANAGER ou UNISWAP_FACTORY não definidos\n");
     }
-    const PoolManager = await hre.ethers.getContractFactory("PoolManager");
-    const poolManager = await PoolManager.deploy(UNISWAP_POSITION_MANAGER, UNISWAP_FACTORY);
-    await poolManager.waitForDeployment();
-    const poolManagerAddress = await poolManager.getAddress();
-    deployedContracts.PoolManager = poolManagerAddress;
-    console.log(`✅ PoolManager implantado em: ${poolManagerAddress}\n`);
 
     // 5. Deploy SwapRouter
     console.log("5️⃣ Deployando SwapRouter...");

@@ -48,7 +48,7 @@ export async function POST(request: Request) {
   try {
     await fs.writeFile(usersPath, JSON.stringify(users, null, 2));
   } catch (err) {
-    return NextResponse.json({ success: false, message: "Erro ao salvar usuário", details: String(err) }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Error saving user", details: String(err) }, { status: 500 });
   }
 
   // Gera token simulado

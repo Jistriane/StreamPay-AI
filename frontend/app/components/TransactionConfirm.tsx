@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import Card from "./Card";
 import Button from "./Button";
+import { useI18n } from "../i18n";
 
 type TxRequest = {
   label: string;
@@ -46,6 +47,7 @@ export default function TransactionConfirm({
   backendUrl,
   onSuccess,
 }: TransactionConfirmProps) {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<string>("idle");
@@ -79,7 +81,7 @@ export default function TransactionConfirm({
 
     try {
       const eth = (window as any).ethereum;
-      if (!eth) throw new Error("MetaMask não encontrado. Instale a extensão.");
+      if (!eth) throw new Error(t("txConfirm.metaMaskMissing"));
 
       // Lazy import to avoid SSR issues
       const { BrowserProvider } = await import("ethers");
@@ -92,7 +94,7 @@ export default function TransactionConfirm({
       const token = localStorage.getItem("authToken");
       if (!token)
         throw new Error(
-          "Você precisa estar autenticado (token ausente). Faça login novamente."
+          t("txConfirm.needsAuth")
         );
 
       setStep("preparing");
@@ -116,7 +118,7 @@ export default function TransactionConfirm({
         throw new Error(
           data?.message ||
             data?.error ||
-            "Falha ao preparar transação no backend."
+            t("txConfirm.failedBackend")
         );
       }
 
@@ -126,7 +128,7 @@ export default function TransactionConfirm({
       };
       const txs = data.txRequests || [];
       if (!txs.length)
-        throw new Error("Nenhuma transação retornada para executar.");
+        throw new Error(t("txConfirm.noTxReturned"));
 
       setStep("sending");
       const hashes: string[] = [];
@@ -146,7 +148,7 @@ export default function TransactionConfirm({
           [txResp.hash]: receipt?.status === 1 ? "confirmed" : "failed",
         }));
         if (receipt?.status !== 1) {
-          throw new Error(`Transação falhou (revert): ${txResp.hash}`);
+          throw new Error(`${t("txConfirm.failedTx")} ${txResp.hash}`);
         }
       }
 
@@ -166,7 +168,7 @@ export default function TransactionConfirm({
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <Card variant="glass" padding="lg" className="max-w-lg w-full">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Confirmar transação</h2>
+          <h2 className="text-2xl font-bold">{t("txConfirm.title")}</h2>
           <button
             onClick={onClose}
             className="text-secondary hover:text-white text-2xl"
@@ -180,15 +182,15 @@ export default function TransactionConfirm({
           <div className="bg-slate-800/50 border border-slate-700 rounded p-3 mb-4 text-sm">
             <div className="flex flex-col gap-1">
               <div>
-                <span className="text-secondary">Ação:</span>{" "}
+                <span className="text-secondary">{t("txConfirm.action")}:</span>{" "}
                 <span className="text-white">{summary.intent}</span>
               </div>
               <div className="font-mono break-all">
-                <span className="text-secondary">Wallet:</span>{" "}
+                <span className="text-secondary">{t("txConfirm.wallet")}:</span>{" "}
                 <span className="text-white">{summary.userAddress}</span>
               </div>
               <div>
-                <span className="text-secondary">Expira em:</span>{" "}
+                <span className="text-secondary">{t("txConfirm.expiresAt")}:</span>{" "}
                 <span className="text-white">{summary.expiresAt}</span>
               </div>
             </div>
@@ -203,16 +205,16 @@ export default function TransactionConfirm({
 
         {txHashes.length > 0 && (
           <div className="bg-slate-800/50 border border-slate-700 rounded p-3 mb-4">
-            <p className="text-secondary text-sm mb-2">Transações enviadas:</p>
+            <p className="text-secondary text-sm mb-2">{t("txConfirm.sent")}</p>
             <ul className="text-xs font-mono break-all space-y-1">
               {txHashes.map((h) => {
                 const st = txStatuses[h] || "sent";
                 const label =
                   st === "confirmed"
-                    ? "confirmada"
+                    ? t("txConfirm.confirmed")
                     : st === "failed"
-                    ? "falhou"
-                    : "pendente";
+                    ? t("txConfirm.failed")
+                    : t("txConfirm.pending");
                 const explorerBase =
                   summary?.network === "sepolia"
                     ? "https://sepolia.etherscan.io/tx/"
@@ -241,27 +243,27 @@ export default function TransactionConfirm({
 
         <div className="flex items-center justify-between gap-3 pt-2">
           <div className="text-xs text-secondary">
-            Status:{" "}
+            {t("common.status")}: {" "}
             <span className="text-white">
               {step === "idle"
-                ? "pronto"
+                ? t("txConfirm.ready")
                 : step === "signing"
-                ? "assinando"
+                ? t("txConfirm.signing")
                 : step === "preparing"
-                ? "preparando"
+                ? t("txConfirm.preparing")
                 : step === "sending"
-                ? "enviando"
+                ? t("txConfirm.sending")
                 : step === "done"
-                ? "concluído"
-                : "erro"}
+                ? t("txConfirm.done")
+                : t("txConfirm.error")}
             </span>
           </div>
           <div className="flex gap-3">
             <Button variant="ghost" onClick={onClose} disabled={loading}>
-              Fechar
+              {t("txConfirm.close")}
             </Button>
             <Button variant="neon" onClick={signAndExecute} disabled={loading}>
-              {loading ? "Processando..." : "Assinar e enviar"}
+              {loading ? t("chat.processing") : t("txConfirm.sign")}
             </Button>
           </div>
         </div>

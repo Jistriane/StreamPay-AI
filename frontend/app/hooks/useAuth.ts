@@ -47,7 +47,7 @@ export function useAuth(): UseAuthReturn {
         logout();
       }
     } catch (error) {
-      console.error('Erro ao carregar dados do usuário:', error);
+      console.error('Error loading user data:', error);
     } finally {
       setLoading(false);
     }

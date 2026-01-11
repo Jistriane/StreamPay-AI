@@ -16,7 +16,7 @@ export const agentPayloadSchema = z.object({
   requestId: z.string().min(8),
   intent: z.string().min(1),
   userAddress: addressSchema,
-  network: z.enum(["sepolia", "localhost"]),
+  network: z.enum(["sepolia", "localhost", "polygon", "mainnet"]),
   chainId: z.number().int(),
   parameters: z.record(z.any()),
   issuedAt: z.number().int(),

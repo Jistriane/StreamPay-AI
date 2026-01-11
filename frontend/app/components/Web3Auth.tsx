@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { BrowserProvider } from 'ethers';
 import Button from './Button';
 import Card from './Card';
+import { useI18n } from '../i18n';
 
 interface Web3AuthProps {
   onSuccess?: (token: string) => void;
@@ -11,6 +12,7 @@ interface Web3AuthProps {
 }
 
 export function Web3Auth({ onSuccess, onError }: Web3AuthProps) {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export function Web3Auth({ onSuccess, onError }: Web3AuthProps) {
       // Verificar se MetaMask está instalado
       const eth = (window as any).ethereum;
       if (!eth) {
-        throw new Error('MetaMask não encontrado. Instale a extensão!');
+        throw new Error(t("web3auth.metamaskMissing"));
       }
 
       // Solicitar conexão com MetaMask
@@ -40,16 +42,16 @@ StreamPay AI Authentication
 Address: ${userAddress}
 Timestamp: ${Date.now()}
 
-Assinando esta mensagem para confirmar sua identidade.
+Signing this message to confirm your identity.
       `.trim();
 
       // Solicitar assinatura de mensagem
       const signer = await provider.getSigner();
-      setMessage('📝 Assinando mensagem...');
+      setMessage(t("web3auth.signing"));
       const signature = await signer.signMessage(authMessage);
 
       // Enviar para backend para verificação
-      setMessage('🔄 Verificando assinatura...');
+      setMessage(t("web3auth.verifying"));
       const response = await fetch('http://localhost:3001/api/auth/verify', {
         method: 'POST',
         headers: {
@@ -64,7 +66,7 @@ Assinando esta mensagem para confirmar sua identidade.
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Falha ao verificar assinatura');
+        throw new Error(error.error || t("web3auth.verifyFailed"));
       }
 
       const data = await response.json();
@@ -79,7 +81,7 @@ Assinando esta mensagem para confirmar sua identidade.
       localStorage.setItem('userAddress', userAddress);
 
       setConnected(true);
-      setMessage('✅ Autenticado com sucesso!');
+      setMessage(`✅ ${t("web3auth.success")}`);
       onSuccess?.(token);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -105,7 +107,7 @@ Assinando esta mensagem para confirmar sua identidade.
     return (
       <div className="flex flex-col gap-4 w-full">
         <Card variant="glass" padding="md" className="text-center">
-          <p className="text-sm text-gray-600 mb-2">Carteira Conectada</p>
+          <p className="text-sm text-gray-600 mb-2">{t("web3auth.walletConnected")}</p>
           <p className="font-mono text-lg">
             {address.slice(0, 6)}...{address.slice(-4)}
           </p>
@@ -115,7 +117,7 @@ Assinando esta mensagem para confirmar sua identidade.
           variant="ghost"
           fullWidth
         >
-          Desconectar
+          {t("web3auth.disconnect")}
         </Button>
       </div>
     );
@@ -130,7 +132,7 @@ Assinando esta mensagem para confirmar sua identidade.
         size="lg"
         fullWidth
       >
-        {loading ? 'Conectando...' : 'Conectar MetaMask'}
+        {loading ? t("web3auth.connecting") : t("web3auth.connect")}
       </Button>
       
       {message && (
@@ -142,7 +144,7 @@ Assinando esta mensagem para confirmar sua identidade.
       )}
 
       <p className="text-xs text-center text-gray-500">
-        ℹ️ Certifique-se de que MetaMask está na rede Sepolia testnet
+        ℹ️ {t("web3auth.ensureNetwork")}
       </p>
     </div>
   );

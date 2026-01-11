@@ -5,6 +5,7 @@ import Card from "@/app/components/Card";
 import Button from "@/app/components/Button";
 import { fetchWithAuth } from "@/app/lib/api";
 import { useToast } from "@/app/components/ToastProvider";
+import { useI18n } from "../../i18n";
 
 interface Stream {
   id: string | number;
@@ -24,6 +25,7 @@ export default function StreamDetailPage() {
   const router = useRouter();
   const params = useParams();
   const { addToast } = useToast();
+  const { t } = useI18n();
   const streamId = params?.id as string;
 
   const [stream, setStream] = useState<Stream | null>(null);
@@ -45,14 +47,14 @@ export default function StreamDetailPage() {
         );
 
         if (!response.ok) {
-          throw new Error('Stream não encontrado');
+          throw new Error(t("stream.notFound"));
         }
 
         const data = await response.json();
         setStream(data.data);
       } catch (err) {
-        console.error('Erro ao buscar stream:', err);
-        setError(err instanceof Error ? err.message : 'Erro desconhecido');
+        console.error('Error fetching stream:', err);
+        setError(err instanceof Error ? err.message : t("history.unknownError"));
       } finally {
         setLoading(false);
       }
@@ -77,16 +79,16 @@ export default function StreamDetailPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Erro ao reivindicar stream');
+        throw new Error(t("stream.claimError"));
       }
 
-      addToast('✅ Stream reivindicado com sucesso!', 'success', 3000);
-      setActionMessage('✅ Stream reivindicado com sucesso!');
+      addToast(`✅ ${t("stream.claimSuccess")}`, 'success', 3000);
+      setActionMessage(`✅ ${t("stream.claimSuccess")}`);
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
-      setActionMessage(`❌ Erro: ${errorMsg}`);
-      addToast(`❌ Erro ao reivindicar: ${errorMsg}`, 'error', 4000);
+      const errorMsg = err instanceof Error ? err.message : t("history.unknownError");
+      setActionMessage(`❌ ${t("chat.errorPrefix")}: ${errorMsg}`);
+      addToast(`❌ ${t("stream.claimError")}: ${errorMsg}`, 'error', 4000);
     } finally {
       setActionLoading(false);
     }
@@ -107,23 +109,23 @@ export default function StreamDetailPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Erro ao pausar stream');
+        throw new Error(t("stream.pauseError"));
       }
 
-      addToast('⏸️ Stream pausado com sucesso!', 'success', 3000);
-      setActionMessage('⏸️ Stream pausado com sucesso!');
+      addToast(`⏸️ ${t("stream.pauseSuccess")}`, 'success', 3000);
+      setActionMessage(`⏸️ ${t("stream.pauseSuccess")}`);
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
-      setActionMessage(`❌ Erro: ${errorMsg}`);
-      addToast(`❌ Erro ao pausar: ${errorMsg}`, 'error', 4000);
+      const errorMsg = err instanceof Error ? err.message : t("history.unknownError");
+      setActionMessage(`❌ ${t("chat.errorPrefix")}: ${errorMsg}`);
+      addToast(`❌ ${t("stream.pauseError")}: ${errorMsg}`, 'error', 4000);
     } finally {
       setActionLoading(false);
     }
   };
 
   const handleCancel = async () => {
-    if (!stream || !confirm('Tem certeza que deseja cancelar este stream?')) return;
+    if (!stream || !confirm(t("stream.confirmCancel"))) return;
     
     setActionLoading(true);
     setActionMessage(null);
@@ -137,16 +139,16 @@ export default function StreamDetailPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Erro ao cancelar stream');
+        throw new Error(t("stream.cancelError"));
       }
 
-      addToast('🗑️ Stream cancelado com sucesso!', 'success', 3000);
-      setActionMessage('🗑️ Stream cancelado com sucesso!');
+      addToast(`🗑️ ${t("stream.cancelSuccess")}`, 'success', 3000);
+      setActionMessage(`🗑️ ${t("stream.cancelSuccess")}`);
       setTimeout(() => router.push('/dashboard'), 1500);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
-      setActionMessage(`❌ Erro: ${errorMsg}`);
-      addToast(`❌ Erro ao cancelar: ${errorMsg}`, 'error', 4000);
+      const errorMsg = err instanceof Error ? err.message : t("history.unknownError");
+      setActionMessage(`❌ ${t("chat.errorPrefix")}: ${errorMsg}`);
+      addToast(`❌ ${t("stream.cancelError")}: ${errorMsg}`, 'error', 4000);
     } finally {
       setActionLoading(false);
     }
@@ -171,7 +173,7 @@ export default function StreamDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <Card variant="glass" padding="lg">
-          <p className="text-center">Carregando detalhes do stream...</p>
+          <p className="text-center">{t("stream.loading")}</p>
         </Card>
       </div>
     );
@@ -182,9 +184,9 @@ export default function StreamDetailPage() {
       <div className="min-h-screen py-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="max-w-4xl mx-auto px-4">
           <Card variant="glass" padding="lg" className="text-center">
-            <p className="text-red-400 mb-4">❌ {error || 'Stream não encontrado'}</p>
+            <p className="text-red-400 mb-4">❌ {error || t("stream.notFound")}</p>
             <Button onClick={() => router.push('/dashboard')} variant="neon">
-              Voltar ao Dashboard
+              {t("stream.backDashboard")}
             </Button>
           </Card>
         </div>
@@ -198,19 +200,19 @@ export default function StreamDetailPage() {
         <div className="mb-8 flex justify-between items-start">
           <div>
             <h1 className="text-4xl font-bold text-gradient mb-2">
-              Stream #{stream.id}
+              {t("stream.detailTitle")} {stream.id}
             </h1>
-            <p className="text-secondary">Detalhes completos da transação</p>
+            <p className="text-secondary">{t("stream.subtitle")}</p>
           </div>
           <Button onClick={() => router.push('/dashboard')} variant="ghost">
-            ← Voltar
+            ← {t("stream.back")}
           </Button>
         </div>
 
         <Card variant="glass" padding="lg" className="mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <p className="text-sm text-secondary mb-2">Status</p>
+              <p className="text-sm text-secondary mb-2">{t("common.status")}</p>
               <div className={`px-4 py-2 rounded-lg ${statusBg} inline-block`}>
                 <p className={`font-bold ${statusColor} uppercase`}>
                   {stream.status}
@@ -219,14 +221,14 @@ export default function StreamDetailPage() {
             </div>
 
             <div>
-              <p className="text-sm text-secondary mb-2">Criado em</p>
+              <p className="text-sm text-secondary mb-2">{t("history.createdAt")}</p>
               <p className="font-mono text-sm">
-                {new Date(stream.created_at).toLocaleDateString('pt-BR')}
+                {new Date(stream.created_at).toLocaleDateString('en-US')}
               </p>
             </div>
 
             <div>
-              <p className="text-sm text-secondary mb-2">Token</p>
+              <p className="text-sm text-secondary mb-2">{t("common.token")}</p>
               <p className="text-xl font-bold text-cyan-400">{stream.token}</p>
             </div>
           </div>
@@ -242,16 +244,16 @@ export default function StreamDetailPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card variant="glass" padding="lg">
-            <h2 className="text-xl font-bold mb-4">Endereços</h2>
+            <h2 className="text-xl font-bold mb-4">{t("stream.addresses")}</h2>
             <div className="space-y-4">
               <div>
-                <p className="text-xs text-cyan-400 uppercase tracking-wider mb-1">De (Sender)</p>
+                <p className="text-xs text-cyan-400 uppercase tracking-wider mb-1">{t("stream.from")}</p>
                 <p className="font-mono text-sm break-all">
                   {stream.sender}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-cyan-400 uppercase tracking-wider mb-1">Para (Recipient)</p>
+                <p className="text-xs text-cyan-400 uppercase tracking-wider mb-1">{t("stream.to")}</p>
                 <p className="font-mono text-sm break-all">
                   {stream.recipient}
                 </p>
@@ -260,17 +262,17 @@ export default function StreamDetailPage() {
           </Card>
 
           <Card variant="glass" padding="lg">
-            <h2 className="text-xl font-bold mb-4">Valores</h2>
+            <h2 className="text-xl font-bold mb-4">{t("stream.values")}</h2>
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-secondary mb-1">Depositado</p>
+                <p className="text-sm text-secondary mb-1">{t("stream.deposited")}</p>
                 <p className="text-2xl font-bold text-cyan-400">
                   {stream.deposit} {stream.token}
                 </p>
               </div>
               {stream.claimed_amount && (
                 <div>
-                  <p className="text-sm text-secondary mb-1">Reivindicado</p>
+                  <p className="text-sm text-secondary mb-1">{t("stream.claimed")}</p>
                   <p className="text-lg font-semibold text-green-400">
                     {stream.claimed_amount} {stream.token}
                   </p>
@@ -281,22 +283,22 @@ export default function StreamDetailPage() {
         </div>
 
         <Card variant="glass" padding="lg" className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Taxa de Fluxo</h2>
+          <h2 className="text-xl font-bold mb-4">{t("stream.flowRate")}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-slate-800/50 rounded p-4">
-              <p className="text-xs text-secondary mb-2">Por Segundo</p>
+              <p className="text-xs text-secondary mb-2">{t("stream.perSecond")}</p>
               <p className="text-lg font-bold text-cyan-400">{stream.rate_per_second}</p>
             </div>
             <div className="bg-slate-800/50 rounded p-4">
-              <p className="text-xs text-secondary mb-2">Por Hora</p>
+              <p className="text-xs text-secondary mb-2">{t("stream.perHour")}</p>
               <p className="text-lg font-bold text-cyan-400">{flowInfo.perHour.toFixed(2)}</p>
             </div>
             <div className="bg-slate-800/50 rounded p-4">
-              <p className="text-xs text-secondary mb-2">Por Dia</p>
+              <p className="text-xs text-secondary mb-2">{t("stream.perDay")}</p>
               <p className="text-lg font-bold text-cyan-400">{flowInfo.perDay.toFixed(2)}</p>
             </div>
             <div className="bg-slate-800/50 rounded p-4">
-              <p className="text-xs text-secondary mb-2">Por Mês</p>
+              <p className="text-xs text-secondary mb-2">{t("stream.perMonth")}</p>
               <p className="text-lg font-bold text-cyan-400">{flowInfo.perMonth.toFixed(2)}</p>
             </div>
           </div>
@@ -304,7 +306,7 @@ export default function StreamDetailPage() {
 
         {stream.remaining_balance && (
           <Card variant="glass" padding="lg" className="mb-8">
-            <h2 className="text-xl font-bold mb-4">Saldo Restante</h2>
+            <h2 className="text-xl font-bold mb-4">{t("stream.remainingBalance")}</h2>
             <p className="text-3xl font-bold text-green-400">
               {stream.remaining_balance} {stream.token}
             </p>
@@ -312,7 +314,7 @@ export default function StreamDetailPage() {
         )}
 
         <Card variant="glass" padding="lg">
-          <h2 className="text-xl font-bold mb-4">Ações Disponíveis</h2>
+          <h2 className="text-xl font-bold mb-4">{t("stream.actions")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {stream.status === 'active' && (
               <>
@@ -322,7 +324,7 @@ export default function StreamDetailPage() {
                   disabled={actionLoading}
                   fullWidth
                 >
-                  {actionLoading ? '⏳ Processando...' : '💰 Reivindicar'}
+                  {actionLoading ? `⏳ ${t("stream.processing")}` : `💰 ${t("stream.claim")}`}
                 </Button>
                 <Button
                   variant="neon"
@@ -330,7 +332,7 @@ export default function StreamDetailPage() {
                   disabled={actionLoading}
                   fullWidth
                 >
-                  {actionLoading ? '⏳ Processando...' : '⏸️ Pausar'}
+                  {actionLoading ? `⏳ ${t("stream.processing")}` : `⏸️ ${t("stream.pause")}`}
                 </Button>
               </>
             )}
@@ -341,7 +343,7 @@ export default function StreamDetailPage() {
               fullWidth
               className={stream.status === 'cancelled' ? 'opacity-50 cursor-not-allowed' : ''}
             >
-              {actionLoading ? '⏳ Processando...' : '🗑️ Cancelar'}
+              {actionLoading ? `⏳ ${t("stream.processing")}` : `🗑️ ${t("stream.cancel")}`}
             </Button>
           </div>
         </Card>

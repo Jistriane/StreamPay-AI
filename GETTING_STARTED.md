@@ -171,7 +171,9 @@ http://localhost:3000
 | Backend Health | http://localhost:3001/health |
 | PostgreSQL | localhost:5432 |
 | Etherscan Sepolia | https://sepolia.etherscan.io |
-| StreamPayCore | https://sepolia.etherscan.io/address/0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C |
+| Polygonscan Mainnet | https://polygonscan.com |
+| StreamPayCore (Sepolia) | https://sepolia.etherscan.io/address/0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C |
+| StreamPayCore (Polygon) | https://polygonscan.com/address/0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD |
 
 ---
 

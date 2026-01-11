@@ -29,7 +29,7 @@ export class ElizaOSService {
         backendUrl: process.env.BACKEND_URL || 'http://localhost:3001',
         userAddress: userAddress,
         authToken: authToken,
-        network: (process.env.NETWORK as 'sepolia' | 'localhost') || 'sepolia',
+        network: (process.env.NETWORK as 'polygon' | 'sepolia' | 'localhost' | 'mainnet') || 'sepolia',
       };
 
       // Usando o artefato de build CommonJS para evitar problemas de ESM/CJS

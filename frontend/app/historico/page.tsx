@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Card from "@/app/components/Card";
 import Button from "@/app/components/Button";
 import { fetchWithAuth } from "@/app/lib/api";
+import { useI18n } from "../i18n";
 
 interface Stream {
   id: string | number;
@@ -26,6 +27,7 @@ interface Filters {
 
 export default function HistoricoPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [streams, setStreams] = useState<Stream[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +44,7 @@ export default function HistoricoPage() {
     const token = localStorage.getItem('authToken');
     if (!token) {
       setLoading(false);
-      setError('Você precisa estar autenticado para ver o histórico');
+      setError(t("history.needAuth"));
       return;
     }
     fetchStreams();
@@ -67,14 +69,14 @@ export default function HistoricoPage() {
           return;
         }
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Erro ao buscar histórico");
+        throw new Error(errorData.message || t("history.error"));
       }
 
       const data = await response.json();
       setStreams(data.data || []);
     } catch (err) {
-      console.error("Erro ao buscar streams:", err);
-      setError(err instanceof Error ? err.message : "Erro desconhecido");
+      console.error("Error fetching streams:", err);
+      setError(err instanceof Error ? err.message : t("history.unknownError"));
     } finally {
       setLoading(false);
     }
@@ -155,7 +157,7 @@ export default function HistoricoPage() {
       <div className="min-h-screen py-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="max-w-6xl mx-auto px-4">
           <Card variant="glass" padding="lg" className="text-center">
-            <p>Carregando histórico...</p>
+            <p>{t("history.loading")}</p>
           </Card>
         </div>
       </div>
@@ -168,46 +170,46 @@ export default function HistoricoPage() {
         {/* Header */}
         <div className="mb-8 flex justify-between items-start">
           <div>
-            <h1 className="text-4xl font-bold text-gradient mb-2">Histórico</h1>
+            <h1 className="text-4xl font-bold text-gradient mb-2">{t("history.title")}</h1>
             <p className="text-secondary">
-              Todos os seus streams e transações
+              {t("history.subtitle")}
             </p>
           </div>
           <Button onClick={() => router.push("/dashboard")} variant="ghost">
-            ← Voltar
+            ← {t("history.back")}
           </Button>
         </div>
 
         {/* Filters */}
         <Card variant="glass" padding="lg" className="mb-8">
-          <h2 className="text-xl font-bold mb-4">🔍 Filtros</h2>
+          <h2 className="text-xl font-bold mb-4">🔍 {t("history.filters")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
-              <label className="block text-sm text-secondary mb-2">Status</label>
+              <label className="block text-sm text-secondary mb-2">{t("history.status")}</label>
               <select
                 name="status"
                 value={filters.status}
                 onChange={handleFilterChange}
                 className="w-full bg-slate-800/50 border border-slate-700 rounded px-4 py-2 text-white focus:outline-none focus:border-cyan-400"
               >
-                <option value="all">Todos</option>
-                <option value="active">Ativo</option>
-                <option value="pending">Pendente</option>
-                <option value="paused">Pausado</option>
-                <option value="completed">Concluído</option>
-                <option value="cancelled">Cancelado</option>
+                <option value="all">{t("history.all")}</option>
+                <option value="active">{t("common.active")}</option>
+                <option value="pending">{t("common.pending")}</option>
+                <option value="paused">{t("common.paused")}</option>
+                <option value="completed">{t("common.completed")}</option>
+                <option value="cancelled">{t("common.cancelled")}</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm text-secondary mb-2">Token</label>
+              <label className="block text-sm text-secondary mb-2">{t("history.token")}</label>
               <select
                 name="token"
                 value={filters.token}
                 onChange={handleFilterChange}
                 className="w-full bg-slate-800/50 border border-slate-700 rounded px-4 py-2 text-white focus:outline-none focus:border-cyan-400"
               >
-                <option value="all">Todos</option>
+                <option value="all">{t("history.all")}</option>
                 <option value="USDC">USDC</option>
                 <option value="USDT">USDT</option>
                 <option value="ETH">ETH</option>
@@ -215,7 +217,7 @@ export default function HistoricoPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-secondary mb-2">De</label>
+              <label className="block text-sm text-secondary mb-2">{t("history.from")}</label>
               <input
                 type="date"
                 name="dateFrom"
@@ -226,7 +228,7 @@ export default function HistoricoPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-secondary mb-2">Até</label>
+              <label className="block text-sm text-secondary mb-2">{t("history.to")}</label>
               <input
                 type="date"
                 name="dateTo"
@@ -249,15 +251,15 @@ export default function HistoricoPage() {
                 }
                 fullWidth
               >
-                Limpar Filtros
+                {t("history.clear")}
               </Button>
             </div>
           </div>
 
           <div className="mt-4 pt-4 border-t border-slate-700">
             <p className="text-secondary">
-              Mostrando <span className="text-cyan-400 font-bold">{filteredCount}</span> de{" "}
-              <span className="text-cyan-400 font-bold">{totalCount}</span> streams
+              {t("history.showing")} <span className="text-cyan-400 font-bold">{filteredCount}</span> {t("history.of")} {" "}
+              <span className="text-cyan-400 font-bold">{totalCount}</span> {t("history.items")}
             </p>
           </div>
         </Card>
@@ -271,13 +273,13 @@ export default function HistoricoPage() {
                 onClick={fetchStreams}
                 className="mr-2"
               >
-                🔄 Tentar Novamente
+                🔄 {t("history.retry")}
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => router.push('/login')}
               >
-                🔐 Fazer Login
+                🔐 {t("register.login")}
               </Button>
             </div>
           </Card>
@@ -287,7 +289,7 @@ export default function HistoricoPage() {
         {filteredStreams.length === 0 ? (
           <Card variant="glass" padding="lg" className="text-center">
             <p className="text-secondary mb-4">
-              Nenhum stream encontrado com os filtros selecionados
+              {t("history.none")}
             </p>
             <Button
               variant="neon"
@@ -300,7 +302,7 @@ export default function HistoricoPage() {
                 })
               }
             >
-              Limpar Filtros
+              {t("history.clear")}
             </Button>
           </Card>
         ) : (
@@ -325,7 +327,7 @@ export default function HistoricoPage() {
 
                   {/* Status */}
                   <div>
-                    <p className="text-xs text-secondary mb-1">Status</p>
+                    <p className="text-xs text-secondary mb-1">{t("history.status")}</p>
                     <div className={`px-3 py-1 rounded inline-block ${getStatusBg(stream.status)}`}>
                       <p className={`text-sm font-bold uppercase ${getStatusColor(stream.status)}`}>
                         {stream.status}
@@ -335,7 +337,7 @@ export default function HistoricoPage() {
 
                   {/* Token & Amount */}
                   <div>
-                    <p className="text-xs text-secondary mb-1">Valor</p>
+                    <p className="text-xs text-secondary mb-1">{t("history.amount")}</p>
                     <p className="font-bold text-cyan-400">
                       {stream.deposit} {stream.token}
                     </p>
@@ -343,15 +345,15 @@ export default function HistoricoPage() {
 
                   {/* Taxa */}
                   <div>
-                    <p className="text-xs text-secondary mb-1">Taxa/seg</p>
+                    <p className="text-xs text-secondary mb-1">{t("history.rate")}</p>
                     <p className="font-mono text-sm">{stream.rate_per_second}</p>
                   </div>
 
                   {/* Data */}
                   <div>
-                    <p className="text-xs text-secondary mb-1">Criado em</p>
+                    <p className="text-xs text-secondary mb-1">{t("history.createdAt")}</p>
                     <p className="text-sm">
-                      {new Date(stream.created_at).toLocaleDateString("pt-BR")}
+                      {new Date(stream.created_at).toLocaleDateString("en-US")}
                     </p>
                   </div>
 
@@ -364,7 +366,7 @@ export default function HistoricoPage() {
                         router.push(`/stream/${stream.id}`);
                       }}
                     >
-                      Ver Detalhes →
+                      {t("dashboard.details")} →
                     </Button>
                   </div>
                 </div>

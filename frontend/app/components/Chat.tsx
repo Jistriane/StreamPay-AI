@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAccount } from "wagmi";
 import TransactionConfirm, { type SignatureRequest } from "./TransactionConfirm";
+import { useI18n } from "../i18n";
 
 interface Message {
   id: string;
@@ -12,11 +13,12 @@ interface Message {
 
 export default function Chat() {
   const { address, isConnected } = useAccount();
+  const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       role: "assistant",
-      content: "Olá! Sou o assistente IA do StreamPay. Como posso ajudá-lo hoje?",
+      content: t("chat.greeting"),
       timestamp: new Date(),
     },
   ]);
@@ -74,9 +76,7 @@ export default function Chat() {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content:
-            (data.resposta || data.message || "Preciso da sua assinatura para continuar.") +
-            "\n\nAbra o modal e confirme a transação na sua wallet.",
+          content: data.resposta || data.message || t("chat.needSignature"),
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, assistantMessage]);
@@ -89,7 +89,7 @@ export default function Chat() {
         const processingMessage: Message = {
           id: processingId,
           role: "assistant",
-          content: "⏳ Processando transação na blockchain...",
+          content: t("chat.processing"),
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, processingMessage]);
@@ -103,7 +103,7 @@ export default function Chat() {
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: "assistant",
-            content: data.resposta || data.message || data.error || "Transação processada com sucesso!",
+            content: data.resposta || data.message || data.error || t("chat.txSuccess"),
             timestamp: new Date(),
           };
           return [...filtered, assistantMessage];
@@ -112,7 +112,7 @@ export default function Chat() {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: data.resposta || data.message || data.error || "Desculpe, não consegui processar sua mensagem.",
+          content: data.resposta || data.message || data.error || t("chat.defaultError"),
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, assistantMessage]);
@@ -121,7 +121,7 @@ export default function Chat() {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: `Erro: ${error.message || "Falha ao conectar com o servidor."}`,
+        content: `${t("chat.errorPrefix")}: ${error.message || t("chat.defaultError")}`,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -148,7 +148,7 @@ export default function Chat() {
           >
             <div className="message-content">
               <div className="message-role">
-                {message.role === "user" ? "Você" : "StreamPay AI"}
+                {message.role === "user" ? t("chat.you") : t("chat.assistant")}
               </div>
               <div className="message-text">{message.content}</div>
             </div>
@@ -157,7 +157,7 @@ export default function Chat() {
         {loading && (
           <div className="chat-message message-assistant">
             <div className="message-content">
-              <div className="message-role">StreamPay AI</div>
+              <div className="message-role">{t("chat.assistant")}</div>
               <div className="message-text loading-dots">
                 <span></span>
                 <span></span>
@@ -172,7 +172,7 @@ export default function Chat() {
       <div className="chat-input-container">
         {!isConnected && (
           <div className="chat-warning">
-            Conecte sua wallet para usar todas as funcionalidades
+            {t("chat.connectWallet")}
           </div>
         )}
         <div className="chat-input-wrapper">
@@ -181,14 +181,14 @@ export default function Chat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={isConnected ? "Digite sua mensagem... (Enter para enviar, Shift+Enter para nova linha)" : "Conecte sua wallet para usar o chat"}
+            placeholder={isConnected ? t("chat.placeholder") : t("chat.placeholderDisconnected")}
             className="chat-input"
             rows={1}
             disabled={loading || !isConnected}
           />
            <button
              onClick={handleSend}
-             aria-label="Enviar mensagem"
+             aria-label="Send message"
              disabled={!input.trim() || loading || !isConnected}
              className="chat-send-button"
           >
@@ -216,7 +216,7 @@ export default function Chat() {
             id: (Date.now() + 2).toString(),
             role: "assistant",
             content:
-              `Transação(ões) enviada(s) com sucesso.\n\n` +
+              `${t("chat.txSuccess")}` +
               hashes.map((h) => `- ${h}`).join("\n"),
             timestamp: new Date(),
           };

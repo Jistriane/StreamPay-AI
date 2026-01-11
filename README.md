@@ -1,6 +1,6 @@
 # 🚀 StreamPay AI - Smart Payment Streaming Platform
 
-**Status**: 🟡 Em progresso (E2E do chat/agent pendente) | **Version**: 1.0.1 | **Updated**: January 11, 2026
+**Status**: 🟡 Em progresso (E2E do chat/agent pendente) | **Version**: 1.1.0 | **Updated**: January 11, 2026
 
 ## 📖 Overview
 
@@ -46,6 +46,9 @@ StreamPay is a decentralized payment streaming platform for freelancers, investo
 - ⚠️ Stream creation via chat — fluxo E2E ainda em validação (assinatura/execução)
 - Token swaps, liquidez, saldo/preço — revisar após concluir E2E do chat
 
+### Chat demo (stream creation)
+![Stream creation chat flow](assets/images/Dashboard.png)
+
 ### 🧪 Testing & Quality (January 11, 2026)
 - ✅ **Backend**: 41/55 testes passam (74.5%)
   - ✅ Auth (7/7), Streams (10/10), Infura (4/4), Etherscan (7/7)
@@ -68,6 +71,15 @@ StreamPay is a decentralized payment streaming platform for freelancers, investo
 | **[docs/API.md](./docs/API.md)** | API endpoints documentation | 15 min |
 | **[docs/TECHNICAL_DOCUMENTATION.md](./docs/TECHNICAL_DOCUMENTATION.md)** | Architecture details | 30 min |
 
+## 🌐 Deployments
+
+| Network | Chain ID | StreamPayCore | LiquidityPool | PoolManager | SwapRouter | Explorer |
+|---------|----------|---------------|---------------|-------------|------------|----------|
+| Polygon Mainnet | 137 | `0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD` | `0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c` | `0xae185cA95D0b626a554b0612777350CE3DE06bB9` | `0x07AfFa6C58999Ac0c98237d10476983A573eD368` | https://polygonscan.com |
+| Sepolia Testnet | 11155111 | `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C` | `0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd` | `0x0F71393348E7b021E64e7787956fB1e7682AB4A8` | `0x9f3d42feC59d6742CC8dC096265Aa27340C1446F` | https://sepolia.etherscan.io |
+
+More details and token addresses in [DEPLOYED_CONTRACTS.md](DEPLOYED_CONTRACTS.md).
+
 ## ⚡ Quick Start (5 minutes)
 
 ### Prerequisites
@@ -85,7 +97,17 @@ cd StreamPay-AI
 # Install dependencies
 npm install
 
-# Start all services (Recommended)
+# Choose network (polygon | sepolia | localhost)
+export NETWORK=polygon
+# Optional: override RPC (defaults: polygon-rpc.com / sepolia publicnode)
+export POLYGON_RPC_URL=https://polygon-rpc.com
+
+# Quick start command bundle
+export NETWORK=polygon
+# opcional: export POLYGON_RPC_URL=https://polygon-rpc.com
+npm run dev
+
+# Start all services (recommended)
 npm run dev
 # Backend: http://localhost:3001
 # Frontend: http://localhost:3003
@@ -124,6 +146,9 @@ JWT_SECRET=your-secret-key-here
 JWT_REFRESH_SECRET=your-refresh-secret-here
 NODE_ENV=development
 PORT=3001
+NETWORK=polygon
+POLYGON_RPC_URL=https://polygon-rpc.com
+PRIVATE_KEY=0xyourprivkey64chars
 ```
 
 ## 🏗️ Project Structure
@@ -245,6 +270,13 @@ npm test
 
 See [SECURITY.md](./SECURITY.md) for detailed security guidelines.
 
+## 🚀 What's New (January 11, 2026)
+
+1. **Polygon Mainnet Deployment**
+   - Contracts deployed and recorded in [smart-contracts/deployments/polygon_mainnet-1768119533450.json](smart-contracts/deployments/polygon_mainnet-1768119533450.json) and [smart-contracts/deployments/polygon-poolmanager-1768120845394.json](smart-contracts/deployments/polygon-poolmanager-1768120845394.json)
+   - Addresses published in [DEPLOYED_CONTRACTS.md](DEPLOYED_CONTRACTS.md) and mirrored in [docs/API.md](docs/API.md)
+   - Pending: update frontend/backend `.env` for mainnet usage and run smoke (read-only) against mainnet RPC
+
 ## 🚀 What's New (December 15, 2025)
 
 ### ✨ Features Added
@@ -337,6 +369,6 @@ For questions or suggestions, please open an issue on GitHub.
 ---
 
 **Last Updated**: January 11, 2026  
-**Version**: 1.0.1  
+**Version**: 1.1.0  
 **Status**: 🟡 Em progresso (validando agente/chat E2E)
 

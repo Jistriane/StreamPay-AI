@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useI18n } from "../i18n";
 
 export default function Header() {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const pathname = usePathname();
+  const { t } = useI18n();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -23,13 +25,13 @@ export default function Header() {
   };
 
   const navLinks = [
-    { href: "/", label: "Dashboard", icon: "📊" },
-    { href: "/cadastro", label: "Cadastro", icon: "✍️" },
-    { href: "/historico", label: "Histórico", icon: "📜" },
-    { href: "/compliance", label: "Compliance", icon: "✅" },
-    { href: "/configuracoes", label: "Configurações", icon: "⚙️" },
-    { href: "/monitoramento", label: "Monitoramento", icon: "📡" },
-    { href: "/notificacoes", label: "Notificações", icon: "🔔" },
+    { href: "/", label: t("header.dashboard"), icon: "📊" },
+    { href: "/cadastro", label: t("header.register"), icon: "✍️" },
+    { href: "/historico", label: t("header.history"), icon: "📜" },
+    { href: "/compliance", label: t("header.compliance"), icon: "✅" },
+    { href: "/configuracoes", label: t("header.settings"), icon: "⚙️" },
+    { href: "/monitoramento", label: t("header.monitoring"), icon: "📡" },
+    { href: "/notificacoes", label: t("header.notifications"), icon: "🔔" },
   ];
 
   const formatAddress = (addr: string) => {
@@ -79,9 +81,9 @@ export default function Header() {
               <button
                 onClick={() => disconnect()}
                 className="btn-wallet btn-disconnect"
-                title="Desconectar Wallet"
+                title={t("header.disconnectWallet")}
               >
-                Desconectar
+                {t("header.disconnectWallet")}
               </button>
             </div>
           ) : (
@@ -90,7 +92,7 @@ export default function Header() {
               className="btn-wallet btn-connect"
             >
               <span className="wallet-icon">🔗</span>
-              Conectar Wallet
+              {t("header.connectWallet")}
             </button>
           )}
 

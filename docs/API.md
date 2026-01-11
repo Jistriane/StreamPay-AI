@@ -30,6 +30,30 @@ For full reference, see [DEPLOYED_CONTRACTS.md](../DEPLOYED_CONTRACTS.md)
 
 ---
 
+## 📋 Smart Contracts (Polygon Mainnet)
+
+**Network**: Polygon Mainnet (Chain ID: 137)  
+**Deploy Date**: 11/01/2026 08:18:53 UTC (PoolManager: 08:40:45 UTC)
+
+### Contract Addresses
+
+| Contract | Address | Polygonscan |
+|----------|---------|-------------|
+| **StreamPayCore** | `0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD` | [View](https://polygonscan.com/address/0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD) |
+| **LiquidityPool** | `0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c` | [View](https://polygonscan.com/address/0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c) |
+| **PoolManager** | `0xae185cA95D0b626a554b0612777350CE3DE06bB9` | [View](https://polygonscan.com/address/0xae185cA95D0b626a554b0612777350CE3DE06bB9) |
+| **SwapRouter** | `0x07AfFa6C58999Ac0c98237d10476983A573eD368` | [View](https://polygonscan.com/address/0x07AfFa6C58999Ac0c98237d10476983A573eD368) |
+| **USDC (Token)** | `0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174` | [View](https://polygonscan.com/token/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174) |
+
+### Deployment Files
+
+- `smart-contracts/deployments/polygon_mainnet-1768119533450.json`
+- `smart-contracts/deployments/polygon-poolmanager-1768120845394.json`
+
+For full reference, see [DEPLOYED_CONTRACTS.md](../DEPLOYED_CONTRACTS.md)
+
+---
+
 ## Authentication
 
 - JWT for protected routes

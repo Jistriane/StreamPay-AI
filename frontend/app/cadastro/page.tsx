@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import { useI18n } from "../i18n";
 
 export default function CadastroPage() {
   const [name, setName] = useState("");
@@ -10,11 +11,12 @@ export default function CadastroPage() {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { t } = useI18n();
 
   const handleCadastro = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setStatus("⏳ Registrando...");
+    setStatus(`⏳ ${t("register.registering")}`);
     
     try {
       const res = await fetch("/api/auth/register", {
@@ -26,15 +28,15 @@ export default function CadastroPage() {
       const data = await res.json();
       
       if (res.ok) {
-        setStatus("✅ Registro realizado com sucesso!\n" + JSON.stringify(data, null, 2));
+        setStatus(`✅ ${t("register.success")}\n` + JSON.stringify(data, null, 2));
         setTimeout(() => {
           window.location.href = "/login";
         }, 2000);
       } else {
-        setStatus(`❌ Erro: ${data.error || "Falha no registro"}\n${JSON.stringify(data, null, 2)}`);
+        setStatus(`❌ ${t("register.errorPrefix")}: ${data.error || "Registration failed"}\n${JSON.stringify(data, null, 2)}`);
       }
     } catch (err: any) {
-      setStatus(`❌ Erro: ${err.message}`);
+      setStatus(`❌ ${t("register.errorPrefix")}: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -50,33 +52,33 @@ export default function CadastroPage() {
             StreamPay Registration
           </h1>
           <p className="text-secondary" style={{ color: "var(--text-secondary)" }}>
-            Crie sua conta para começar
+            {t("register.subtitle")}
           </p>
         </div>
 
         <form onSubmit={handleCadastro}>
           <Input
-            label="Nome"
+            label={t("register.name")}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Seu nome completo"
+            placeholder="Your full name"
             icon="👤"
             required
           />
 
           <Input
-            label="E-mail"
+            label={t("register.email")}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="seu@email.com"
+            placeholder="you@email.com"
             icon="📧"
             required
           />
 
           <Input
-            label="Senha"
+            label={t("register.password")}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -93,7 +95,7 @@ export default function CadastroPage() {
             loading={loading}
             className="mt-4"
           >
-            Registrar
+            {t("register.submit")}
           </Button>
         </form>
 
@@ -114,13 +116,13 @@ export default function CadastroPage() {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-secondary" style={{ color: "var(--text-secondary)" }}>
-            Já tem uma conta?{" "}
+            {t("register.alreadyHave")} {" "}
             <a 
               href="/login" 
               className="text-primary hover:underline"
               style={{ color: "var(--color-primary)" }}
             >
-              Faça login
+              {t("register.login")}
             </a>
           </p>
         </div>

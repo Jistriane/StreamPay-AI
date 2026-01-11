@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     if (!r.ok) {
       const data = await r.json().catch(() => ({}));
       return NextResponse.json(
-        { error: data?.error || "Falha ao consultar o agente (ElizaOS)" },
+        { error: data?.error || "Failed to query agent (ElizaOS)" },
         { status: 502 }
       );
     }
@@ -58,6 +58,6 @@ export async function POST(request: Request) {
       action: response?.action,
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Erro ao processar a mensagem" }, { status: 500 });
+    return NextResponse.json({ error: error?.message || "Error processing message" }, { status: 500 });
   }
 }

@@ -4,6 +4,13 @@ import { getNetworkConfig } from "./config/contracts";
 import { logger } from "./utils/logger";
 
 const networkConfig = getNetworkConfig(process.env.NETWORK as any);
+
+if (!networkConfig) {
+  const target = process.env.NETWORK || process.env.NODE_ENV || "unknown";
+  logger.error(`[StreamPay] Configuração de rede inválida ou ausente: ${target}`);
+  throw new Error("NETWORK inválida ou não configurada (use polygon, mainnet, sepolia ou localhost)");
+}
+
 const rpcUrl = networkConfig.rpcUrl;
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 

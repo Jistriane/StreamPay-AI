@@ -1,0 +1,18 @@
+{
+  "network": "polygon_mainnet",
+  "chainId": 137,
+  "deployer": "0x3b598F74e735104435B450fdf3dAd565f046eA70",
+  "timestamp": "2026-01-11T08:40:45.393Z",
+  "contract": {
+    "name": "PoolManager",
+    "address": "0xae185cA95D0b626a554b0612777350CE3DE06bB9",
+    "constructorArgs": [
+      "0xC36442b4a4522e871399cD717ABDd847AB11fe1f",
+      "0x1F98431C8aD98523631AE4a59F267346Ea31f64C"
+    ]
+  },
+  "uniswap": {
+    "positionManager": "0xC36442b4a4522e871399cD717ABDd847AB11fe1f",
+    "factory": "0x1F98431C8aD98523631AE4a59F267346Ea31f64C"
+  }
+}

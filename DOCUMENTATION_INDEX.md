@@ -1,6 +1,6 @@
 # 📚 Documentation Index - StreamPay AI (Em progresso)
 
-**Última atualização**: 11 de janeiro de 2026 | **Versão**: 1.0.1
+**Última atualização**: 11 de janeiro de 2026 | **Versão**: 1.1.0
 
 ## 🎯 Where to Start?
 
@@ -53,6 +53,7 @@
 | `DEPLOYED_CONTRACTS.md` | Endereços de contratos | 5 min |
 | `CHANGELOG.md` | Histórico de mudanças | 15 min |
 | `SECURITY.md` | Segurança | 10 min |
+| `docs/API.md` | Endpoints + deploy mainnet | 15 min |
 
 ### 📚 Técnicos (docs/)
 | File | Description |
@@ -127,6 +128,7 @@ StreamPay-AI/
 | **Tests** | ✅ 17/17 | TESTE_CHATBOT.md |
 | **Build** | ✅ Success | README.md |
 | **Deploy** | ✅ Ready | SECURITY.md |
+| **Mainnet (Polygon)** | ✅ Deploy publicado | DEPLOYED_CONTRACTS.md |
 
 ---
 
@@ -166,6 +168,6 @@ More details in `GETTING_STARTED.md` and `README.md`
 ---
 
 **Last updated**: January 11, 2026  
-**Version**: 1.0.1  
+**Version**: 1.1.0  
 **Status**: 🟡 Em progresso (E2E do chat/agent pendente; testes 74.5% backend, 87.7% frontend)  
 **Test Results**: Backend 41/55 ✅, Frontend 50/57 ✅, Coverage 45.49%  

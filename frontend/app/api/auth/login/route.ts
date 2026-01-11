@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const data = await fs.readFile(usersPath, "utf-8");
     users = JSON.parse(data);
   } catch (err) {
-    return NextResponse.json({ success: false, message: "Erro ao acessar usuários.", details: String(err) }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Error accessing users.", details: String(err) }, { status: 500 });
   }
   const user = users.find(u => u.email === email && u.password === password);
   if (!user) {

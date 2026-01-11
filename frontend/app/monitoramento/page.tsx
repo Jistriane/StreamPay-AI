@@ -1,10 +1,12 @@
 "use client";
 import React from 'react';
 import { useState, useEffect } from "react";
+import { useI18n } from "../i18n";
 
 export default function MonitoramentoPage() {
   const [status, setStatus] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useI18n();
 
   useEffect(() => {
     fetch("/api/monitoramento-status")
@@ -18,9 +20,9 @@ export default function MonitoramentoPage() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 to-blue-900 p-8">
-      <h1 className="text-3xl font-bold text-cyan-400 mb-8">Monitoramento</h1>
+      <h1 className="text-3xl font-bold text-cyan-400 mb-8">{t("monitoring.title")}</h1>
       <div className="bg-slate-800/50 rounded-lg p-6">
-        {loading && <p className="text-cyan-300">Carregando status...</p>}
+        {loading && <p className="text-cyan-300">{t("monitoring.loading")}</p>}
         {!loading && status && (
           <ul>
             {Object.entries(status).map(([servico, info]: any) => (
@@ -31,7 +33,7 @@ export default function MonitoramentoPage() {
             ))}
           </ul>
         )}
-        {!loading && !status && <p className="text-red-400">Falha ao carregar status dos serviços.</p>}
+        {!loading && !status && <p className="text-red-400">{t("monitoring.failure")}</p>}
       </div>
     </div>
   );

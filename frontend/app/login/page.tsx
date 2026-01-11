@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import Card from "../components/Card";
 import { Web3Auth } from "../components/Web3Auth";
 import { useAuth } from "../hooks/useAuth";
+import { useI18n } from "../i18n";
 
 export default function LoginPage() {
   const router = useRouter();
   const { isAuthenticated, loading } = useAuth();
+  const { t } = useI18n();
 
   // Se já está autenticado, redirecionar para dashboard
   useEffect(() => {
@@ -32,50 +34,49 @@ export default function LoginPage() {
             className="text-4xl font-bold mb-2 text-gradient" 
             style={{ fontFamily: "var(--font-family-display)" }}
           >
-            StreamPay AI
+            {t("login.title")}
           </h1>
           <p 
             className="text-secondary" 
             style={{ color: "var(--text-secondary)" }}
           >
-            Autenticação Web3 com MetaMask
+            {t("login.subtitle")}
           </p>
         </div>
 
         <div className="mb-6">
           <p className="text-sm text-center mb-4" style={{ color: "var(--text-secondary)" }}>
-            Conecte sua carteira MetaMask para acessar o StreamPay AI
+            {t("login.description")}
           </p>
           <Web3Auth
             onSuccess={handleAuthSuccess}
             onError={(error) => {
-              console.error("Erro na autenticação:", error);
+              console.error("Authentication error:", error);
             }}
           />
         </div>
 
         <div className="border-t border-gray-300 dark:border-gray-700 pt-6">
           <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--text-primary)" }}>
-            Como funciona:
+            {t("login.howItWorks")}
           </h2>
           <ul className="text-xs space-y-2" style={{ color: "var(--text-secondary)" }}>
-            <li>✅ Clique em "Conectar MetaMask"</li>
-            <li>✅ Selecione sua carteira</li>
-            <li>✅ Assine a mensagem para verificar identidade</li>
-            <li>✅ Receba seu JWT para acessar a plataforma</li>
+            <li>✅ {t("login.step1")}</li>
+            <li>✅ {t("login.step2")}</li>
+            <li>✅ {t("login.step3")}</li>
+            <li>✅ {t("login.step4")}</li>
           </ul>
         </div>
 
         <div className="mt-6 text-center text-xs" style={{ color: "var(--text-secondary)" }}>
           <p>
-            ℹ️ Certifique-se de estar na rede{" "}
-            <strong>Sepolia Testnet</strong>
+            ℹ️ {t("login.networkReminder")}
           </p>
         </div>
 
         <div className="mt-6 text-center">
           <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            Não tem MetaMask?{" "}
+            {t("login.install")} {" "}
             <a
               href="https://metamask.io/download/"
               target="_blank"
@@ -83,7 +84,7 @@ export default function LoginPage() {
               className="hover:underline"
               style={{ color: "var(--color-primary)" }}
             >
-              Instale aqui
+              MetaMask
             </a>
           </p>
         </div>

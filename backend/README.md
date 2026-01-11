@@ -68,6 +68,15 @@ Configure variables in `.env` for:
 - JWT authentication keys
 - Compliance providers
 
+## Deployments
+
+| Network | Chain ID | StreamPayCore | LiquidityPool | PoolManager | SwapRouter | Explorer |
+|---------|----------|---------------|---------------|-------------|------------|----------|
+| Polygon Mainnet | 137 | `0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD` | `0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c` | `0xae185cA95D0b626a554b0612777350CE3DE06bB9` | `0x07AfFa6C58999Ac0c98237d10476983A573eD368` | https://polygonscan.com |
+| Sepolia Testnet | 11155111 | `0x74ef273eCdc2BBA1Ddf69a2106122d43424F3c0C` | `0x896171C52d49Ff2e94300FF9c9B2164aC62F0Edd` | `0x0F71393348E7b021E64e7787956fB1e7682AB4A8` | `0x9f3d42feC59d6742CC8dC096265Aa27340C1446F` | https://sepolia.etherscan.io |
+
+Refer to [DEPLOYED_CONTRACTS.md](DEPLOYED_CONTRACTS.md) for tokens, notes, and verification status.
+
 ## Deployment and Production
 
 - Dockerfile ready for build and deployment

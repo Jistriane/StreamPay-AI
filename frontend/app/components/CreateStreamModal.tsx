@@ -4,6 +4,7 @@ import Card from "./Card";
 import Button from "./Button";
 import { fetchWithAuth } from "@/app/lib/api";
 import { useToast } from "./ToastProvider";
+import { useI18n } from "../i18n";
 
 interface CreateStreamModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function CreateStreamModal({
   onStreamCreated,
 }: CreateStreamModalProps) {
   const { addToast } = useToast();
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     recipient: "",
     token: "USDC",
@@ -43,22 +45,22 @@ export default function CreateStreamModal({
 
   const validateForm = () => {
     if (!formData.recipient.trim()) {
-      setError("Endereço do destinatário é obrigatório");
+      setError(t("createStream.addressRequired"));
       return false;
     }
 
     if (!/^0x[a-fA-F0-9]{40}$/.test(formData.recipient)) {
-      setError("Endereço Ethereum inválido (deve começar com 0x)");
+      setError(t("createStream.addressInvalid"));
       return false;
     }
 
     if (!formData.deposit || parseFloat(formData.deposit) <= 0) {
-      setError("Valor de depósito deve ser maior que zero");
+      setError(t("createStream.depositInvalid"));
       return false;
     }
 
     if (!formData.rate_per_second || parseFloat(formData.rate_per_second) <= 0) {
-      setError("Taxa por segundo deve ser maior que zero");
+      setError(t("createStream.rateInvalid"));
       return false;
     }
 
@@ -92,12 +94,12 @@ export default function CreateStreamModal({
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.message || "Erro ao criar stream"
+          errorData.message || t("createStream.errorCreating")
         );
       }
 
       setSuccess(true);
-      addToast("✅ Stream criado com sucesso!", "success", 3000);
+      addToast(`✅ ${t("createStream.successToast")}`, "success", 3000);
       setFormData({
         recipient: "",
         token: "USDC",
@@ -110,9 +112,9 @@ export default function CreateStreamModal({
         onClose();
       }, 1500);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido";
+      const errorMsg = err instanceof Error ? err.message : t("history.unknownError");
       setError(errorMsg);
-      addToast(`❌ Erro ao criar stream: ${errorMsg}`, "error", 4000);
+      addToast(`❌ ${t("createStream.errorToast")}: ${errorMsg}`, "error", 4000);
     } finally {
       setLoading(false);
     }
@@ -124,7 +126,7 @@ export default function CreateStreamModal({
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <Card variant="glass" padding="lg" className="max-w-md w-full">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Criar Novo Stream</h2>
+          <h2 className="text-2xl font-bold">{t("createStream.title")}</h2>
           <button
             onClick={onClose}
             className="text-secondary hover:text-white text-2xl"
@@ -137,8 +139,8 @@ export default function CreateStreamModal({
         {success ? (
           <div className="text-center py-8">
             <p className="text-4xl mb-4">✅</p>
-            <p className="text-green-400 font-bold mb-2">Stream criado com sucesso!</p>
-            <p className="text-secondary text-sm">Redirecionando...</p>
+            <p className="text-green-400 font-bold mb-2">{t("createStream.successTitle")}</p>
+            <p className="text-secondary text-sm">{t("createStream.redirect")}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -150,7 +152,7 @@ export default function CreateStreamModal({
 
             <div>
               <label className="block text-sm text-secondary mb-2">
-                Endereço do Destinatário
+                {t("createStream.recipient")}
               </label>
               <input
                 type="text"
@@ -162,12 +164,12 @@ export default function CreateStreamModal({
                 disabled={loading}
               />
               <p className="text-xs text-secondary mt-1">
-                Endereço Ethereum de 42 caracteres
+                {t("createStream.recipientHint")}
               </p>
             </div>
 
             <div>
-              <label className="block text-sm text-secondary mb-2">Token</label>
+              <label className="block text-sm text-secondary mb-2">{t("createStream.token")}</label>
               <select
                 name="token"
                 value={formData.token}
@@ -183,7 +185,7 @@ export default function CreateStreamModal({
 
             <div>
               <label className="block text-sm text-secondary mb-2">
-                Valor de Depósito ({formData.token})
+                {t("createStream.depositLabel")} ({formData.token})
               </label>
               <input
                 type="number"
@@ -199,7 +201,7 @@ export default function CreateStreamModal({
 
             <div>
               <label className="block text-sm text-secondary mb-2">
-                Taxa por Segundo ({formData.token})
+                {t("createStream.rateLabel")} ({formData.token})
               </label>
               <input
                 type="number"
@@ -213,7 +215,7 @@ export default function CreateStreamModal({
               />
               {formData.rate_per_second && (
                 <div className="mt-2 p-3 bg-slate-800/50 rounded text-sm">
-                  <p className="text-secondary mb-1">Estimativa mensal:</p>
+                  <p className="text-secondary mb-1">{t("createStream.monthlyEstimate")}</p>
                   <p className="text-cyan-400 font-bold">
                     {calculateMonthly()} {formData.token}
                   </p>
@@ -228,7 +230,7 @@ export default function CreateStreamModal({
                 disabled={loading}
                 fullWidth
               >
-                Cancelar
+                {t("common.cancel")}
               </Button>
               <Button
                 variant="neon"
@@ -236,7 +238,7 @@ export default function CreateStreamModal({
                 disabled={loading}
                 fullWidth
               >
-                {loading ? "⏳ Criando..." : "✓ Criar"}
+                {loading ? `⏳ ${t("createStream.creating")}` : `✓ ${t("createStream.create")}`}
               </Button>
             </div>
           </form>
