@@ -161,10 +161,16 @@ export default function TransactionConfirm({
       const signature = await signer.signMessage(request.messageToSign);
 
       const token = localStorage.getItem("authToken");
-      if (!token)
-        throw new Error(
-          t("txConfirm.needsAuth")
-        );
+      console.log("[TransactionConfirm] Token retrieved from localStorage:", token ? `${token.substring(0, 10)}...` : "null");
+      
+      if (!token) {
+        console.error("[TransactionConfirm] Auth token is MISSING in localStorage!");
+        // Tenta recuperar do contexto da página ou alertar
+        console.log("[TransactionConfirm] LocalStorage keys:", Object.keys(localStorage));
+        throw new Error(t("txConfirm.needsAuth"));
+      }
+
+      console.log("[TransactionConfirm] Sending execute-contract request to:", `${effectiveBackendUrl}/api/agent/execute-contract`);
 
       setStep("preparing");
       const r = await fetch(

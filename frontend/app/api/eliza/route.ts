@@ -15,6 +15,12 @@ export async function POST(request: Request) {
     const prompt = String(body?.prompt || "");
     const userAddress = body?.userAddress ? String(body.userAddress) : undefined;
     const authHeader = request.headers.get('authorization') || undefined;
+    
+    if (!authHeader) {
+      console.warn("[API/Eliza] Missing Authorization header in request");
+    } else {
+      console.log("[API/Eliza] Forwarding request with auth token");
+    }
 
     if (!prompt.trim()) {
       return NextResponse.json({ error: "Prompt é obrigatório" }, { status: 400 });

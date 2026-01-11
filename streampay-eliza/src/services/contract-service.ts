@@ -64,12 +64,8 @@ const addressSchema = z
   .regex(/^0x[a-fA-F0-9]{40}$/, 'Endereço Ethereum inválido (esperado 0x + 40 hex)');
 
 function getChainId(network: NetworkName): number {
-  // Polygon (137) for production, Mainnet (1) optional, Sepolia (11155111) for testing, Localhost (31337) for dev
   if (network === 'polygon') return 137;
-  if (network === 'mainnet') return 1;
-  if (network === 'sepolia') return 11155111;
-  if (network === 'localhost') return 31337;
-  return 137; // Default to Polygon
+  return network === 'sepolia' ? 11155111 : 31337;
 }
 
 function canonicalMessage(payload: SignaturePayload): string {
@@ -88,7 +84,7 @@ export class ContractService {
       backendUrl: config.backendUrl,
       userAddress: config.userAddress,
       authToken: config.authToken,
-      network: config.network || 'polygon',
+      network: config.network || (process.env.NETWORK as NetworkName) || 'polygon',
     };
 
     this.httpClient = new HttpClient({

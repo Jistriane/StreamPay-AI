@@ -54,6 +54,8 @@ export default function Chat() {
     try {
       // Inclui JWT se disponível para que o backend reconheça a sessão
       const authToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+      console.log("[Chat] Auth token available:", authToken ? "YES (len=" + authToken.length + ")" : "NO");
+
       const response = await fetch("/api/eliza", {
         method: "POST",
         headers: {
@@ -68,15 +70,43 @@ export default function Chat() {
 
       const data = await response.json();
 
-      // Se o agente pediu assinatura, abrir modal de confirmação
-      const maybeReq: any = data?.data?.pendingSignature ? data.data : data?.pendingSignature ? data : null;
-      if (maybeReq?.pendingSignature && maybeReq?.messageToSign && maybeReq?.payload) {
-        setSignatureRequest(maybeReq as SignatureRequest);
+      console.log("[Chat] Response from Eliza:", JSON.stringify(data, null, 2));
+
+      // Check for pending signature in various possible locations
+      // createStreamAction returns: { text: ..., content: { ...result.data } }
+      // where result.data is the signatureRequest.
+      // So data from API might be: { answer: "...", content: { ...signatureRequest } } or similar.
+      
+      // Let's look for payload/messageToSign deep in various places
+      const findSignatureRequest = (obj: any): any => {
+        if (!obj || typeof obj !== 'object') return null;
+        if (obj.pendingSignature && obj.messageToSign && obj.payload) return obj;
+        
+        // Check content
+        if (obj.content && typeof obj.content === 'object') {
+           const found = findSignatureRequest(obj.content);
+           if (found) return found;
+        }
+        
+        // Check data
+        if (obj.data && typeof obj.data === 'object') {
+           const found = findSignatureRequest(obj.data);
+           if (found) return found;
+        }
+        
+        return null;
+      };
+
+      const signatureReq = findSignatureRequest(data);
+
+      if (signatureReq) {
+        console.log("[Chat] Found signature request:", signatureReq);
+        setSignatureRequest(signatureReq as SignatureRequest);
         setTxModalOpen(true);
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: data.resposta || data.message || t("chat.needSignature"),
+          content: data.resposta || data.message || data.text || t("chat.needSignature"),
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, assistantMessage]);
