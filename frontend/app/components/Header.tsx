@@ -4,11 +4,13 @@ import { useAccount, useConnect, useDisconnect } from "wagmi";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "../i18n";
+import { useWalletAuth } from "../hooks/useWalletAuth";
 
 export default function Header() {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
+  // We use our custom auth hook for logout to clear storage too
+  const { authenticate, isAuthenticated, isLoading, error: authError, logout } = useWalletAuth(); 
   const pathname = usePathname();
   const { t } = useI18n();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -17,6 +19,15 @@ export default function Header() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Effect to trigger authentication if connected but not authenticated
+  useEffect(() => {
+    if (mounted && isConnected && address && !isAuthenticated && !isLoading) {
+       // Optional: Add a small delay or check if we haven't tried recently
+       // For now, let's trigger it. User can cancel signature in wallet.
+       authenticate();
+    }
+  }, [mounted, isConnected, address, isAuthenticated]); // Removed isLoading to avoid loop if it changes
 
   const handleConnectWallet = () => {
     if (connectors && connectors.length > 0) {
@@ -74,12 +85,16 @@ export default function Header() {
         <div className="header-actions">
           {isConnected && address ? (
             <div className="wallet-info">
-              <div className="wallet-status">
-                <div className="wallet-indicator"></div>
+              {authError && (
+                 <span className="text-xs text-red-500 mr-2" title={authError}>⚠️ Auth Failed</span>
+              )}
+              <div className={`wallet-status ${isAuthenticated ? 'verified' : 'pending'}`}>
+                <div className={`wallet-indicator ${isAuthenticated ? 'bg-green-500' : 'bg-yellow-500'}`} 
+                     title={isAuthenticated ? "Authenticated" : "Wallet Connected (Not Authenticated)"}></div>
                 <span className="wallet-address-text">{formatAddress(address)}</span>
               </div>
               <button
-                onClick={() => disconnect()}
+                onClick={logout}
                 className="btn-wallet btn-disconnect"
                 title={t("header.disconnectWallet")}
               >

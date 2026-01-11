@@ -13,7 +13,7 @@ import type { StreamPayIntent } from './intent-parser';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 
-export type NetworkName = 'sepolia' | 'localhost';
+export type NetworkName = 'sepolia' | 'localhost' | 'polygon';
 
 export interface SignaturePayload<TParams extends Record<string, any> = Record<string, any>> {
   /**
@@ -64,6 +64,7 @@ const addressSchema = z
   .regex(/^0x[a-fA-F0-9]{40}$/, 'Endereço Ethereum inválido (esperado 0x + 40 hex)');
 
 function getChainId(network: NetworkName): number {
+  if (network === 'polygon') return 137;
   return network === 'sepolia' ? 11155111 : 31337;
 }
 
@@ -83,7 +84,7 @@ export class ContractService {
       backendUrl: config.backendUrl,
       userAddress: config.userAddress,
       authToken: config.authToken,
-      network: config.network || 'sepolia',
+      network: config.network || (process.env.NETWORK as NetworkName) || 'polygon',
     };
 
     this.httpClient = new HttpClient({

@@ -46,7 +46,7 @@ export class ActionHandler {
       backendUrl: context.backendUrl,
       userAddress: context.userAddress,
       authToken: context.authToken,
-      network: context.network || 'sepolia',
+      network: context.network,
     });
   }
 

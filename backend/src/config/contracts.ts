@@ -18,7 +18,8 @@ const polygonConfig = {
   SwapRouter: '0x07AfFa6C58999Ac0c98237d10476983A573eD368',
 
   // Tokens
-  USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // USDC.e (PoS)
+  USDC_NATIVE: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359', // USDC (Native)
 
   // Uniswap V3
   UniswapPositionManager: '0xC36442b4a4522e871399cD717ABDd847AB11fe1f',
@@ -40,7 +41,8 @@ export const CONTRACTS_CONFIG = {
     SwapRouter: '0x9f3d42feC59d6742CC8dC096265Aa27340C1446F',
     
     // Tokens
-    USDC: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+    // USDC: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238', // Native Sepolia USDC (pode estar vazio/bugado)
+    USDC: '0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8', // Aave USDC (Mais confiável para testes)
     
     // Uniswap V3
     UniswapPositionManager: '0x1238536071E1c677A632429e3655c799b22cDA52',
