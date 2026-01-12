@@ -35,12 +35,11 @@ export class ChainlinkService {
   private priceCache: Map<string, { price: PriceData; timestamp: number }> = new Map();
   private cacheDuration = 60000; // 1 minute
 
-  // Common Chainlink price feeds on Polygon
   private feeds: Map<string, PriceFeed> = new Map([
     [
       'ETH/USD',
       {
-        address: '0xF9680D99D6CC9750f3D0fb6c1A27bf7926d2BDF5',
+        address: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
         symbol: 'ETH/USD',
         decimals: 8,
       },
@@ -48,7 +47,7 @@ export class ChainlinkService {
     [
       'BTC/USD',
       {
-        address: '0xde31F8bFBD8c84b5360CFACCa3539B938dd24CB57',
+        address: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
         symbol: 'BTC/USD',
         decimals: 8,
       },
@@ -56,7 +55,7 @@ export class ChainlinkService {
     [
       'MATIC/USD',
       {
-        address: '0xAB594600146Bf3bA3f0Ff6747b4C880502995f11',
+        address: '0x7bAC85a8a13A4BcD8abb3eB7d6b4d632c5a57676',
         symbol: 'MATIC/USD',
         decimals: 8,
       },
@@ -64,7 +63,7 @@ export class ChainlinkService {
     [
       'USDC/USD',
       {
-        address: '0xFCA0A6eC915cc64BDef3B7a7581f737Ff1eCf4E6',
+        address: '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6',
         symbol: 'USDC/USD',
         decimals: 8,
       },
@@ -72,7 +71,7 @@ export class ChainlinkService {
     [
       'DAI/USD',
       {
-        address: '0x4746DeC9e833A82EC7C2C1356372CcF2cfaD2F3D',
+        address: '0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9',
         symbol: 'DAI/USD',
         decimals: 8,
       },
@@ -81,7 +80,7 @@ export class ChainlinkService {
 
   constructor(config: ChainlinkConfig) {
     this.rpcUrl = config.rpcUrl;
-    this.chainId = config.chainId || 137; // Polygon
+    this.chainId = config.chainId || 1; // Ethereum
 
     this.httpClient = new HttpClient({
       baseURL: config.baseURL || 'https://api.chain.link/v1',
@@ -332,5 +331,5 @@ export class ChainlinkService {
  * Create Chainlink service singleton
  */
 export const createChainlinkService = (rpcUrl: string): ChainlinkService => {
-  return new ChainlinkService({ rpcUrl, chainId: 137 });
+  return new ChainlinkService({ rpcUrl, chainId: 1 });
 };

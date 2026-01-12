@@ -1,4 +1,10 @@
 import request from 'supertest';
+
+
+// Importante: definir antes de importar o app
+process.env.NODE_ENV = 'test';
+process.env.NETWORK = 'ethereum';
+
 import app from '../src/server';
 
 describe('Integração Moralis', () => {

@@ -4,6 +4,7 @@ import { Wallet } from "ethers";
 
 // Important: must be set before importing the app (server reads env during initialization).
 process.env.NODE_ENV = "test";
+process.env.NETWORK = "ethereum";
 
 import app from "../src/server";
 
@@ -36,11 +37,11 @@ describe("Agent Contracts Route", () => {
       requestId: "req_test_12345678",
       intent: "CREATE_STREAM",
       userAddress: wallet.address,
-      network: "sepolia",
-      chainId: 11155111,
+      network: "ethereum",
+      chainId: 1,
       parameters: {
         recipient: wallet.address,
-        token: "USDC",
+        token: "MNEE",
         amount: 1,
         durationSeconds: 60,
       },
@@ -68,11 +69,11 @@ describe("Agent Contracts Route", () => {
       requestId: "req_test_12345678",
       intent: "CREATE_STREAM",
       userAddress: wallet.address,
-      network: "sepolia",
-      chainId: 11155111,
+      network: "ethereum",
+      chainId: 1,
       parameters: {
         recipient: "0x1234567890123456789012345678901234567890",
-        token: "USDC",
+        token: "MNEE",
         amount: 1,
         durationSeconds: 60,
       },

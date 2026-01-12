@@ -59,7 +59,7 @@ export class MoralisService {
 
   constructor(config: MoralisConfig) {
     this.apiKey = config.apiKey;
-    this.chainId = config.chainId || 137; // Polygon by default
+    this.chainId = config.chainId || 1; // Ethereum by default
 
     this.httpClient = new HttpClient({
       baseURL: config.baseURL || 'https://deep-index.moralis.io/api/v2.2',
@@ -280,7 +280,7 @@ export class MoralisService {
    */
   async isHealthy(): Promise<boolean> {
     try {
-      await this.getTokenPrice('0xc2132D05D31c914a87C6611C10748AEb04B58e8F'); // USDT on Polygon
+      await this.getTokenPrice('0xdAC17F958D2ee523a2206206994597C13D831ec7'); // USDT on Ethereum
       return true;
     } catch (error) {
       console.error('[Moralis] Health check failed:', error);
@@ -293,5 +293,5 @@ export class MoralisService {
  * Create Moralis service singleton
  */
 export const createMoralisService = (apiKey: string): MoralisService => {
-  return new MoralisService({ apiKey, chainId: 137 });
+  return new MoralisService({ apiKey, chainId: 1 });
 };

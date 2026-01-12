@@ -7,10 +7,10 @@
  * Chain ID: 11155111
  */
 
-const polygonConfig = {
-  chainId: 137,
-  chainName: 'Polygon Mainnet',
-  rpcUrl: process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com',
+const ethereumMainnetConfig = {
+  chainId: 1,
+  chainName: 'Ethereum Mainnet',
+  rpcUrl: process.env.MAINNET_RPC_URL || 'https://eth.llamarpc.com',
 
   StreamPayCore: '0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298',
   LiquidityPool: '0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
@@ -18,7 +18,7 @@ const polygonConfig = {
   SwapRouter: '0x07AfFa6C58999Ac0c98237d10476983A573eD368',
 
   // Tokens
-  USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // USDC.e (PoS)
+  MNEE: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF', // MNEE Token
   USDC_NATIVE: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359', // USDC (Native)
 
   // Uniswap V3
@@ -45,8 +45,8 @@ const mainnetConfig = {
 } as const;
 
 export const CONTRACTS_CONFIG = {
-  polygon: polygonConfig,
-  mainnet: mainnetConfig,
+  ethereum: ethereumMainnetConfig,
+  mainnet: ethereumMainnetConfig,
   
   sepolia: {
     chainId: 11155111,

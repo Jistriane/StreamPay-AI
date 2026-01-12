@@ -47,6 +47,7 @@ function tokenDecimals(tokenSymbolOrAddress: string): number {
   const key = tokenSymbolOrAddress.toUpperCase();
   // Ajuste mínimo: USDC na Sepolia é 6 decimais.
   if (key === "USDC") return 6;
+  if (key === "MNEE") return 18;
   return 18;
 }
 

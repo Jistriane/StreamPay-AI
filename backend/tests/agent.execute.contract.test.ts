@@ -1,4 +1,9 @@
 import request from 'supertest';
+
+// Important: must be set before importing the app
+process.env.NODE_ENV = 'test';
+process.env.NETWORK = 'ethereum';
+
 import app from '../src/server';
 import { Wallet } from 'ethers';
 import jwt from 'jsonwebtoken';
@@ -14,11 +19,11 @@ describe('Agent execute-contract - CREATE_STREAM', () => {
       requestId: Math.random().toString(36).slice(2),
       intent: 'CREATE_STREAM',
       userAddress: address,
-      network: 'sepolia',
-      chainId: 11155111,
+      network: 'ethereum',
+      chainId: 1,
       parameters: {
         recipient: '0x1234567890123456789012345678901234567890',
-        token: 'USDC',
+        token: 'MNEE',
         amount: 100,
         durationSeconds: 7 * 24 * 60 * 60,
       },
@@ -41,12 +46,13 @@ describe('Agent execute-contract - CREATE_STREAM', () => {
       .send({ signature, payload });
 
     expect([200, 400, 401]).toContain(res.status);
+    console.log('[DEBUG] Response Body:', JSON.stringify(res.body, null, 2));
     if (res.status === 200) {
       expect(res.body).toHaveProperty('txRequests');
       expect(Array.isArray(res.body.txRequests)).toBe(true);
       // deve conter approve e createStream
-      const kinds = res.body.txRequests.map((r: any) => r.kind || r.type || '');
-      expect(kinds.join(' ')).toMatch(/approve|create/i);
+      const labels = res.body.txRequests.map((r: any) => r.label || '');
+      expect(labels.join(' ')).toMatch(/aprovar|criar/i);
     } else {
       // Em caso de erro, deve haver mensagem
       expect(res.body).toHaveProperty('error');
