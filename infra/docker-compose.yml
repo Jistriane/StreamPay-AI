@@ -1,30 +1,7 @@
-version: '3.8'
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "3001:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://backend:3000
-    depends_on:
-      - backend
-  backend:
-    build: ./backend
-    ports:
-      - "3000:3000"
-    environment:
-      - PORT=3000
-      - MORALIS_API_KEY
-      - CHAINLINK_RPC_URL
-      - KYC_PROVIDER_API_KEY
-      - POSTGRES_URL=postgresql://postgres:1234@localhost:5432/streampay?schema=public
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - db
-      - redis
-  db:
-    image: postgres:15
-    restart: always
+  postgres:
+    image: postgres:15-alpine
+    container_name: streampay-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -32,14 +9,48 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
-    image: redis:7
-    restart: always
+    image: redis:7-alpine
+    container_name: streampay-redis
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+
+  backend:
+    build: ../backend
+    container_name: streampay-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/streampay
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  frontend:
+    build: ../frontend
+    container_name: streampay-frontend
+    ports:
+      - "3003:3003"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:3001
+      - NEXT_PUBLIC_ELIZA_URL=http://localhost:3002
+    depends_on:
+      - backend
+
 volumes:
-  db_data:
+  postgres_data:
   redis_data:

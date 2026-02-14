@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "npm-run-all --parallel dev:frontend dev:backend dev:eliza",
-    "dev:frontend": "cd frontend && PORT=3003 npm run dev",
-    "dev:backend": "cd backend && npm run dev",
-    "dev:eliza": "cd streampay-eliza && npm run dev",
-    "contracts:compile": "cd smart-contracts && npm run compile",
-    "contracts:test": "cd smart-contracts && npm run test",
-    "contracts:deploy": "cd smart-contracts && npm run deploy",
-    "test": "jest"
+    "dev:frontend": "cd frontend && PORT=3003 pnpm dev",
+    "dev:backend": "cd backend && pnpm dev",
+    "dev:eliza": "cd streampay-eliza && bun run dev",
+    "contracts:compile": "cd smart-contracts && pnpm compile",
+    "contracts:test": "cd smart-contracts && pnpm test",
+    "contracts:deploy": "cd smart-contracts && pnpm deploy",
+    "vercel-build": "cd frontend && pnpm install --no-frozen-lockfile && pnpm build",
+    "test": "cd backend && pnpm test"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.27.1",
@@ -22,6 +23,6 @@
     "jest": "^29.7.0"
   },
   "dependencies": {
-    "next": "^16.0.5"
+    "next": "^14.2.33"
   }
 }
