@@ -13,7 +13,7 @@ import type { StreamPayIntent } from './intent-parser';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 
-export type NetworkName = 'sepolia' | 'localhost' | 'ethereum';
+export type NetworkName = 'sepolia' | 'localhost' | 'ethereum' | 'mainnet' | 'polygon';
 
 export interface SignaturePayload<TParams extends Record<string, any> = Record<string, any>> {
   /**
@@ -63,9 +63,12 @@ const addressSchema = z
   .string()
   .regex(/^0x[a-fA-F0-9]{40}$/, 'Endereço Ethereum inválido (esperado 0x + 40 hex)');
 
-function getChainId(network: NetworkName): number {
-  if (network === 'ethereum') return 1;
-  return network === 'sepolia' ? 11155111 : 31337;
+function getChainId(network: string): number {
+  const n = network.toLowerCase();
+  if (n === 'ethereum' || n === 'mainnet') return 1;
+  if (n === 'sepolia') return 11155111;
+  if (n === 'polygon') return 137;
+  return 31337;
 }
 
 function canonicalMessage(payload: SignaturePayload): string {

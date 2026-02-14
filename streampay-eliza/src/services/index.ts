@@ -76,6 +76,7 @@ export class ServiceFactory {
       authToken: this.config.authToken,
       moralisService: this.getMoralisService(),
       chainlinkService: this.getChainlinkService(),
+      network: this.config.network as any,
     });
   }
 
@@ -86,7 +87,7 @@ export class ServiceFactory {
         backendUrl: this.config.backendUrl,
         userAddress: this.config.userAddress || '',
         authToken: this.config.authToken,
-        network: this.config.network || 'polygon',
+        network: this.config.network || 'sepolia',
       });
     }
     return this.contractService;
