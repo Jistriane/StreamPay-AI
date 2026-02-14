@@ -1,20 +1,16 @@
 /**
  * Smart Contracts Configuration
- * 
+ *
  * Endereços dos contratos deployados em Mainnet e Sepolia
- * Deploy: 15/12/2025 06:05:36 UTC
- * Deployer: 0x3b598F74e735104435B450fdf3dAd565f046eA70
- * Chain IDs: Mainnet (1), Sepolia (11155111)
+ * Chain IDs: Mainnet (1), Sepolia (11155111), Polygon (137), Localhost (31337)
  */
-/**
- * Default chain ID (Polygon Mainnet)
- */
-export const DEFAULT_CHAIN_ID = 137;
-
-/**
- * Supported chain IDs
- */
-export const SUPPORTED_CHAINS = [137, 1, 11155111, 31337] as const;
+export const CONTRACTS = {
+  polygon: {
+    chainId: 137,
+    chainName: 'Polygon Mainnet',
+    rpcUrl: 'https://polygon-rpc.com',
+    blockExplorer: 'https://polygonscan.com',
+    contracts: {
       StreamPayCore: {
         address: '0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298',
         explorerUrl: 'https://polygonscan.com/address/0x2E53DAB8B91f60B6b6163e57b9c68D025Ce0c298',
@@ -127,42 +123,7 @@ export const SUPPORTED_CHAINS = [137, 1, 11155111, 31337] as const;
       factory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
     },
   },
-  
-  mainnet: {
-    chainId: 1,
-    chainName: 'Ethereum Mainnet',
-    rpcUrl: 'https://eth.llamarpc.com',
-    blockExplorer: 'https://etherscan.io',
-    
-    contracts: {
-      StreamPayCore: {
-        address: '0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD',
-        explorerUrl: 'https://etherscan.io/address/0x8a9bDE90B28b6ec99CC0895AdB2d851A786041dD',
-      },
-      LiquidityPool: {
-        address: '0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
-        explorerUrl: 'https://etherscan.io/address/0x585C98E899F07c22C4dF33d694aF8cb7096CCd5c',
-      },
-      PoolManager: {
-        address: '0xae185cA95D0b626a554b0612777350CE3DE06bB9',
-        explorerUrl: 'https://etherscan.io/address/0xae185cA95D0b626a554b0612777350CE3DE06bB9',
-      },
-      SwapRouter: {
-        address: '0x07AfFa6C58999Ac0c98237d10476983A573eD368',
-        explorerUrl: 'https://etherscan.io/address/0x07AfFa6C58999Ac0c98237d10476983A573eD368',
-      },
-    },
-    
-    tokens: {
-      MNEE: {
-        address: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
-        symbol: 'MNEE',
-        decimals: 18,
-        explorerUrl: 'https://etherscan.io/token/0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
-      },
-    },
-  },
-  
+
   localhost: {
     chainId: 31337,
     chainName: 'Localhost',
@@ -189,11 +150,12 @@ export const SUPPORTED_CHAINS = [137, 1, 11155111, 31337] as const;
  * Get contract configuration based on chain ID
  */
 export function getContractConfig(chainId: number) {
+  if (chainId === 137) return CONTRACTS.polygon;
   if (chainId === 1) return CONTRACTS.mainnet;
   if (chainId === 11155111) return CONTRACTS.sepolia;
   if (chainId === 31337) return CONTRACTS.localhost;
-  
-  throw new Error(`Unsupported chain ID: ${chainId}. Supported: Mainnet (1), Sepolia (11155111), Localhost (31337)`);
+
+  throw new Error(`Unsupported chain ID: ${chainId}. Supported: 1, 137, 11155111, 31337`);
 }
 
 /**
@@ -215,4 +177,4 @@ export const DEFAULT_CHAIN_ID = 1;
 /**
  * Supported chain IDs
  */
-export const SUPPORTED_CHAINS = [1, 11155111, 31337] as const;
+export const SUPPORTED_CHAINS = [1, 137, 11155111, 31337] as const;

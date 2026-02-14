@@ -85,7 +85,7 @@ export type NetworkKey = keyof typeof CONTRACTS_CONFIG;
  * Get network config based on NODE_ENV or explicit network parameter
  */
 export function getNetworkConfig(network?: NetworkKey) {
-  const defaultNetwork: NetworkKey = process.env.NODE_ENV === 'production' ? 'polygon' : 'localhost';
+  const defaultNetwork: NetworkKey = process.env.NODE_ENV === 'production' ? 'ethereum' : 'localhost';
   const envNetwork = (process.env.NETWORK as NetworkKey) || undefined;
   const targetNetwork: NetworkKey = network || envNetwork || defaultNetwork;
   return CONTRACTS_CONFIG[targetNetwork];

@@ -16,12 +16,16 @@ const envSchema = z.object({
   // Blockchain
   NETWORK: z.enum(['localhost', 'sepolia', 'ethereum', 'mainnet']).default('sepolia'),
   RPC_URL: z.string().url('RPC_URL deve ser uma URL válida').default('https://ethereum-sepolia-rpc.publicnode.com'),
-  PRIVATE_KEY: z.string()
+  PRIVATE_KEY: z
+    .string()
+    .optional()
     .refine(
-      (key) => key.startsWith('0x') && key.length === 66,
-      'PRIVATE_KEY deve estar no formato 0x + 64 caracteres hexadecimais'
-    )
-    .optional(),
+      (key) =>
+        key === undefined ||
+        key === '' ||
+        (key.startsWith('0x') && /^0x[0-9a-fA-F]{64}$/.test(key)),
+      'PRIVATE_KEY deve estar no formato 0x + 64 caracteres hexadecimais (ou vazia em dev)'
+    ),
   
   // Smart Contracts
   STREAMPAY_CORE_ADDRESS: z.string().optional(),

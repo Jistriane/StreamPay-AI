@@ -46,7 +46,7 @@ export class ActionHandler {
       backendUrl: context.backendUrl,
       userAddress: context.userAddress,
       authToken: context.authToken,
-      network: context.network || 'polygon',
+      network: context.network || 'sepolia',
     });
   }
 
@@ -61,21 +61,21 @@ export class ActionHandler {
           // For now, we keep the private handler or redirect?
           // Let's redirect to the new public method if parameters are sufficient.
           return await this.createStream({
-             recipient: parsed.parameters.recipient,
-             amount: parsed.parameters.amount ? Number(parsed.parameters.amount) : 0,
-             token: parsed.parameters.token,
-             duration: parsed.parameters.duration ? Number(parsed.parameters.duration) : 0,
-             durationUnit: parsed.parameters.durationUnit
+            recipient: parsed.parameters.recipient,
+            amount: parsed.parameters.amount ? Number(parsed.parameters.amount) : 0,
+            token: parsed.parameters.token,
+            duration: parsed.parameters.duration ? Number(parsed.parameters.duration) : 0,
+            durationUnit: parsed.parameters.durationUnit
           });
 
         case StreamPayIntent.CLAIM_STREAM:
-             return await this.claimStream(parsed.parameters.streamId);
+          return await this.claimStream(parsed.parameters.streamId);
 
         case StreamPayIntent.PAUSE_STREAM:
-             return await this.pauseStream(parsed.parameters.streamId);
+          return await this.pauseStream(parsed.parameters.streamId);
 
         case StreamPayIntent.CANCEL_STREAM:
-             return await this.cancelStream(parsed.parameters.streamId);
+          return await this.cancelStream(parsed.parameters.streamId);
 
         case StreamPayIntent.VIEW_STREAMS:
           return await this.handleViewStreams(parsed);
@@ -94,9 +94,9 @@ export class ActionHandler {
 
         case StreamPayIntent.SWAP_TOKENS:
           return await this.swapTokens({
-             tokenIn: parsed.parameters.tokenIn,
-             tokenOut: parsed.parameters.tokenOut, 
-             amount: parsed.parameters.amount ? Number(parsed.parameters.amount) : 0
+            tokenIn: parsed.parameters.tokenIn,
+            tokenOut: parsed.parameters.tokenOut,
+            amount: parsed.parameters.amount ? Number(parsed.parameters.amount) : 0
           });
 
         case StreamPayIntent.CHECK_BALANCE:
@@ -189,7 +189,7 @@ export class ActionHandler {
     } catch (error) {
       console.error('[ActionHandler] Erro ao preparar criação de stream:', error);
       const errorMessage = error instanceof Error ? error.message : 'erro desconhecido';
-      
+
       // Mensagens de erro mais específicas
       if (errorMessage.includes('address') || errorMessage.includes('Endereço')) {
         return {
@@ -240,7 +240,7 @@ export class ActionHandler {
     } catch (error) {
       console.error('[ActionHandler] Erro ao preparar claim:', error);
       const errorMessage = error instanceof Error ? error.message : 'erro desconhecido';
-      
+
       return {
         success: false,
         message: `Falha ao preparar reivindicação: ${errorMessage}. Verifique se o stream existe e está ativo.`,
@@ -260,28 +260,28 @@ export class ActionHandler {
         error: 'streamId is required',
       };
     }
-    
+
     // ... logic (assuming simple pass-through or similar validation)
-     try {
+    try {
       // Mock or call contract service (assuming contract service has pauseStream)
       // The original code had handlePauseStream but I didn't see the full body in snippet.
       // I will assume it follows similar pattern.
       // Actually, checking lines 244+ above, it was just starting.
       // I will add a generic implementation or try to follow what was there if visible.
       // Based on context, it likely calls this.contractService.pauseStream
-      
+
       const signatureRequest = this.contractService.pauseStream({ streamId });
       return {
-          success: true,
-          message: `Pronto para pausar o stream ${streamId}. Assine na wallet.`,
-          data: signatureRequest
+        success: true,
+        message: `Pronto para pausar o stream ${streamId}. Assine na wallet.`,
+        data: signatureRequest
       };
     } catch (error) {
-       return {
-            success: false,
-            message: 'Falha ao pausar stream',
-            error: String(error)
-       };
+      return {
+        success: false,
+        message: 'Falha ao pausar stream',
+        error: String(error)
+      };
     }
   }
 
@@ -290,26 +290,26 @@ export class ActionHandler {
    */
   async cancelStream(streamId: string): Promise<ActionResult> {
     if (!streamId) {
-        return {
-            success: false, 
-            message: 'Missing stream ID',
-            error: 'streamId is required'
-        };
+      return {
+        success: false,
+        message: 'Missing stream ID',
+        error: 'streamId is required'
+      };
     }
 
     try {
-        const signatureRequest = this.contractService.cancelStream({ streamId });
-        return {
-            success: true,
-            message: `Pronto para cancelar o stream ${streamId}. Assine na wallet.`,
-            data: signatureRequest
-        };
-    } catch(error) {
-        return {
-            success: false,
-            message: 'Falha ao cancelar stream',
-            error: String(error)
-        };
+      const signatureRequest = this.contractService.cancelStream({ streamId });
+      return {
+        success: true,
+        message: `Pronto para cancelar o stream ${streamId}. Assine na wallet.`,
+        data: signatureRequest
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Falha ao cancelar stream',
+        error: String(error)
+      };
     }
   }
 
@@ -322,8 +322,8 @@ export class ActionHandler {
       const response = await this.httpClient.get<{ streams: any[] }>('/api/streams');
 
       const streamCount = response.streams?.length || 0;
-      const summary = streamCount === 0 
-        ? 'Você não possui streams ativos no momento.' 
+      const summary = streamCount === 0
+        ? 'Você não possui streams ativos no momento.'
         : `Você possui ${streamCount} stream${streamCount > 1 ? 's' : ''} ativo${streamCount > 1 ? 's' : ''}.`;
 
       return {
@@ -334,7 +334,7 @@ export class ActionHandler {
     } catch (error) {
       console.error('[ActionHandler] Erro ao buscar streams:', error);
       const errorMessage = error instanceof Error ? error.message : 'erro desconhecido';
-      
+
       // Verificar se é erro de autenticação
       if (errorMessage.includes('401') || errorMessage.includes('Unauthorized')) {
         return {
@@ -622,11 +622,11 @@ export class ActionHandler {
     };
 
     let normalizedUnit = (unit || 'second').toLowerCase();
-    
+
     // Handle Portuguese plurals and standard English 's'
     if (normalizedUnit.endsWith('meses')) normalizedUnit = 'mes';
     else normalizedUnit = normalizedUnit.replace(/s$/, '');
-    
+
     return num * (unitMap[normalizedUnit] || 1);
   }
 }

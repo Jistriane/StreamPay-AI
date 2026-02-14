@@ -3,13 +3,20 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const pool = new Pool({
-    user: process.env.DB_USER || "postgres",
-    password: process.env.DB_PASSWORD || "postgres",
-    host: process.env.DB_HOST || "localhost",
-    port: parseInt(process.env.DB_PORT || "5432"),
-    database: process.env.DB_NAME || "streampay",
-});
+const connectionString =
+  process.env.DATABASE_URL || process.env.POSTGRES_URL;
+
+export const pool = new Pool(
+  connectionString
+    ? { connectionString }
+    : {
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD || "postgres",
+        host: process.env.DB_HOST || "localhost",
+        port: parseInt(process.env.DB_PORT || "5432"),
+        database: process.env.DB_NAME || "streampay",
+      }
+);
 
 pool.on("error", (err) => {
     console.error("Unexpected error on idle client", err);
